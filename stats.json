@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-09-15T16:54:37Z",
+  "updated_utc": "2026-09-15T17:09:37Z",
   "inception": "2026-09-13",
   "verified_url": null,
   "headline": {
@@ -8,11 +8,11 @@
     "max_drawdown_pct": 0.01
   },
   "metrics": {
-    "trades": 2,
-    "win_rate_pct": 50.0,
-    "profit_factor": 0.72,
-    "avg_hold_hours": 0.2,
-    "trades_per_week": 7.0,
+    "trades": 3,
+    "win_rate_pct": 66.7,
+    "profit_factor": 0.75,
+    "avg_hold_hours": 0.4,
+    "trades_per_week": 10.5,
     "days_live": 2,
     "best_month_pct": -0.01,
     "worst_month_pct": -0.01
