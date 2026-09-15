@@ -1023,7 +1023,7 @@ function drawRoster(strats){
     return '<tr class="'+(live?'':'pending')+'"'+(sc?' data-id="'+esc(sc.id)+'" style="cursor:pointer"':'')+'>'+
       '<td>'+flagSVG(s.flag)+'</td><td class="name">'+esc(s.name)+'</td><td class="sym">'+esc(s.symbols)+'</td><td class="sym">'+esc(s.style)+'</td>'+
       '<td class="r">'+(sc?int(T.trades):'—')+'</td><td class="r">'+(sc?upct(T.win_rate_pct,1):'—')+'</td><td class="r">'+(sc?num(T.profit_factor):'—')+'</td>'+
-      '<td class="r">'+bar+'</td><td class="st '+(live?'live':'testing')+'">'+(live?'Sailing since '+(s.since?fmtDate(s.since):'—'):'In the yard')+'</td></tr>';
+      '<td class="r">'+bar+'</td><td class="st '+(live?'live':'testing')+'">'+(live?'Sailing since '+(s.since?fmtDate(s.since):'—'):(s.status==='paused'?'Paused':(s.status==='retired'?'Retired':'In the yard')))+'</td></tr>';
   }).join('');
   $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>{ selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
 }
