@@ -1,15 +1,36 @@
 {
-  "updated_utc": "2026-09-13T16:29:13Z",
+  "updated_utc": "2026-09-15T16:09:59Z",
   "inception": "2026-09-13",
   "verified_url": null,
   "headline": {
-    "return_since_inception_pct": null,
-    "month_to_date_pct": null,
-    "max_drawdown_pct": null
+    "return_since_inception_pct": 0.0,
+    "month_to_date_pct": 0.0,
+    "max_drawdown_pct": 0.0
   },
-  "metrics": {},
-  "equity": [],
-  "monthly": [],
+  "metrics": {
+    "best_month_pct": 0.0,
+    "worst_month_pct": 0.0
+  },
+  "equity": [
+    {
+      "d": "2026-09-13",
+      "v": 100.0
+    },
+    {
+      "d": "2026-09-14",
+      "v": 100.0
+    },
+    {
+      "d": "2026-09-15",
+      "v": 100.0
+    }
+  ],
+  "monthly": [
+    {
+      "m": "2026-09",
+      "r": 0.0
+    }
+  ],
   "strategies": [
     {
       "flag": "A",
