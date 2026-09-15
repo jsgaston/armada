@@ -1,15 +1,21 @@
 {
-  "updated_utc": "2026-09-15T16:09:59Z",
+  "updated_utc": "2026-09-15T16:23:28Z",
   "inception": "2026-09-13",
   "verified_url": null,
   "headline": {
-    "return_since_inception_pct": 0.0,
-    "month_to_date_pct": 0.0,
-    "max_drawdown_pct": 0.0
+    "return_since_inception_pct": -0.01,
+    "month_to_date_pct": -0.01,
+    "max_drawdown_pct": 0.01
   },
   "metrics": {
-    "best_month_pct": 0.0,
-    "worst_month_pct": 0.0
+    "trades": 2,
+    "win_rate_pct": 50.0,
+    "profit_factor": 0.72,
+    "avg_hold_hours": 0.2,
+    "trades_per_week": 7.0,
+    "days_live": 2,
+    "best_month_pct": -0.01,
+    "worst_month_pct": -0.01
   },
   "equity": [
     {
@@ -22,13 +28,13 @@
     },
     {
       "d": "2026-09-15",
-      "v": 100.0
+      "v": 99.99
     }
   ],
   "monthly": [
     {
       "m": "2026-09",
-      "r": 0.0
+      "r": -0.01
     }
   ],
   "strategies": [
