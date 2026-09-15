@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Armada — copy-trading signal by Wisfli</title>
-<meta name="description" content="One MetaTrader 5 account running ten of my own algorithms. Your terminal mirrors every position, sized to your balance. Live figures published straight from the account.">
+<meta name="description" content="One MetaTrader 5 account running ten of my own algorithms. Your terminal mirrors every position, sized to your balance. Full statistics published straight from the account every 15 minutes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -20,35 +20,33 @@
   --up:#1E6B57;
   --down:#BE3A2B;
   --brass:#E0A92C;
-  --maxw:1080px;
+  --maxw:1180px;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{
   margin:0;background:var(--paper);color:var(--sea);
   font-family:Spectral,Georgia,serif;font-size:17px;line-height:1.65;
   font-variant-numeric:tabular-nums;
 }
-h1,h2,h3,.ui,button,th,.num{font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+h1,h2,h3,.ui,button,th,td,dt,dd{font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums}
 a{color:var(--sea);text-decoration-thickness:1px;text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.pos{color:var(--up)} .neg{color:var(--down)}
 
-/* ---------- masthead ---------- */
-.masthead{border-bottom:1px solid var(--rule)}
-.masthead .wrap{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:20px;padding-bottom:20px}
+/* masthead */
+.masthead{border-bottom:1px solid var(--rule);position:sticky;top:0;background:rgba(223,229,227,.94);backdrop-filter:blur(6px);z-index:5}
+.masthead .wrap{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:16px;padding-bottom:16px}
 .brand{font-family:Archivo;font-weight:700;font-stretch:118%;letter-spacing:.06em;font-size:15px;text-decoration:none}
-.masthead nav{font-family:Archivo;font-size:14px;display:flex;gap:22px}
+.masthead nav{font-family:Archivo;font-size:14px;display:flex;gap:20px;flex-wrap:wrap}
 .masthead nav a{text-decoration:none;color:var(--muted)}
 .masthead nav a:hover{color:var(--sea)}
 
-/* ---------- hero ---------- */
-.hero{padding:64px 0 40px}
+/* hero */
+.hero{padding:60px 0 0}
 .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:end}
-h1{
-  font-size:clamp(64px,12vw,148px);font-weight:800;font-stretch:122%;
-  line-height:.84;margin:0 0 18px;letter-spacing:-.02em;
-}
+h1{font-size:clamp(64px,12vw,148px);font-weight:800;font-stretch:122%;line-height:.84;margin:0 0 18px;letter-spacing:-.02em}
 .kicker{font-family:Archivo;font-size:14px;font-weight:500;color:var(--muted);margin:0 0 26px}
 .lead{font-size:20px;line-height:1.55;max-width:33em;margin:0}
 .hoist{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
@@ -56,48 +54,98 @@ h1{
 .hoist .dim{opacity:.28}
 .hoist-note{font-family:Archivo;font-size:13px;color:var(--muted);margin:0}
 
-/* ---------- status rail ---------- */
+.ticket{
+  display:inline-flex;align-items:center;gap:10px;margin:0 0 22px;
+  font-family:Archivo;font-size:13.5px;font-weight:600;color:var(--sea);
+  border:1px solid var(--rule-strong);padding:6px 12px 6px 8px;background:var(--panel)
+}
+.ticket i{font-style:normal;background:var(--brass);color:#1A1206;padding:1px 7px;font-size:12px;font-weight:700}
+
+/* rail */
 .rail{border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);margin-top:52px}
-.rail .wrap{display:flex;flex-wrap:wrap;gap:0;padding:0}
-.rail-item{flex:1 1 0;min-width:150px;padding:18px 24px 20px;border-right:1px solid var(--rule)}
+.rail .wrap{display:grid;grid-template-columns:repeat(6,1fr);padding:0}
+.rail-item{padding:18px 20px 20px;border-right:1px solid var(--rule)}
 .rail-item:last-child{border-right:0}
 .rail-item .t{font-family:Archivo;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 4px}
-.rail-item .v{font-family:Archivo;font-size:27px;font-weight:700;font-stretch:108%;line-height:1.1;margin:0}
-.v.pos{color:var(--up)} .v.neg{color:var(--down)}
+.rail-item .v{font-family:Archivo;font-size:26px;font-weight:700;font-stretch:108%;line-height:1.1;margin:0;white-space:nowrap}
+.rail-item .s{font-family:Archivo;font-size:12.5px;color:var(--muted);margin:3px 0 0;white-space:nowrap}
 
-/* ---------- sections ---------- */
+/* sections */
 section{padding:72px 0}
 section + section{border-top:1px solid var(--rule)}
 h2{font-size:34px;font-weight:700;font-stretch:112%;line-height:1.1;margin:0 0 8px;letter-spacing:-.01em}
-.sub{color:var(--muted);margin:0 0 34px;max-width:40em}
-.prose p{max-width:34em}
+h3.col{font-size:15px;font-weight:700;font-stretch:108%;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--sea)}
+.sub{color:var(--muted);margin:0 0 30px;max-width:42em}
 
-/* ---------- equity ---------- */
-.plot{background:var(--panel);border:1px solid var(--rule);padding:22px 20px 14px;position:relative}
-.plot svg{display:block;width:100%;height:auto}
-.plot-empty{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:260px;text-align:center;color:var(--muted);gap:8px;padding:24px
+/* controls */
+.bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.seg{display:inline-flex;border:1px solid var(--rule-strong)}
+.seg button{
+  font:600 13px Archivo,sans-serif;background:transparent;color:var(--muted);border:0;
+  padding:7px 13px;cursor:pointer;border-right:1px solid var(--rule)
 }
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--sea);color:#fff}
+.seg button:disabled{opacity:.35;cursor:default}
+
+/* charts */
+.plot{background:var(--panel);border:1px solid var(--rule);position:relative}
+.plot svg{display:block;width:100%}
+.plot + .plot{border-top:0}
+.plot-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center;color:var(--muted);gap:8px;padding:24px}
+.plot-empty b{font-family:Archivo;color:var(--sea)}
 .readout{
-  position:absolute;top:16px;right:20px;font-family:Archivo;font-size:13px;
-  color:var(--muted);background:var(--panel);padding:2px 0 2px 10px
+  position:absolute;top:10px;left:14px;font-family:Archivo;font-size:13px;color:var(--muted);
+  background:rgba(246,248,246,.92);padding:3px 8px;pointer-events:none;display:flex;gap:14px;flex-wrap:wrap
 }
 .readout b{color:var(--sea);font-weight:700}
+.plot-label{position:absolute;top:8px;left:14px;font-family:Archivo;font-size:12px;font-weight:600;color:var(--muted);pointer-events:none}
 .stamp{font-family:Archivo;font-size:12.5px;color:var(--muted);margin:12px 0 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
-/* ---------- metrics table ---------- */
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:34px}
-.metrics div{background:var(--paper);padding:16px 18px}
-.metrics dt{font-family:Archivo;font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 3px}
-.metrics dd{font-family:Archivo;font-size:22px;font-weight:700;margin:0}
+/* account ledger */
+.ledger{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--rule);border-top:0;background:var(--paper)}
+.ledger div{padding:14px 16px;border-right:1px solid var(--rule)}
+.ledger div:last-child{border-right:0}
+.ledger dt{font-size:12px;font-weight:600;color:var(--muted);margin:0 0 2px}
+.ledger dd{font-size:18px;font-weight:700;margin:0;white-space:nowrap}
 
-/* ---------- roster ---------- */
-table.roster{width:100%;border-collapse:collapse;font-family:Archivo;font-size:15px}
-table.roster th{
-  text-align:left;font-size:12.5px;font-weight:600;color:var(--muted);
-  padding:0 12px 10px 0;border-bottom:1px solid var(--rule-strong)
-}
+/* stat columns */
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:34px}
+dl.stats{margin:0}
+dl.stats div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule)}
+dl.stats dt{font-size:14.5px;color:#324B60;font-weight:500}
+dl.stats dt[title]{cursor:help;text-decoration:underline dotted rgba(15,44,66,.35);text-underline-offset:4px}
+dl.stats dd{margin:0;font-size:16px;font-weight:700;white-space:nowrap}
+.note{font-family:Archivo;font-size:12.5px;color:var(--muted);margin:14px 0 0;max-width:60em}
+
+/* monthly heatmap */
+.scroll{overflow-x:auto}
+table.heat{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+table.heat th{font-size:12px;font-weight:600;color:var(--muted);padding:0 4px 8px;text-align:center}
+table.heat th:first-child{text-align:left}
+table.heat td{padding:0;border:2px solid var(--paper);text-align:center;height:46px;font-weight:600}
+table.heat td.y{text-align:left;font-weight:700;padding-right:12px;border:0;width:56px}
+table.heat td.tot{font-weight:800;border-left:10px solid var(--paper)}
+table.heat td span{display:block;line-height:1.2}
+table.heat td small{display:block;font-size:11px;font-weight:500;opacity:.8}
+table.heat td.nil{color:rgba(15,44,66,.25)}
+
+/* shape */
+.trio{display:grid;grid-template-columns:1fr 1fr;gap:44px 48px}
+.chart-cap{font-family:Archivo;font-size:12.5px;color:var(--muted);margin:8px 0 0}
+table.split{width:100%;border-collapse:collapse;font-size:14px;margin-top:4px}
+table.split th{font-size:12px;font-weight:600;color:var(--muted);text-align:right;padding:0 0 8px}
+table.split th:first-child,table.split td:first-child{text-align:left}
+table.split td{padding:10px 0;border-bottom:1px solid var(--rule);text-align:right;font-weight:600}
+.strip{display:flex;gap:3px;flex-wrap:wrap;margin-top:22px}
+.strip span{width:12px;height:22px;display:block}
+.strip .w{background:var(--up)} .strip .l{background:var(--down);opacity:.8}
+
+/* roster */
+.scroll-roster{overflow-x:auto}
+table.roster{width:100%;border-collapse:collapse;font-size:15px;min-width:820px}
+table.roster th{text-align:left;font-size:12.5px;font-weight:600;color:var(--muted);padding:0 12px 10px 0;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+table.roster th.r,table.roster td.r{text-align:right}
 table.roster td{padding:13px 12px 13px 0;border-bottom:1px solid var(--rule);vertical-align:middle}
 table.roster td:first-child{width:56px;padding-right:16px}
 table.roster svg{width:38px;height:25px;display:block;box-shadow:0 1px 0 rgba(15,44,66,.25)}
@@ -108,15 +156,18 @@ table.roster svg{width:38px;height:25px;display:block;box-shadow:0 1px 0 rgba(15
 .st.testing{color:var(--muted)}
 .st.testing::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;border:1px solid var(--rule-strong);margin-right:7px;vertical-align:middle}
 tr.pending td{opacity:.5}
+.contrib{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.contrib i{display:block;height:8px;background:var(--up)}
+.contrib i.n{background:var(--down)}
 
-/* ---------- steps ---------- */
+/* steps */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;counter-reset:s}
 .step{counter-increment:s;border-top:2px solid var(--sea);padding-top:14px}
 .step h3{font-size:17px;margin:0 0 6px;font-weight:700}
 .step h3::before{content:counter(s);font-size:13px;color:var(--muted);margin-right:10px;font-weight:600}
 .step p{margin:0;font-size:16px;color:#324B60}
 
-/* ---------- price ---------- */
+/* price */
 .berth{background:var(--sea-deep);color:#E7EDEA;padding:44px 44px 40px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
 .berth h2{color:#fff;margin-bottom:14px}
 .berth p{max-width:30em;color:#AFC2CE;margin:0 0 18px}
@@ -126,15 +177,9 @@ tr.pending td{opacity:.5}
 .price{text-align:right}
 .price .amt{font-family:Archivo;font-size:70px;font-weight:800;font-stretch:112%;line-height:1;color:#fff}
 .price .per{font-family:Archivo;font-size:15px;color:#AFC2CE;display:block;margin-top:6px}
-.buy{
-  display:inline-block;margin-top:22px;background:var(--brass);color:#1A1206;
-  font-family:Archivo;font-weight:700;font-size:17px;padding:15px 30px;
-  text-decoration:none;border:0;cursor:pointer
-}
-.buy:hover{background:#EFBB43}
 .price small{display:block;margin-top:14px;font-family:Archivo;font-size:12.5px;color:#8FA6B4;max-width:20em;margin-left:auto}
 
-/* ---------- plain talk ---------- */
+/* plain talk */
 .talk{display:grid;grid-template-columns:1fr 1fr;gap:44px}
 .talk h3{font-size:18px;margin:0 0 10px}
 .talk p{font-size:16px;margin:0 0 14px;color:#2C4356}
@@ -142,18 +187,88 @@ tr.pending td{opacity:.5}
 footer{border-top:1px solid var(--rule-strong);padding:34px 0 70px;font-family:Archivo;font-size:13px;color:var(--muted)}
 footer p{max-width:52em;margin:0 0 10px}
 
-@media (max-width:860px){
-  .hero{padding:44px 0 30px}
-  .hero-grid{grid-template-columns:1fr;gap:34px;align-items:start}
-  .metrics{grid-template-columns:repeat(2,1fr)}
+@media (max-width:980px){
+  .rail .wrap{grid-template-columns:repeat(3,1fr)}
+  .rail-item:nth-child(3n){border-right:0}
+  .rail-item:nth-child(-n+3){border-bottom:1px solid var(--rule)}
+  .ledger{grid-template-columns:repeat(3,1fr)}
+  .ledger div:nth-child(3n){border-right:0}
+  .ledger div:nth-child(-n+3){border-bottom:1px solid var(--rule)}
+  .cols{grid-template-columns:1fr 1fr}
+  .trio{grid-template-columns:1fr 1fr}
+  
+}
+@media (max-width:720px){
+  .masthead nav a.opt{display:none}
+  .hero{padding:40px 0 0}
+  .hero-grid{grid-template-columns:1fr;gap:30px;align-items:start}
+  .rail .wrap{grid-template-columns:repeat(2,1fr)}
+  .rail-item{border-right:1px solid var(--rule)!important;border-bottom:1px solid var(--rule)}
+  .rail-item:nth-child(2n){border-right:0!important}
+  .rail-item .v{font-size:22px}
+  .ledger{grid-template-columns:repeat(2,1fr)}
+  .ledger div{border-right:1px solid var(--rule)!important;border-bottom:1px solid var(--rule)}
+  .ledger div:nth-child(2n){border-right:0!important}
+  .cols,.trio{grid-template-columns:1fr;gap:34px}
   .steps{grid-template-columns:1fr;gap:26px}
   .berth{grid-template-columns:1fr;padding:32px 26px;gap:26px}
   .price{text-align:left}.price small{margin-left:0}
   .talk{grid-template-columns:1fr;gap:26px}
-  .rail-item{border-right:0;border-bottom:1px solid var(--rule)}
-  .masthead nav{gap:16px}
+  section{padding:56px 0}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+
+/* scope bar */
+.scopebar{position:sticky;top:53px;z-index:4;background:var(--sea-deep);color:#E7EDEA}
+.scopebar .wrap{display:flex;align-items:center;gap:14px 20px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.scopebar label{font-family:Archivo;font-size:13px;color:#AFC2CE}
+.scopebar select{
+  font:700 15px Archivo,sans-serif;color:#fff;background:#12344D;border:1px solid rgba(255,255,255,.25);
+  padding:7px 34px 7px 12px;min-width:260px;max-width:100%;appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,#E0A92C 50%),linear-gradient(135deg,#E0A92C 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px;background-repeat:no-repeat
+}
+.scopebar select:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.scopebar .meta{font-family:Archivo;font-size:13px;color:#AFC2CE;display:flex;gap:6px 16px;flex-wrap:wrap;align-items:center}
+.scopebar .meta b{color:#fff;font-weight:600}
+.scopebar .flagmini svg{width:30px;height:20px;display:block}
+.scopebar .nav{margin-left:auto;display:flex;gap:6px}
+.scopebar .nav button{font:600 13px Archivo;background:transparent;border:1px solid rgba(255,255,255,.25);color:#E7EDEA;padding:6px 10px;cursor:pointer}
+.scopebar .nav button:hover{border-color:var(--brass)}
+
+/* compare */
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;min-width:1040px}
+table.cmp th{font-size:12px;font-weight:600;color:var(--muted);text-align:right;padding:0 10px 10px;border-bottom:1px solid var(--rule-strong);white-space:nowrap;cursor:pointer;user-select:none}
+table.cmp th:first-child{text-align:left;padding-left:0}
+table.cmp th[aria-sort="descending"]::after{content:" ▾";color:var(--sea)}
+table.cmp th[aria-sort="ascending"]::after{content:" ▴";color:var(--sea)}
+table.cmp td{padding:10px;border-bottom:1px solid var(--rule);text-align:right;font-weight:600;white-space:nowrap}
+table.cmp td:first-child{text-align:left;padding-left:0}
+table.cmp tbody tr{cursor:pointer}
+table.cmp tbody tr:hover td{background:rgba(246,248,246,.7)}
+table.cmp tr.sel td{background:var(--panel);box-shadow:inset 0 2px 0 var(--sea),inset 0 -2px 0 var(--sea)}
+table.cmp tr.kind-account td{border-bottom:1px solid var(--rule-strong)}
+table.cmp tr.kind-magic td:first-child{padding-left:18px}
+table.cmp .bn{display:flex;align-items:center;gap:10px}
+table.cmp .bn svg{width:27px;height:18px;flex:none;box-shadow:0 1px 0 rgba(15,44,66,.25)}
+table.cmp .bn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+table.cmp td.spark svg{display:block}
+.tag{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--rule-strong);padding:0 5px;margin-left:6px;vertical-align:1px}
+
+/* correlation */
+table.corr{border-collapse:collapse;font-size:12.5px}
+table.corr th{font-weight:600;color:var(--muted);padding:4px 8px;white-space:nowrap;text-align:right}
+table.corr thead th{writing-mode:vertical-rl;transform:rotate(180deg);text-align:left;height:120px;padding:6px 2px}
+table.corr td{width:46px;height:34px;text-align:center;font-weight:600;border:2px solid var(--paper)}
+table.corr tr.hl th{color:var(--sea)}
+.corr-wrap{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:start}
+.legend{display:flex;align-items:center;gap:8px;font-family:Archivo;font-size:12px;color:var(--muted);margin-top:14px}
+.legend i{display:block;width:140px;height:10px;background:linear-gradient(90deg,rgba(30,107,87,.85),#F6F8F6 50%,rgba(190,58,43,.85))}
+.symlist{font-family:Archivo;font-size:13px;color:var(--muted);margin:10px 0 0}
+.empty-scope{font-family:Archivo;color:var(--muted);padding:30px 0}
+@media (max-width:1100px){ .cols{grid-template-columns:1fr 1fr} }
+@media (max-width:980px){ .corr-wrap{grid-template-columns:1fr} }
+@media (max-width:720px){ .scopebar{top:49px} .scopebar select{min-width:0;width:100%} .scopebar .nav{margin-left:0} .trio{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -162,9 +277,11 @@ footer p{max-width:52em;margin:0 0 10px}
   <div class="wrap">
     <a class="brand" href="https://wisfli.com">WISFLI</a>
     <nav>
-      <a href="#fleet">The fleet</a>
-      <a href="#how">How it works</a>
-      <a href="setup.html">Setup guide</a>
+      <a href="#compare">Bots</a>
+      <a href="#record">Record</a>
+      <a href="#stats">Statistics</a>
+      <a href="#fleet" class="opt">The fleet</a>
+      <a href="setup.html" class="opt">Setup guide</a>
       <a href="#berth">Subscribe</a>
     </nav>
   </div>
@@ -175,6 +292,7 @@ footer p{max-width:52em;margin:0 0 10px}
     <div>
       <h1>Armada</h1>
       <p class="kicker">A MetaTrader&nbsp;5 copy-trading signal</p>
+      <p class="ticket" id="ticket" hidden></p>
       <p class="lead">One account, ten algorithms. I am putting the first ten trading bots I build into this single signal, adding each one only after it finishes validation. Your terminal mirrors every position the account takes, scaled to your own balance.</p>
     </div>
     <div>
@@ -184,43 +302,150 @@ footer p{max-width:52em;margin:0 0 10px}
   </div>
   <div class="rail">
     <div class="wrap">
-      <div class="rail-item"><p class="t">Since inception</p><p class="v" id="r-total">—</p></div>
-      <div class="rail-item"><p class="t">This month</p><p class="v" id="r-month">—</p></div>
-      <div class="rail-item"><p class="t">Deepest drawdown</p><p class="v" id="r-dd">—</p></div>
-      <div class="rail-item"><p class="t">Bots sailing</p><p class="v" id="r-fleet">—</p></div>
+      <div class="rail-item"><p class="t">Return</p><p class="v" id="r-total">—</p><p class="s" id="r-total-s">&nbsp;</p></div>
+      <div class="rail-item"><p class="t">Net profit</p><p class="v" id="r-roi">—</p><p class="s" id="r-roi-s">&nbsp;</p></div>
+      <div class="rail-item"><p class="t">Profit factor</p><p class="v" id="r-pf">—</p><p class="s" id="r-pf-s">&nbsp;</p></div>
+      <div class="rail-item"><p class="t">Deepest drawdown</p><p class="v" id="r-dd">—</p><p class="s" id="r-dd-s">&nbsp;</p></div>
+      <div class="rail-item"><p class="t">Recovery factor</p><p class="v" id="r-rec">—</p><p class="s" id="r-rec-s">&nbsp;</p></div>
+      <div class="rail-item"><p class="t">Sharpe ratio</p><p class="v" id="r-sharpe">—</p><p class="s" id="r-sharpe-s">&nbsp;</p></div>
     </div>
   </div>
 </div>
 
+<div class="scopebar" id="scopebar" hidden>
+  <div class="wrap">
+    <label for="scope">Showing</label>
+    <select id="scope"></select>
+    <div class="meta" id="scope-meta"></div>
+    <div class="nav">
+      <button type="button" id="prev" aria-label="Previous bot">Previous</button>
+      <button type="button" id="next" aria-label="Next bot">Next</button>
+    </div>
+  </div>
+</div>
+
+<section id="compare">
+  <div class="wrap">
+    <h2>Every bot side by side</h2>
+    <p class="sub">Each bot trades under its own magic number, and bots with several magic numbers are grouped under their flag. Returns are measured against the whole account, so a bot's figures show what it has contributed. Select a row to see its full record below, or sort by any column.</p>
+    <div class="scroll"><table class="cmp" id="cmp"><tbody><tr><td class="empty-scope">No closed trades yet. The comparison fills in as the bots trade.</td></tr></tbody></table></div>
+  </div>
+</section>
+
 <section id="record">
   <div class="wrap">
-    <h2>The account, as it stands</h2>
-    <p class="sub">Published directly from the trading account every 15 minutes. The curve starts at 100 on day one, so it reads the same whatever size the account is. Open positions are never shown here — that part is what subscribers receive.</p>
+    <h2 id="record-title">The account, as it stands</h2>
+    <p class="sub">Published directly from the trading account every 15 minutes. Growth is time-weighted, so deposits and withdrawals never move the curve. Open positions are never shown here — that part is what subscribers receive.</p>
+
+    <div class="bar">
+      <div class="seg" role="group" aria-label="Curve">
+        <button type="button" data-mode="growth" aria-pressed="true">Growth %</button>
+        <button type="button" data-mode="profit" aria-pressed="false" id="btn-profit">Profit</button>
+        <button type="button" data-mode="balance" aria-pressed="false" id="btn-balance">Balance</button>
+      </div>
+      <div class="seg" role="group" aria-label="Range">
+        <button type="button" data-range="30">1M</button>
+        <button type="button" data-range="91">3M</button>
+        <button type="button" data-range="182">6M</button>
+        <button type="button" data-range="365">1Y</button>
+        <button type="button" data-range="0" aria-pressed="true">All</button>
+      </div>
+    </div>
 
     <div class="plot" id="plot">
       <div class="plot-empty" id="plot-empty">
-        <p style="margin:0;font-family:Archivo;font-weight:600;color:var(--sea)">The fleet hasn't sailed yet.</p>
-        <p style="margin:0;font-size:15px">The first figures appear here the day the account takes its first trade.</p>
+        <b>The fleet hasn't sailed yet.</b>
+        <span style="font-size:15px">The first figures appear here the day the account takes its first trade.</span>
       </div>
       <div class="readout" id="readout" hidden></div>
     </div>
+    <div class="plot" id="plot-dd" hidden><span class="plot-label">Drawdown from peak</span></div>
+
+    <dl class="ledger" id="ledger" hidden></dl>
+
     <p class="stamp">
       <span id="stamp-updated">Waiting for first publication</span>
       <span id="stamp-verify"></span>
     </p>
+  </div>
+</section>
 
-    <dl class="metrics" id="metrics"></dl>
+<section id="stats">
+  <div class="wrap">
+    <h2 id="stats-title">Every number the account produces</h2>
+    <p class="sub">Recalculated on each publication for the account and for every bot. Hover a label for what it means.</p>
+    <div class="cols">
+      <div><h3 class="col">Returns</h3><dl class="stats" id="st-returns"></dl></div>
+      <div><h3 class="col">Drawdown and recovery</h3><dl class="stats" id="st-risk"></dl></div>
+      <div><h3 class="col">Trades</h3><dl class="stats" id="st-trades"></dl></div>
+      <div><h3 class="col">Streaks and costs</h3><dl class="stats" id="st-streaks"></dl></div>
+    </div>
+    <p class="symlist" id="symlist"></p>
+    <p class="note" id="sample-note"></p>
+  </div>
+</section>
+
+<section id="months">
+  <div class="wrap">
+    <h2>Month by month</h2>
+    <p class="sub">Time-weighted return for each calendar month, with the year's compounded total at the end of the row.</p>
+    <div class="scroll"><table class="heat" id="heat"><tbody><tr><td class="nil" style="height:80px">No closed months yet.</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<section id="shape">
+  <div class="wrap">
+    <h2>How the trades are distributed</h2>
+    <p class="sub">Each closed position counted once, measured as a share of the account balance on the day it closed. Times are UTC.</p>
+    <div class="trio">
+      <div>
+        <h3 class="col">Result per trade</h3>
+        <div id="hist"></div>
+        <p class="chart-cap">Number of trades by result, % of balance.</p>
+      </div>
+      <div>
+        <h3 class="col">Long and short</h3>
+        <table class="split" id="sides"><tbody><tr><td>—</td></tr></tbody></table>
+        <div class="strip" id="recent" aria-label="Recent trades, won or lost"></div>
+        <p class="chart-cap" id="recent-cap"></p>
+      </div>
+      <div>
+        <h3 class="col">By weekday</h3>
+        <div id="weekday"></div>
+        <p class="chart-cap">Summed trade results by closing day.</p>
+      </div>
+      <div>
+        <h3 class="col">By hour of entry</h3>
+        <div id="hours"></div>
+        <p class="chart-cap">Summed trade results by the hour the position opened.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="correlation" hidden>
+  <div class="wrap">
+    <h2>Do the bots move together?</h2>
+    <div class="corr-wrap">
+      <div class="scroll"><table class="corr" id="corr"></table></div>
+      <div>
+        <p class="sub" style="margin-bottom:10px">Correlation of daily results between magic numbers. Close to +1, two bots win and lose on the same days and add risk together. Close to 0 or negative, they tend to offset each other, which is what keeps the account's drawdown smaller than the sum of its parts.</p>
+        <div class="legend"><span>+1</span><i></i><span>−1</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section id="fleet">
   <div class="wrap">
     <h2>The fleet</h2>
-    <p class="sub">Ten bots, added one at a time. A bot joins the account only once it has passed out-of-sample testing and a period of live trading on my own money. Until then it stays in the yard, and you can see it here.</p>
-    <table class="roster">
-      <thead><tr><th>Flag</th><th>Bot</th><th>Instruments</th><th>Approach</th><th>Status</th></tr></thead>
-      <tbody id="roster"></tbody>
-    </table>
+    <p class="sub">Ten bots, added one at a time. A bot joins the account only once it has passed out-of-sample testing. Until then it stays in the yard.</p>
+    <div class="scroll-roster">
+      <table class="roster">
+        <thead><tr><th>Flag</th><th>Bot</th><th>Instruments</th><th>Approach</th><th class="r">Trades</th><th class="r">Hits</th><th class="r">Profit factor</th><th class="r">Contribution</th><th>Status</th></tr></thead>
+        <tbody id="roster"></tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -242,7 +467,7 @@ footer p{max-width:52em;margin:0 0 10px}
         <p>Opens, closes, stop-loss and take-profit changes are followed within a second or two, at a lot size proportional to your balance.</p>
       </div>
     </div>
-    <p style="margin-top:30px;font-family:Archivo;font-size:15px"><a href="setup.html">Read the full setup guide before subscribing →</a></p>
+    <p style="margin-top:30px;font-family:Archivo;font-size:15px"><a href="setup.html">Read the full setup guide before subscribing</a></p>
   </div>
 </section>
 
@@ -262,27 +487,18 @@ footer p{max-width:52em;margin:0 0 10px}
       <div class="price">
         <div class="amt">€59</div>
         <span class="per">per month, first 100 accounts</span>
-        <!--<a class="buy" href="STRIPE_PAYMENT_LINK_HERE">Subscribe to Armada</a>-->
         <div id="paypal-button-container-P-6TC590247X0331525NKTMXCI"></div>
 <script src="https://www.paypal.com/sdk/js?client-id=AWa_6Af93UGQdocFcdOmDgC6xGjFV4Kp-8yeFyZ6DhHqPDnHt6kK5xQdSenwitI1-a0kk4Sc4DeCYK9N&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
 <script>
-  paypal.Buttons({
-      style: {
-          shape: 'pill',
-          color: 'gold',
-          layout: 'vertical',
-          label: 'subscribe'
-      },
+  if (window.paypal) paypal.Buttons({
+      style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
       createSubscription: function(data, actions) {
-        return actions.subscription.create({
-          /* Creates the subscription */
-          plan_id: 'P-6TC590247X0331525NKTMXCI'
-        });
+        return actions.subscription.create({ plan_id: 'P-6TC590247X0331525NKTMXCI' });
       },
       onApprove: function(data, actions) {
-        alert(data.subscriptionID); // You can add optional success message for the subscriber here
+        alert(data.subscriptionID);
       }
-  }).render('#paypal-button-container-P-6TC590247X0331525NKTMXCI'); // Renders the PayPal button
+  }).render('#paypal-button-container-P-6TC590247X0331525NKTMXCI');
 </script>
         <small>Standard rate €99/month once all ten bots are sailing. Suggested account size €2,000 or more — see the setup guide for why.</small>
       </div>
@@ -296,12 +512,14 @@ footer p{max-width:52em;margin:0 0 10px}
     <div class="talk" style="margin-top:26px">
       <div>
         <h3>What you are buying</h3>
-        <p>Access to the positions of one live account, for as long as you subscribe. Not a course, not a bot licence, not advice about what you personally should do with your money.</p>
-        <p>Every figure on this page comes out of that account automatically. There are no backtests on this page and no simulated results. Where a number is missing, it is missing because the account has not produced it yet.</p>
+        <p>Access to the positions of one account, for as long as you subscribe. Not a course, not a bot licence, not advice about what you personally should do with your money.</p>
+        <p>Every figure on this page comes out of that account automatically. There are no backtests on this page. Where a number is missing, it is missing because the account has not produced it yet.</p>
+        <p id="demo-talk" hidden>The account is currently a <b>demo account</b>. Demo fills are usually kinder than real ones — no requotes, no partial fills, no slippage on news. Read these figures as a record of how the strategies trade, not as proof of real-money execution. When the account moves to real money this page will say so, and the record will restart.</p>
       </div>
       <div>
         <h3>What can go wrong</h3>
         <p>Losing months happen, and a losing month is not a malfunction. Your results will also differ from mine: a different broker, spread, execution speed or account size all move the outcome, and copying is never exact.</p>
+        <p>Ratios such as Sharpe and Calmar are unstable over short periods. A few good weeks can make them look far better than they will be over a year, so give more weight to drawdown and to the number of months on record.</p>
         <p>Leveraged trading can cost you more than you put in. Subscribe with money you can afford to lose, start at a reduced risk factor, and stop if it stops suiting you.</p>
       </div>
     </div>
@@ -311,7 +529,7 @@ footer p{max-width:52em;margin:0 0 10px}
 <footer>
   <div class="wrap">
     <p>Armada is operated by Wisfli, Alicante, Spain. Past performance does not indicate future results. Nothing here is investment advice or a personal recommendation, and no return is promised or implied.</p>
-    <p><a href="https://wisfli.com">wisfli.com</a> · <a href="setup.html">Setup guide</a> · <a href="mailto:jsgastoniriartecabrera@gmail.com">jsgastoniriartecabrera@gmail.com</a></p>
+    <p><a href="https://wisfli.com">wisfli.com</a> &nbsp;|&nbsp; <a href="setup.html">Setup guide</a> &nbsp;|&nbsp; <a href="mailto:jsgastoniriartecabrera@gmail.com">jsgastoniriartecabrera@gmail.com</a></p>
   </div>
 </footer>
 
@@ -330,142 +548,512 @@ const F = {
   J:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 13h60v14H0z" fill="#fff"/>'
 };
 const LETTERS = ['A','B','C','D','E','F','G','H','I','J'];
-const flagSVG = l => '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>';
-
-/* ---------- fallback roster (overridden by stats.json) ---------- */
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const flagSVG = l => F[l] ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>' : '';
 const FALLBACK = LETTERS.map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-const pct = n => (n>0?'+':'') + n.toFixed(1) + '%';
-const cls = n => n>0?'pos':(n<0?'neg':'');
-
+/* ---------- formatting ---------- */
+let CUR='EUR';
+const nil = v => v===null || v===undefined || Number.isNaN(v);
+const pct = (n,d=2) => nil(n) ? '—' : (n>0?'+':(n<0?'−':'')) + Math.abs(n).toFixed(d) + '%';
+const upct = (n,d=2) => nil(n) ? '—' : Math.abs(n).toFixed(d) + '%';
+const ddpct = (n,d=2) => nil(n) ? '—' : (n>0 ? '−'+Math.abs(n).toFixed(d)+'%' : '0.00%');
+const num = (n,d=2) => nil(n) ? '—' : (n<0?'−':'') + Math.abs(n).toFixed(d);
+const int = n => nil(n) ? '—' : Math.round(n).toLocaleString('en-GB');
+const money = (n,sign=false) => {
+  if(nil(n)) return '—';
+  const s = new Intl.NumberFormat('en-IE',{style:'currency',currency:CUR,maximumFractionDigits:Math.abs(n)>=10000?0:2}).format(Math.abs(n));
+  return (n<0?'−':(sign&&n>0?'+':'')) + s;
+};
+const cls = n => nil(n)?'':(n>0?'pos':(n<0?'neg':''));
+const fmtDate = iso => { const d=new Date(iso+'T00:00:00Z'); return d.getUTCDate()+' '+MONTHS[d.getUTCMonth()]+' '+d.getUTCFullYear(); };
+const days = n => nil(n)?'—':(n===1?'1 day':int(n)+' days');
+const hours = n => nil(n)?'—':(n<48? n.toFixed(1)+' h' : (n/24).toFixed(1)+' d');
 function ago(iso){
-  const m = Math.round((Date.now()-new Date(iso))/60000);
-  if(m<2) return 'just now';
-  if(m<60) return m+' minutes ago';
+  const m=Math.round((Date.now()-new Date(iso))/60000);
+  if(m<2) return 'just now'; if(m<60) return m+' minutes ago';
   const h=Math.round(m/60); if(h<24) return h+(h===1?' hour ago':' hours ago');
   const d=Math.round(h/24); return d+(d===1?' day ago':' days ago');
 }
 
+/* ---------- state ---------- */
+let DATA=null, SCOPES=[], CUR_SCOPE=null, ACC={};
+const view={mode:'growth', range:0};
+const scopeById = id => SCOPES.find(x=>x.id===id);
+const magicLabel = sc => sc.magics && sc.magics.length ? (sc.magics.length===1?'magic '+sc.magics[0]:'magics '+sc.magics.join(', ')) : '';
+
+/* ---------- adapter for older stats.json ---------- */
+function normalise(s){
+  if(s.scopes && s.scopes.length) return s.scopes;
+  if(!s.equity || !s.equity.length) return [];
+  return [{id:'all',kind:'account',name:'Whole account',returns:s.returns||{total_pct:(s.headline||{}).return_since_inception_pct,month_pct:(s.headline||{}).month_to_date_pct},
+    risk:s.risk||{max_drawdown_pct:(s.headline||{}).max_drawdown_pct},trades:s.trades||s.metrics||{},sides:s.sides||{},weekday:s.weekday||[],hours:[],
+    trade_hist:s.trade_hist||[],recent:s.recent||[],monthly:s.monthly||[],yearly:s.yearly||[],equity:s.equity}];
+}
+
+/* ---------- hoist ---------- */
 function drawHoist(strats){
-  const wrap=document.getElementById('hoist');
-  wrap.innerHTML = strats.map(s=>{
-    const live = s.status==='live';
-    return '<span class="'+(live?'':'dim')+'" title="'+s.name+'">'+flagSVG(s.flag)+'</span>';
-  }).join('');
+  $('hoist').innerHTML = strats.map(s=>'<span class="'+(s.status==='live'?'':'dim')+'" title="'+esc(s.name)+'">'+flagSVG(s.flag)+'</span>').join('');
   const live=strats.filter(s=>s.status==='live').length;
-  document.getElementById('hoist-note').textContent =
-    live===0 ? 'Ten flags, none flying yet.' :
-    'Flying: '+live+' of 10. The faded flags are still in the yard.';
+  $('hoist-note').textContent = live===0 ? 'Ten flags, none flying yet.' : 'Flying: '+live+' of 10. The faded flags are still in the yard.';
 }
 
+function drawTicket(s){
+  const A=s.account||{};
+  if(!A.type && !s.inception) return;
+  const bits=[];
+  if(A.publish_money && !nil(A.starting_balance)) bits.push(money(A.starting_balance)+' '+(A.type==='demo'?'demo account':'account'));
+  else bits.push(A.type==='demo'?'Demo account':'Live account');
+  if(A.broker) bits.push('at '+A.broker);
+  if(s.inception) bits.push('since '+fmtDate(s.inception));
+  $('ticket').innerHTML=(A.type==='demo'?'<i>DEMO</i>':'<i>LIVE</i>')+esc(bits.join(' '));
+  $('ticket').hidden=false;
+  if(A.type==='demo' && $('demo-talk')) $('demo-talk').hidden=false;
+}
+
+/* ---------- scope selector ---------- */
+function buildSelector(){
+  if(!SCOPES.length) return;
+  const groups={account:[],group:[],magic:[]};
+  SCOPES.forEach(sc=>(groups[sc.kind]||groups.magic).push(sc));
+  const opt=sc=>'<option value="'+esc(sc.id)+'">'+esc(sc.name)+(sc.kind==='magic'&&sc.magics?' ('+sc.magics[0]+')':'')+(sc.empty?' — no trades yet':'')+'</option>';
+  let html=groups.account.map(opt).join('');
+  if(groups.group.length) html+='<optgroup label="Bots and groups">'+groups.group.map(opt).join('')+'</optgroup>';
+  if(groups.magic.length) html+='<optgroup label="Magic numbers">'+groups.magic.map(opt).join('')+'</optgroup>';
+  $('scope').innerHTML=html;
+  $('scopebar').hidden=false;
+  $('scope').addEventListener('change',e=>selectScope(e.target.value,true));
+  const step=d=>{ const i=SCOPES.findIndex(x=>x.id===CUR_SCOPE.id); selectScope(SCOPES[(i+d+SCOPES.length)%SCOPES.length].id,true); };
+  $('prev').addEventListener('click',()=>step(-1));
+  $('next').addEventListener('click',()=>step(1));
+}
+
+function selectScope(id, push){
+  const sc=scopeById(id)||SCOPES[0]; if(!sc) return;
+  CUR_SCOPE=sc;
+  $('scope').value=sc.id;
+  if(push) history.replaceState(null,'', sc.id==='all' ? location.pathname+location.search : '#bot='+sc.id);
+  const isAcc=sc.kind==='account';
+  const T=sc.trades||{};
+  $('scope-meta').innerHTML=
+    (sc.flag?'<span class="flagmini">'+flagSVG(sc.flag)+'</span>':'')+
+    (magicLabel(sc)?'<span>'+esc(magicLabel(sc))+'</span>':'')+
+    (T.trades?'<span><b>'+int(T.trades)+'</b> trades</span>':'')+
+    (T.first_trade?'<span>trading since <b>'+fmtDate(T.first_trade)+'</b></span>':'')+
+    (!isAcc && !nil((sc.returns||{}).share_of_profit_pct)?'<span><b>'+pct(sc.returns.share_of_profit_pct,1).replace('+','')+'</b> of account profit</span>':'');
+  $('record-title').textContent = isAcc ? 'The account, as it stands' : sc.name+': its record';
+  $('stats-title').textContent = isAcc ? 'Every number the account produces' : 'Every number for '+sc.name;
+  const bb=$('btn-balance'); bb.disabled=!isAcc||!ACC.publish_money;
+  bb.title = isAcc ? '' : 'Balance applies to the whole account; use Profit for a single bot';
+  $('btn-profit').disabled=!ACC.publish_money;
+  if(view.mode==='balance' && bb.disabled) setMode('growth');
+  document.querySelectorAll('#cmp tbody tr').forEach(tr=>tr.classList.toggle('sel',tr.dataset.id===sc.id));
+  renderScope();
+}
+
+function renderScope(){
+  const sc=CUR_SCOPE;
+  drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity();
+  document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
+}
+
+/* ---------- rail ---------- */
+function setText(id,txt,c){ const el=$(id); if(!el) return; el.textContent=txt; el.classList.remove('pos','neg'); if(c) el.classList.add(c); }
+function drawRail(sc){
+  const R=sc.returns||{}, K=sc.risk||{}, T=sc.trades||{}, isAcc=sc.kind==='account';
+  setText('r-total',pct(R.total_pct),cls(R.total_pct));
+  setText('r-total-s', !nil(R.month_pct)?'this month '+pct(R.month_pct):'\u00a0');
+  const net = isAcc ? ACC.net_profit : sc.net;
+  if(ACC.publish_money && !nil(net)){ setText('r-roi',money(net,true),cls(net)); setText('r-roi-s','ROI '+pct(R.roi_pct)); }
+  else { setText('r-roi',pct(R.roi_pct),cls(R.roi_pct)); setText('r-roi-s','return on capital'); }
+  setText('r-pf',num(T.profit_factor)); setText('r-pf-s', !nil(T.win_rate_pct)?'hits '+upct(T.win_rate_pct,1):'\u00a0');
+  setText('r-dd',ddpct(K.max_drawdown_pct)); setText('r-dd-s', nil(K.current_drawdown_pct)?'\u00a0':'now '+(K.current_drawdown_pct>0?'−'+upct(K.current_drawdown_pct):'at peak'));
+  setText('r-rec',num(K.recovery_factor)); setText('r-rec-s', !nil(K.longest_underwater_days)?'longest under water '+days(K.longest_underwater_days):'\u00a0');
+  setText('r-sharpe',num(K.sharpe)); setText('r-sharpe-s', !nil(K.sortino)?'Sortino '+num(K.sortino):(nil(R.total_pct)?'\u00a0':'needs 5 trading days'));
+}
+
+function drawLedger(sc){
+  const T=sc.trades||{}, R=sc.returns||{};
+  let items;
+  if(sc.kind==='account'){
+    if(!ACC.publish_money || nil(ACC.balance)){ $('ledger').hidden=true; return; }
+    items=[['Starting balance',money(ACC.starting_balance)],['Balance',money(ACC.balance)],['Equity',money(ACC.equity)],
+      ['Net profit','<span class="'+cls(ACC.net_profit)+'">'+money(ACC.net_profit,true)+'</span>'],
+      ['Floating','<span class="'+cls(ACC.floating_pct)+'">'+pct(ACC.floating_pct)+'</span>'],
+      ['Deposits − withdrawals',money((ACC.deposits||0)-(ACC.withdrawals||0))]];
+  } else {
+    if(sc.empty){ $('ledger').hidden=true; return; }
+    items = ACC.publish_money ? [
+      ['Net profit','<span class="'+cls(sc.net)+'">'+money(sc.net,true)+'</span>'],
+      ['Gross profit','<span class="pos">'+money(T.gross_profit)+'</span>'],
+      ['Gross loss','<span class="neg">'+money(-(T.gross_loss||0))+'</span>'],
+      ['Commission',money(T.commission)],['Swap',money(T.swap)],
+      ['Share of account profit',nil(R.share_of_profit_pct)?'—':upct(R.share_of_profit_pct,1)]
+    ] : [['Return',pct(R.total_pct)],['Trades',int(T.trades)],['Hits',upct(T.win_rate_pct,1)],['Profit factor',num(T.profit_factor)],['Max drawdown',ddpct((sc.risk||{}).max_drawdown_pct)],['Share of profit',upct(R.share_of_profit_pct,1)]];
+  }
+  $('ledger').innerHTML=items.map(i=>'<div><dt>'+i[0]+'</dt><dd>'+i[1]+'</dd></div>').join('');
+  $('ledger').hidden=false;
+}
+
+/* ---------- compare table ---------- */
+const CMP_COLS=[
+  {k:'name', t:'Bot', v:sc=>sc.name, f:null},
+  {k:'spark', t:'Curve', v:()=>0, f:null, nosort:true},
+  {k:'trades', t:'Trades', v:sc=>(sc.trades||{}).trades, f:int},
+  {k:'hits', t:'Hits', v:sc=>(sc.trades||{}).win_rate_pct, f:x=>upct(x,1)},
+  {k:'pf', t:'Profit factor', v:sc=>(sc.trades||{}).profit_factor, f:num},
+  {k:'ret', t:'Return', v:sc=>(sc.returns||{}).total_pct, f:pct, c:true},
+  {k:'net', t:'Net', v:sc=>sc.kind==='account'?ACC.net_profit:sc.net, f:x=>money(x,true), c:true, money:true},
+  {k:'mdd', t:'Max DD', v:sc=>(sc.risk||{}).max_drawdown_pct, f:ddpct, lowBest:true},
+  {k:'rec', t:'Recovery', v:sc=>(sc.risk||{}).recovery_factor, f:num},
+  {k:'sharpe', t:'Sharpe', v:sc=>(sc.risk||{}).sharpe, f:num},
+  {k:'exp', t:'Expectancy', v:sc=>(sc.trades||{}).expectancy_pct, f:x=>pct(x,3), c:true},
+  {k:'wst', t:'Best streak', v:sc=>(sc.trades||{}).max_consec_wins, f:int},
+  {k:'lst', t:'Worst streak', v:sc=>(sc.trades||{}).max_consec_losses, f:int, lowBest:true},
+  {k:'share', t:'Share', v:sc=>(sc.returns||{}).share_of_profit_pct, f:x=>nil(x)?'—':num(x,1)+'%'}
+];
+let cmpSort={k:null,dir:-1};
+
+function sparkline(sc){
+  const e=sc.equity||[]; if(e.length<2) return '';
+  const W=86,H=24, vs=e.map(p=>p.v), lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
+  const d=e.map((p,i)=>(i?'L':'M')+(i/(e.length-1)*W).toFixed(1)+' '+(H-2-(p.v-lo)/sp*(H-4)).toFixed(1)).join('');
+  const col=vs[vs.length-1]>=100?'#1E6B57':'#BE3A2B';
+  const y0=(H-2-(100-lo)/sp*(H-4)).toFixed(1);
+  return '<svg width="'+W+'" height="'+H+'" aria-hidden="true"><line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.2)" stroke-dasharray="2 2"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5"/></svg>';
+}
+
+function drawCompare(){
+  const rows=SCOPES.filter(sc=>!sc.empty);
+  if(rows.length<1) return;
+  const cols=CMP_COLS.filter(c=>!c.money||ACC.publish_money);
+  let list=rows.slice();
+  if(cmpSort.k){
+    const col=cols.find(c=>c.k===cmpSort.k);
+    const acc=list.filter(x=>x.kind==='account'), rest=list.filter(x=>x.kind!=='account');
+    rest.sort((a,b)=>{ const va=col.v(a), vb=col.v(b);
+      if(nil(va)) return 1; if(nil(vb)) return -1;
+      return typeof va==='string' ? cmpSort.dir*va.localeCompare(vb) : cmpSort.dir*(va-vb); });
+    list=acc.concat(rest);
+  }
+  const head='<thead><tr>'+cols.map(c=>'<th scope="col" data-k="'+c.k+'"'+(c.nosort?'':' tabindex="0"')+(cmpSort.k===c.k?' aria-sort="'+(cmpSort.dir<0?'descending':'ascending')+'"':'')+'>'+c.t+'</th>').join('')+'</tr></thead>';
+  const body=list.map(sc=>'<tr class="kind-'+sc.kind+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
+    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':magicLabel(sc))+'</small></span></span></td>';
+    if(c.k==='spark') return '<td class="spark">'+sparkline(sc)+'</td>';
+    const v=c.v(sc); return '<td class="'+(c.c?cls(v):'')+'">'+c.f(v)+'</td>';
+  }).join('')+'</tr>').join('');
+  $('cmp').innerHTML=head+'<tbody>'+body+'</tbody>';
+  $('cmp').querySelectorAll('th[data-k]').forEach(th=>{
+    const col=cols.find(c=>c.k===th.dataset.k); if(col.nosort) return;
+    const go=()=>{ if(cmpSort.k===col.k) cmpSort.dir*=-1; else { cmpSort.k=col.k; cmpSort.dir=col.lowBest?1:-1; if(col.k==='name') cmpSort.dir=1; } drawCompare(); };
+    th.addEventListener('click',go); th.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
+  $('cmp').querySelectorAll('tbody tr').forEach(tr=>{
+    const go=()=>{ selectScope(tr.dataset.id,true); $('record').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); };
+    tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{ if(e.key==='Enter'){ go(); } });
+  });
+}
+
+/* ---------- statistics ---------- */
+function statRows(id,rows){
+  $(id).innerHTML=rows.filter(Boolean).map(([l,v,c,tip])=>'<div><dt'+(tip?' title="'+esc(tip)+'"':'')+'>'+l+'</dt><dd class="'+(c||'')+'">'+v+'</dd></div>').join('');
+}
+function drawStats(sc){
+  const R=sc.returns||{}, K=sc.risk||{}, T=sc.trades||{}, M=ACC.publish_money, isAcc=sc.kind==='account';
+  const mp=(m,p,d=2,sign=true)=> M&&!nil(m) ? money(m,sign)+' <small style="font-weight:500;color:var(--muted)">('+pct(p,d)+')</small>' : pct(p,d);
+  statRows('st-returns',[
+    ['Total return',pct(R.total_pct),cls(R.total_pct), isAcc?'Time-weighted growth since the first day. Deposits and withdrawals are excluded.':'This bot\'s time-weighted contribution to the account.'],
+    ['ROI',pct(R.roi_pct),cls(R.roi_pct),'Net profit divided by starting balance plus deposits minus withdrawals.'],
+    !isAcc ? ['Share of account profit', nil(R.share_of_profit_pct)?'—':num(R.share_of_profit_pct,1)+'%', '', 'This bot\'s net profit as a share of the whole account\'s net profit. Can exceed 100% when other bots are losing.'] : null,
+    ['Annualised (CAGR)',nil(R.cagr_pct)?'after 30 days':pct(R.cagr_pct),cls(R.cagr_pct),'Compound annual growth rate, extrapolated from the record so far.'],
+    ['Year to date',pct(R.ytd_pct),cls(R.ytd_pct)],
+    ['This month',pct(R.month_pct),cls(R.month_pct)],
+    ['This week',pct(R.week_pct),cls(R.week_pct)],
+    ['Today',pct(R.today_pct),cls(R.today_pct),'Closed-trade result today, UTC.'],
+    ['Average month',pct(R.avg_month_pct),cls(R.avg_month_pct)],
+    ['Best month',pct(R.best_month_pct),cls(R.best_month_pct)],
+    ['Worst month',pct(R.worst_month_pct),cls(R.worst_month_pct)],
+    ['Winning months',upct(R.positive_months_pct,0)],
+    ['Best day',pct(R.best_day_pct),cls(R.best_day_pct)],
+    ['Worst day',pct(R.worst_day_pct),cls(R.worst_day_pct)],
+    ['Winning days',upct(R.positive_days_pct,1),'','Share of days with closed trades that ended positive.'],
+  ]);
+  statRows('st-risk',[
+    ['Max drawdown',ddpct(K.max_drawdown_pct),'neg','Largest fall from a peak in the daily closed-trade curve.'],
+    M&&!nil(K.max_drawdown_money) ? ['Max drawdown, money','−'+money(K.max_drawdown_money),'neg','Largest fall in cumulative profit, in account currency.'] : null,
+    ['Max floating drawdown',ddpct(K.max_floating_drawdown_pct),'neg','Includes losses on open trades, sampled every 15 minutes.'],
+    ['Current drawdown',nil(K.current_drawdown_pct)?'—':(K.current_drawdown_pct>0?'−'+upct(K.current_drawdown_pct):'at peak')],
+    ['Days since last peak',days(K.days_since_peak)],
+    ['Longest time under water',days(K.longest_underwater_days),'','Longest stretch between a peak and the next new high.'],
+    ['Drawdown periods',int(K.drawdown_episodes),'','How many times the curve fell below a previous peak.'],
+    ['Average recovery',days(K.avg_recovery_days),'','Average time from a peak back to a new high.'],
+    ['Recovery factor',num(K.recovery_factor),'','Net profit divided by the largest drawdown in money. Above 3 is solid.'],
+    ['Return / drawdown',num(K.return_dd_ratio),'','Total return divided by max drawdown, both in %.'],
+    ['Sharpe ratio',num(K.sharpe),'','Average daily return divided by its volatility, annualised over 252 trading days.'],
+    ['Sortino ratio',num(K.sortino),'','Like Sharpe, but only counts downside volatility.'],
+    ['Calmar ratio',num(K.calmar),'','Annualised return divided by max drawdown.'],
+    ['Ulcer index',num(K.ulcer_index),'','Measures how deep and how long the drawdowns are. Lower is calmer.'],
+    ['Volatility, annualised',upct(K.volatility_ann_pct)],
+    ['Daily VaR 95%',nil(K.var95_daily_pct)?'after 20 days':'−'+upct(K.var95_daily_pct),'','On 95% of trading days the loss has been smaller than this.'],
+  ]);
+  statRows('st-trades',[
+    ['Closed trades',int(T.trades)],
+    ['Won / lost',nil(T.wins)?'—':int(T.wins)+' / '+int(T.losses)],
+    ['Hits (win rate)',upct(T.win_rate_pct,1),'','Share of closed trades that ended in profit, costs included.'],
+    ['Profit factor',num(T.profit_factor),'','Gross profit divided by gross loss. Above 1 makes money.'],
+    ['Payoff ratio',num(T.payoff_ratio),'','Average winning trade divided by average losing trade.'],
+    ['Expectancy',mp(T.expectancy,T.expectancy_pct,3),cls(T.expectancy_pct),'Average result per trade.'],
+    ['Average win',M&&!nil(T.avg_win)?money(T.avg_win):upct(T.avg_win_pct,3),'pos'],
+    ['Average loss',M&&!nil(T.avg_loss)?'−'+money(T.avg_loss):(nil(T.avg_loss_pct)?'—':'−'+upct(T.avg_loss_pct,3)),'neg'],
+    ['Largest win',mp(T.largest_win,T.largest_win_pct),'pos'],
+    ['Largest loss',mp(T.largest_loss,T.largest_loss_pct),'neg'],
+    ['SQN',num(T.sqn),'','System Quality Number: how consistent the edge is per trade. Above 2 is good, above 3 excellent. Needs 10 trades.'],
+    ['Kelly',nil(T.kelly_pct)?'—':num(T.kelly_pct,1)+'%','','Theoretical optimal risk per trade from win rate and payoff. A ceiling, not a target.'],
+    ['Trades per week',nil(T.trades_per_week)?'—':T.trades_per_week.toFixed(1)],
+  ]);
+  const cs=T.current_streak;
+  statRows('st-streaks',[
+    ['Current streak',nil(cs)?'—':(cs>0?cs+' won':Math.abs(cs)+' lost'),cls(cs)],
+    ['Most wins in a row',int(T.max_consec_wins),'pos'],
+    ['Most losses in a row',int(T.max_consec_losses),'neg'],
+    ['Best winning run',mp(T.max_consec_win_money,T.max_consec_win_pct),'pos','Largest total gained during one uninterrupted series of winning trades.'],
+    ['Worst losing run',mp(T.max_consec_loss_money,T.max_consec_loss_pct),'neg','Largest total lost during one uninterrupted series of losing trades.'],
+    ['Average hold',hours(T.avg_hold_hours)],
+    ['Hold, winners',hours(T.avg_hold_win_hours)],
+    ['Hold, losers',hours(T.avg_hold_loss_hours),'','If losers are held much longer than winners, stops are being given too much room.'],
+    M ? ['Gross profit',money(T.gross_profit),'pos'] : null,
+    M ? ['Gross loss',nil(T.gross_loss)?'—':'−'+money(T.gross_loss),'neg'] : null,
+    M ? ['Commission',money(T.commission)] : null,
+    M ? ['Swap',money(T.swap),cls(T.swap)] : null,
+    ['First trade',T.first_trade?fmtDate(T.first_trade):'—'],
+    ['Last trade',T.last_trade?fmtDate(T.last_trade):'—'],
+  ]);
+  $('symlist').textContent = sc.symbols&&sc.symbols.length ? 'Instruments traded: '+sc.symbols.map(x=>x.s+' ('+x.n+')').join(', ') : '';
+  const cd=R.calendar_days;
+  $('sample-note').textContent = sc.empty ? 'This bot has no closed trades yet.' :
+    !cd ? '' : cd<90 ? 'The record covers '+cd+' days. Annualised figures and ratios are extrapolated from a short sample and will move a lot as more months come in.'
+    : 'Based on '+cd+' calendar days, '+(R.trading_days||'—')+' trading days and '+(sc.monthly||[]).length+' months on record.';
+}
+
+/* ---------- heatmap ---------- */
+function drawHeat(sc){
+  const mon=sc.monthly||[];
+  if(!mon.length){ $('heat').innerHTML='<tbody><tr><td class="nil" style="height:80px">No closed months yet.</td></tr></tbody>'; return; }
+  const years=[...new Set(mon.map(m=>+m.m.slice(0,4)))].sort();
+  const yearly={}; (sc.yearly||[]).forEach(y=>yearly[y.y]=y);
+  const maxAbs=Math.max(0.5,...mon.map(m=>Math.abs(m.r||0)));
+  const cell=(r,p,tot)=>{
+    if(nil(r)) return '<td class="nil'+(tot?' tot':'')+'">·</td>';
+    const a=Math.min(1,Math.abs(r)/maxAbs)*.78+.1;
+    const bg=r>=0?'rgba(30,107,87,'+a.toFixed(2)+')':'rgba(190,58,43,'+a.toFixed(2)+')';
+    return '<td class="'+(tot?'tot':'')+'" style="background:'+bg+';color:'+(a>.45?'#fff':'var(--sea)')+'"><span>'+pct(r,1)+'</span>'+(ACC.publish_money&&!nil(p)?'<small>'+money(p,true)+'</small>':'')+'</td>';
+  };
+  let h='<thead><tr><th></th>'+MONTHS.map(m=>'<th>'+m+'</th>').join('')+'<th>Year</th></tr></thead><tbody>';
+  years.forEach(y=>{
+    h+='<tr><td class="y">'+y+'</td>';
+    for(let i=1;i<=12;i++){ const m=mon.find(x=>x.m===y+'-'+String(i).padStart(2,'0')); h+=m?cell(m.r,m.pnl):'<td class="nil">·</td>'; }
+    const Y=yearly[y]; h+=Y?cell(Y.r,Y.pnl,true):'<td class="nil tot">·</td>'; h+='</tr>';
+  });
+  $('heat').innerHTML=h+'</tbody>';
+}
+
+/* ---------- SVG helpers ---------- */
+function niceTicks(lo,hi,n){
+  const span=hi-lo||1, raw=span/n, mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const step=[1,2,2.5,5,10].map(x=>x*mag).find(x=>x>=raw);
+  const out=[]; for(let v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) out.push(+v.toFixed(10)); return out;
+}
+const T=(x,y,txt,anchor,extra)=>'<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" font-family="Archivo" font-size="12" fill="#5C7185"'+(anchor?' text-anchor="'+anchor+'"':'')+(extra||'')+'>'+txt+'</text>';
+const emptyChart=id=>{ $(id).innerHTML='<p class="chart-cap">No closed trades yet.</p>'; };
+
+/* ---------- equity + drawdown ---------- */
+function setMode(m){ view.mode=m; document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.mode===m)); }
+
+function drawEquity(){
+  const sc=CUR_SCOPE, EQ=(sc&&sc.equity)||[];
+  const box=$('plot'), ddBox=$('plot-dd');
+  box.querySelectorAll('svg').forEach(n=>n.remove()); ddBox.querySelectorAll('svg').forEach(n=>n.remove());
+  if(!EQ.length){ ddBox.hidden=true; return; }
+  const empty=$('plot-empty'); if(empty) empty.remove();
+  ddBox.hidden=false;
+
+  let pts=EQ, base=100, basep=0;
+  if(view.range){
+    const last=new Date(EQ[EQ.length-1].d+'T00:00:00Z'), from=new Date(last-view.range*864e5);
+    let i=EQ.findIndex(p=>new Date(p.d+'T00:00:00Z')>=from); if(i<0) i=0;
+    pts=EQ.slice(i); if(i>0){ base=EQ[i-1].v; basep=EQ[i-1].p||0; }
+  }
+  const series=pts.length===1?[pts[0],pts[0]]:pts;
+  const mode = view.mode==='balance' && series.every(p=>!nil(p.b)) ? 'balance' : (view.mode==='profit' && series.every(p=>!nil(p.p)) ? 'profit' : 'growth');
+  const val = p => mode==='balance'?p.b : mode==='profit'?(p.p-basep) : (p.v/base-1)*100;
+  const fmt = v => mode==='growth' ? pct(v, 1) : money(v, mode==='profit').replace(/\.00$/,'');
+
+  const W=Math.max(320,box.clientWidth), H=W<560?230:320, PL=12, PR=W<560?60:76, PT=40, PB=28;
+  const vs=series.map(val);
+  const ref = mode==='balance' ? (view.range? vs[0] : (ACC.starting_balance ?? vs[0])) : 0;
+  let lo=Math.min(ref,...vs), hi=Math.max(ref,...vs);
+  const pad=(hi-lo)*.1 || (mode==='growth'?0.5:50); lo-=pad; hi+=pad;
+  const n=series.length-1||1;
+  const X=i=>PL+(i/n)*(W-PL-PR), Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  let line=''; series.forEach((p,i)=>{ line+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(val(p)).toFixed(1); });
+  const area=line+'L'+X(n).toFixed(1)+' '+(H-PB)+'L'+X(0).toFixed(1)+' '+(H-PB)+'Z';
+  const up=vs[vs.length-1]>=ref, col=up?'#1E6B57':'#BE3A2B';
+
+  const ticks=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.09)"/>'+T(W-PR+8,Y(v)+4,fmt(v))).join('');
+  let xl='',lastM='',lastX=-99;
+  series.forEach((p,i)=>{ const m=p.d.slice(0,7); if(m!==lastM){ lastM=m; const x=X(i); if(x-lastX>54&&x<W-PR-20){ const mm=+m.slice(5)-1; xl+=T(x,H-9,MONTHS[mm]+(mm===0||i===0?' '+m.slice(2,4):'')); lastX=x; } } });
+
+  box.insertAdjacentHTML('afterbegin','<svg id="eq" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Curve for '+esc(sc.name)+'">'+ticks+
+    '<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(ref).toFixed(1)+'" y2="'+Y(ref).toFixed(1)+'" stroke="rgba(15,44,66,.45)" stroke-dasharray="3 3"/>'+
+    '<path d="'+area+'" fill="'+(up?'rgba(30,107,87,.10)':'rgba(190,58,43,.08)')+'"/><path d="'+line+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linejoin="round"/>'+xl+
+    '<line id="cross" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#0F2C42" stroke-width="1" opacity="0"/><circle id="dot" r="4" fill="'+col+'" stroke="#F6F8F6" stroke-width="2" opacity="0"/></svg>');
+
+  const DH=W<560?90:110, DT=26, DB=8, dds=series.map(p=>p.dd||0), dmin=Math.min(-0.5,...dds)*1.1;
+  const DY=v=>DT+(v/dmin)*(DH-DT-DB);
+  let dl='M'+X(0).toFixed(1)+' '+DY(0).toFixed(1); series.forEach((p,i)=>{ dl+='L'+X(i).toFixed(1)+' '+DY(p.dd||0).toFixed(1); }); dl+='L'+X(n).toFixed(1)+' '+DY(0).toFixed(1)+'Z';
+  ddBox.insertAdjacentHTML('beforeend','<svg id="ddsvg" width="'+W+'" height="'+DH+'" viewBox="0 0 '+W+' '+DH+'" role="img" aria-label="Drawdown">'+
+    '<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+DY(0)+'" y2="'+DY(0)+'" stroke="rgba(15,44,66,.25)"/><path d="'+dl+'" fill="rgba(190,58,43,.28)" stroke="#BE3A2B" stroke-width="1"/>'+
+    T(W-PR+8,DY(dmin/1.1)+4,pct(dmin/1.1,1))+'<line id="cross2" y1="'+DT+'" y2="'+(DH-DB)+'" stroke="#0F2C42" stroke-width="1" opacity="0"/></svg>');
+
+  const ro=$('readout'), cross=$('cross'), cross2=$('cross2'), dot=$('dot');
+  const move=e=>{
+    const r=$('eq').getBoundingClientRect();
+    let i=Math.round(((e.clientX-r.left)-PL)/(W-PL-PR)*n); i=Math.max(0,Math.min(series.length-1,i));
+    const p=series[i], x=X(i);
+    [cross,cross2].forEach(c=>{c.setAttribute('x1',x);c.setAttribute('x2',x);c.setAttribute('opacity','.3');});
+    dot.setAttribute('cx',x); dot.setAttribute('cy',Y(val(p))); dot.setAttribute('opacity','1');
+    ro.hidden=false;
+    ro.innerHTML='<span>'+fmtDate(p.d)+'</span><span>growth <b>'+pct((p.v/base-1)*100)+'</b></span>'+
+      (!nil(p.p)?'<span>profit <b>'+money(p.p-basep,true)+'</b></span>':'')+
+      (!nil(p.b)?'<span>balance <b>'+money(p.b)+'</b></span>':'')+
+      '<span>drawdown <b>'+(p.dd<0?pct(p.dd):'0.00%')+'</b></span>';
+  };
+  const leave=()=>{ [cross,cross2,dot].forEach(c=>c.setAttribute('opacity','0')); ro.hidden=true; };
+  ['eq','ddsvg'].forEach(id=>{ $(id).addEventListener('pointermove',move); $(id).addEventListener('pointerleave',leave); });
+}
+
+/* ---------- histogram ---------- */
+function drawHist(sc){
+  const h=sc.trade_hist||[]; if(!h.some(b=>b.n)) return emptyChart('hist');
+  const box=$('hist'), W=Math.max(260,box.clientWidth), H=190, PB=24, PT=14;
+  const max=Math.max(...h.map(b=>b.n)), bw=W/h.length; let bars='';
+  h.forEach((b,i)=>{
+    const bh=(b.n/max)*(H-PT-PB), x=i*bw+2, y=H-PB-bh, neg=b.hi<=0;
+    bars+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(bw-4).toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+(neg?'#BE3A2B':'#1E6B57')+'" opacity="'+(neg?.8:1)+'"><title>'+pct(b.lo)+' to '+pct(b.hi)+': '+b.n+' trades</title></rect>';
+    if(b.n) bars+=T(x+(bw-4)/2,y-4,b.n,'middle',' font-size="10.5"');
+  });
+  const mid=h.length/2*bw;
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trade result histogram">'+bars+
+    '<line x1="0" x2="'+W+'" y1="'+(H-PB)+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.3)"/><line x1="'+mid+'" x2="'+mid+'" y1="'+PT+'" y2="'+(H-PB+4)+'" stroke="rgba(15,44,66,.45)" stroke-dasharray="3 3"/>'+
+    T(2,H-6,pct(h[0].lo))+T(mid,H-6,'0','middle')+T(W-2,H-6,pct(h[h.length-1].hi),'end')+'</svg>';
+}
+
+/* ---------- horizontal / vertical bars ---------- */
+function hbars(id, items, label){
+  if(!items.length || !items.some(x=>x.trades)) return emptyChart(id);
+  const box=$(id), W=Math.max(240,box.clientWidth), row=28, H=items.length*row+6, LW=40, RW=64;
+  const max=Math.max(0.01,...items.map(x=>Math.abs(x.pnl_pct)));
+  const hasNeg=items.some(x=>x.pnl_pct<0), zero=hasNeg?LW+(W-LW-RW)/2:LW, span=hasNeg?(W-LW-RW)/2:(W-LW-RW);
+  let g='';
+  items.forEach((x,i)=>{
+    const y=i*row+6, len=Math.abs(x.pnl_pct)/max*span, bx=x.pnl_pct>=0?zero:zero-len, c=x.pnl_pct>=0?'#1E6B57':'#BE3A2B';
+    g+=T(0,y+14,label(x))+'<rect x="'+bx.toFixed(1)+'" y="'+(y+3)+'" width="'+Math.max(1,len).toFixed(1)+'" height="15" fill="'+c+'"><title>'+x.trades+' trades</title></rect>'+T(W,y+14,pct(x.pnl_pct,1),'end',' font-weight="600" fill="'+c+'"');
+  });
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img">'+'<line x1="'+zero+'" x2="'+zero+'" y1="0" y2="'+H+'" stroke="rgba(15,44,66,.3)"/>'+g+'</svg>';
+}
+function drawWeekday(sc){ hbars('weekday',(sc.weekday||[]).filter(x=>x.trades>0||['Mon','Tue','Wed','Thu','Fri'].includes(x.d)),x=>x.d); }
+function drawHours(sc){
+  const h=sc.hours||[]; if(!h.some(x=>x.trades)) return emptyChart('hours');
+  const box=$('hours'), W=Math.max(260,box.clientWidth), H=190, PB=22, PT=10, bw=W/24;
+  const max=Math.max(0.01,...h.map(x=>Math.abs(x.pnl_pct))), mid=PT+(H-PT-PB)/2, half=(H-PT-PB)/2;
+  let g='';
+  h.forEach((x,i)=>{
+    const len=Math.abs(x.pnl_pct)/max*half, y=x.pnl_pct>=0?mid-len:mid, c=x.pnl_pct>=0?'#1E6B57':'#BE3A2B';
+    g+='<rect x="'+(i*bw+1).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(bw-2).toFixed(1)+'" height="'+Math.max(x.trades?1:0,len).toFixed(1)+'" fill="'+c+'"><title>'+String(x.h).padStart(2,'0')+':00 UTC — '+x.trades+' trades, '+pct(x.pnl_pct)+'</title></rect>';
+    if(i%3===0) g+=T(i*bw+bw/2,H-6,String(x.h).padStart(2,'0'),'middle',' font-size="11"');
+  });
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Result by hour">'+'<line x1="0" x2="'+W+'" y1="'+mid+'" y2="'+mid+'" stroke="rgba(15,44,66,.3)"/>'+g+'</svg>';
+}
+
+/* ---------- long / short + recent ---------- */
+function drawSides(sc){
+  const S=sc.sides||{}, M=ACC.publish_money;
+  if(!S.long && !S.short){ $('sides').innerHTML='<tbody><tr><td>—</td></tr></tbody>'; $('recent').innerHTML=''; $('recent-cap').textContent=''; return; }
+  const row=(name,x)=>x&&x.trades?'<tr><td>'+name+'</td><td>'+int(x.trades)+'</td><td>'+upct(x.win_rate_pct,1)+'</td><td>'+num(x.profit_factor)+'</td><td class="'+cls(x.net_pct)+'">'+(M&&!nil(x.net)?money(x.net,true):pct(x.net_pct))+'</td></tr>'
+                                 :'<tr><td>'+name+'</td><td>0</td><td>—</td><td>—</td><td>—</td></tr>';
+  $('sides').innerHTML='<thead><tr><th></th><th>Trades</th><th>Hits</th><th>PF</th><th>Net</th></tr></thead><tbody>'+row('Long',S.long)+row('Short',S.short)+'</tbody>';
+  const r=sc.recent||[];
+  $('recent').innerHTML=r.map(x=>'<span class="'+(x>0?'w':'l')+'" title="'+(x>0?'Win':'Loss')+'"></span>').join('');
+  const w=r.filter(x=>x>0).length;
+  $('recent-cap').textContent=r.length?'Last '+r.length+' closed trades, oldest first: '+w+' won, '+(r.length-w)+' lost.':'';
+}
+
+/* ---------- correlation ---------- */
+function drawCorr(c){
+  if(!c || !c.ids || c.ids.length<2) return;
+  const name=id=>{ const sc=scopeById(id); return sc?sc.name:id; };
+  let h='<thead><tr><th></th>'+c.ids.map(id=>'<th scope="col">'+esc(name(id))+'</th>').join('')+'</tr></thead><tbody>';
+  c.ids.forEach((id,i)=>{
+    h+='<tr data-id="'+esc(id)+'"><th scope="row">'+esc(name(id))+'</th>';
+    c.m[i].forEach((v,j)=>{
+      if(nil(v)) { h+='<td class="nil">·</td>'; return; }
+      const a=i===j?0.12:Math.min(1,Math.abs(v))*.8+.05;
+      const bg=v>=0?'rgba(30,107,87,'+a.toFixed(2)+')':'rgba(190,58,43,'+a.toFixed(2)+')';
+      h+='<td style="background:'+bg+';color:'+(a>.5?'#fff':'var(--sea)')+'" title="'+esc(name(id))+' vs '+esc(name(c.ids[j]))+'">'+(i===j?'—':v.toFixed(2))+'</td>';
+    });
+    h+='</tr>';
+  });
+  $('corr').innerHTML=h+'</tbody>';
+  $('corr').querySelectorAll('tbody tr').forEach(tr=>{ tr.style.cursor='pointer'; tr.addEventListener('click',()=>selectScope(tr.dataset.id,true)); });
+  $('correlation').hidden=false;
+}
+
+/* ---------- roster ---------- */
 function drawRoster(strats){
-  document.getElementById('roster').innerHTML = strats.map(s=>{
-    const live = s.status==='live';
-    return '<tr class="'+(live?'':'pending')+'">'+
-      '<td>'+flagSVG(s.flag)+'</td>'+
-      '<td class="name">'+s.name+'</td>'+
-      '<td class="sym">'+s.symbols+'</td>'+
-      '<td class="sym">'+s.style+'</td>'+
-      '<td class="st '+(live?'live':'testing')+'">'+(live?'Sailing since '+(s.since||'—'):'In the yard')+'</td>'+
-    '</tr>';
+  const byFlag={};
+  SCOPES.forEach(sc=>{ if(sc.flag && !sc.empty && (!byFlag[sc.flag] || sc.kind==='group')) byFlag[sc.flag]=sc; });
+  const vals=Object.values(byFlag).map(sc=>Math.abs((sc.returns||{}).total_pct||0));
+  const maxAbs=Math.max(0.0001,...vals);
+  $('roster').innerHTML=strats.map(s=>{
+    const live=s.status==='live', sc=byFlag[s.flag], T=sc?(sc.trades||{}):{}, r=sc?(sc.returns||{}).total_pct:null;
+    const bar=!nil(r)?'<span class="contrib"><span class="'+cls(r)+'">'+pct(r)+'</span><i class="'+(r<0?'n':'')+'" style="width:'+Math.round(Math.abs(r)/maxAbs*60)+'px"></i></span>':'—';
+    return '<tr class="'+(live?'':'pending')+'"'+(sc?' data-id="'+esc(sc.id)+'" style="cursor:pointer"':'')+'>'+
+      '<td>'+flagSVG(s.flag)+'</td><td class="name">'+esc(s.name)+'</td><td class="sym">'+esc(s.symbols)+'</td><td class="sym">'+esc(s.style)+'</td>'+
+      '<td class="r">'+(sc?int(T.trades):'—')+'</td><td class="r">'+(sc?upct(T.win_rate_pct,1):'—')+'</td><td class="r">'+(sc?num(T.profit_factor):'—')+'</td>'+
+      '<td class="r">'+bar+'</td><td class="st '+(live?'live':'testing')+'">'+(live?'Sailing since '+(s.since?fmtDate(s.since):'—'):'In the yard')+'</td></tr>';
   }).join('');
+  $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>{ selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
 }
 
-function drawMetrics(m){
-  const rows=[
-    ['Closed trades', m.trades ?? '—'],
-    ['Winning trades', m.win_rate_pct!=null ? m.win_rate_pct.toFixed(1)+'%' : '—'],
-    ['Profit factor', m.profit_factor!=null ? m.profit_factor.toFixed(2) : '—'],
-    ['Best month', m.best_month_pct!=null ? pct(m.best_month_pct) : '—'],
-    ['Worst month', m.worst_month_pct!=null ? pct(m.worst_month_pct) : '—'],
-    ['Average hold', m.avg_hold_hours!=null ? m.avg_hold_hours.toFixed(1)+' h' : '—'],
-    ['Trades per week', m.trades_per_week!=null ? m.trades_per_week.toFixed(1) : '—'],
-    ['Days live', m.days_live ?? '—']
-  ];
-  document.getElementById('metrics').innerHTML =
-    rows.map(r=>'<div><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>').join('');
-}
-
-function drawPlot(eq){
-  if(!eq || eq.length<2) return;
-  document.getElementById('plot-empty').remove();
-  const W=1000,H=300,PL=8,PR=54,PT=18,PB=26;
-  const vs=eq.map(p=>p.v);
-  let lo=Math.min(100,...vs), hi=Math.max(100,...vs);
-  const pad=(hi-lo)*.12 || 2; lo-=pad; hi+=pad;
-  const X=i=>PL+(i/(eq.length-1))*(W-PL-PR);
-  const Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
-
-  let line='', area='';
-  eq.forEach((p,i)=>{ line += (i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)+' '; });
-  area = line+'L'+X(eq.length-1).toFixed(1)+' '+Y(lo)+' L'+X(0)+' '+Y(lo)+' Z';
-
-  const ticks=[lo,(lo+hi)/2,hi].map(v=>
-    '<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.10)"/>'+
-    '<text x="'+(W-PR+9)+'" y="'+(Y(v)+4).toFixed(1)+'" font-family="Archivo" font-size="13" fill="#5C7185">'+v.toFixed(0)+'</text>'
-  ).join('');
-
-  const base='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(100).toFixed(1)+'" y2="'+Y(100).toFixed(1)+'" stroke="rgba(15,44,66,.45)" stroke-dasharray="3 3"/>';
-  const first=eq[0].d, last=eq[eq.length-1].d;
-
-  document.getElementById('plot').insertAdjacentHTML('afterbegin',
-    '<svg id="eq" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" style="height:300px">'+
-      ticks+base+
-      '<path d="'+area+'" fill="rgba(30,107,87,.10)"/>'+
-      '<path d="'+line+'" fill="none" stroke="#1E6B57" stroke-width="2.2" stroke-linejoin="round"/>'+
-      '<line id="cross" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#0F2C42" stroke-width="1" opacity="0"/>'+
-      '<circle id="dot" r="4" fill="#1E6B57" opacity="0"/>'+
-      '<text x="'+PL+'" y="'+(H-6)+'" font-family="Archivo" font-size="13" fill="#5C7185">'+first+'</text>'+
-      '<text x="'+(W-PR)+'" y="'+(H-6)+'" text-anchor="end" font-family="Archivo" font-size="13" fill="#5C7185">'+last+'</text>'+
-    '</svg>');
-
-  const svg=document.getElementById('eq'), ro=document.getElementById('readout');
-  const cross=document.getElementById('cross'), dot=document.getElementById('dot');
-  svg.addEventListener('pointermove',e=>{
-    const r=svg.getBoundingClientRect();
-    const i=Math.round(((e.clientX-r.left)/r.width*W-PL)/(W-PL-PR)*(eq.length-1));
-    const p=eq[Math.max(0,Math.min(eq.length-1,i))]; if(!p) return;
-    const x=X(eq.indexOf(p));
-    cross.setAttribute('x1',x); cross.setAttribute('x2',x); cross.setAttribute('opacity','.35');
-    dot.setAttribute('cx',x); dot.setAttribute('cy',Y(p.v)); dot.setAttribute('opacity','1');
-    ro.hidden=false; ro.innerHTML=p.d+' &nbsp;<b>'+pct(p.v-100)+'</b>';
-  });
-  svg.addEventListener('pointerleave',()=>{
-    cross.setAttribute('opacity','0'); dot.setAttribute('opacity','0'); ro.hidden=true;
-  });
-}
-
-function setRail(s){
-  const set=(id,txt,c)=>{const el=document.getElementById(id);el.textContent=txt;if(c)el.classList.add(c);};
-  const h=s.headline||{};
-  if(h.return_since_inception_pct!=null) set('r-total',pct(h.return_since_inception_pct),cls(h.return_since_inception_pct));
-  if(h.month_to_date_pct!=null) set('r-month',pct(h.month_to_date_pct),cls(h.month_to_date_pct));
-  if(h.max_drawdown_pct!=null) set('r-dd','−'+Math.abs(h.max_drawdown_pct).toFixed(1)+'%');
-  const live=(s.strategies||[]).filter(x=>x.status==='live').length;
-  set('r-fleet',live+' of 10');
-}
+/* ---------- controls & boot ---------- */
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
+document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',()=>{ view.range=+b.dataset.range; document.querySelectorAll('[data-range]').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawEquity(); }));
 
 (async function(){
+  const src=new URLSearchParams(location.search).has('preview')?'stats.preview.json':'stats.json';
   let s=null;
-  try{
-    const res=await fetch('stats.json?t='+Date.now(),{cache:'no-store'});
-    if(res.ok) s=await res.json();
-  }catch(e){ /* page stays in its waiting state */ }
-
+  try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
   const strats=(s&&s.strategies&&s.strategies.length===10)?s.strategies:FALLBACK;
-  drawHoist(strats); drawRoster(strats);
-  drawMetrics((s&&s.metrics)||{});
+  drawHoist(strats);
+  if(!s){ drawRoster(strats); return; }
 
-  if(s){
-    setRail(s);
-    drawPlot(s.equity);
-    if(s.updated_utc){
-      document.getElementById('stamp-updated').textContent='Published from the account '+ago(s.updated_utc)+'.';
-    }
-    if(s.verified_url){
-      document.getElementById('stamp-verify').innerHTML='<a href="'+s.verified_url+'">Independently verified record</a>';
-    }
-  }
+  DATA=s; ACC=s.account||{}; if(ACC.currency) CUR=ACC.currency;
+  SCOPES=normalise(s);
+  drawTicket(s);
+  if(s.updated_utc) $('stamp-updated').textContent='Published from the account '+ago(s.updated_utc)+'.';
+  if(s.verified_url) $('stamp-verify').innerHTML='<a href="'+esc(s.verified_url)+'">Independently verified record</a>';
+  drawRoster(strats);
+  if(!SCOPES.length) return;
+
+  buildSelector(); drawCompare(); drawCorr(s.correlation);
+  const m=location.hash.match(/bot=([\w-]+)/);
+  selectScope(m?m[1]:'all',false);
+  window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
+
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); },120); }).observe(document.body);
 })();
 </script>
 </body>
