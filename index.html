@@ -384,6 +384,11 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 .pnlrow .track i{position:absolute;top:0;height:16px;display:block}
 .pnlrow .track b{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--rule-strong)}
 .pnlrow .val{text-align:right;white-space:nowrap}
+.pnlrow .nm small{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
+.pnltotal{display:grid;grid-template-columns:minmax(120px,220px) 1fr 110px;gap:14px;padding:10px 0 0;border-top:2px solid var(--sea);margin-top:-1px;font:700 14px Archivo}
+.pnltotal .val{text-align:right;white-space:nowrap}
+.pnlnote{font:500 12.5px/1.5 Archivo;color:var(--muted);margin:8px 0 0}
+@media (max-width:720px){ .pnltotal{grid-template-columns:110px 1fr 84px;font-size:13px} }
 .lab{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .mcstats{display:grid;grid-template-columns:repeat(3,1fr);margin:0;border:1px solid var(--rule);border-top:0;background:var(--panel)}
 .mcstats div{padding:12px 14px;border-right:1px solid var(--rule);border-top:1px solid var(--rule)}
@@ -781,6 +786,20 @@ const PRODUCTS = {
 function applyProducts(strats){
   strats.forEach(st=>{ const P=PRODUCTS[st.flag]; if(!P || st.product) return;
     st.callsign = st.name!==P.name ? st.name : null; st.name=P.name; st.product=P; });
+}
+/* A bot's net is the sum of its own closed trades (tl.p). Older publisher
+   versions filtered by the magic of each deal, so a position closed with a
+   different magic (by hand, by stop-out) dropped out of its bot's net. */
+function fixNets(){
+  if(!ACC.publish_money) return;
+  SCOPES.forEach(sc=>{
+    if(sc.kind==='account' || !sc.tl || !Array.isArray(sc.tl.p) || !sc.tl.p.length) return;
+    const sum=Math.round(sc.tl.p.reduce((a,b)=>a+(+b||0),0)*100)/100;
+    if(nil(sc.net) || Math.abs(sum-sc.net)>=0.01){
+      sc.net=sum;
+      if(sc.returns && !nil(ACC.net_profit) && ACC.net_profit) sc.returns.share_of_profit_pct=Math.round(sum/ACC.net_profit*1000)/10;
+    }
+  });
 }
 function labelScopes(strats){
   const byFlag={}; strats.forEach(st=>byFlag[st.flag]=st);
@@ -1401,19 +1420,37 @@ function drawFlows(sc){
   $('flows').hidden=false;
 }
 
-/* ---------- P&L by bot ---------- */
+/* ---------- P&L by bot ----------
+   One row per bot (per signal flag): the flag's group if it has several
+   magic numbers, otherwise its single magic. Loose magic numbers are left out;
+   they are already inside their bot's row. */
+function botScopes(){
+  const out=[];
+  LETTERS.forEach(l=>{
+    const g=SCOPES.find(x=>x.flag===l&&x.kind==='group'&&!x.empty) || SCOPES.find(x=>x.flag===l&&x.kind!=='account'&&!x.empty);
+    if(g) out.push(g);
+  });
+  return out;
+}
 function drawPnlBars(){
-  const rows=SCOPES.filter(x=>x.kind!=='account' && !x.empty);
+  const rows=botScopes();
   if(!rows.length){ $('pnl-wrap').hidden=true; return; }
   const M=ACC.publish_money, v=x=>M&&!nil(x.net)?x.net:(x.returns||{}).total_pct;
   rows.sort((a,b)=>(v(b)||0)-(v(a)||0));
   const max=Math.max(1e-9,...rows.map(x=>Math.abs(v(x)||0))), hasNeg=rows.some(x=>v(x)<0);
-  $('pnlbars').innerHTML=rows.map(x=>{
+  const fmt=val=>M?money(val,true):pct(val);
+  let html=rows.map(x=>{
     const val=v(x)||0, w=Math.abs(val)/max*(hasNeg?50:100), left=hasNeg?(val>=0?50:50-w):0;
-    return '<div class="pnlrow" data-id="'+esc(x.id)+'" title="'+esc(x.name)+'"><span class="nm">'+(x.flag?flagSVG(x.flag):'')+esc(x.name)+(x.kind==='group'?' <span class="tag">group</span>':'')+'</span>'+
+    return '<div class="pnlrow" data-id="'+esc(x.id)+'" title="'+esc(x.name)+'"><span class="nm">'+(x.flag?flagSVG(x.flag):'')+esc(x.name)+(x.callsign?'<small>'+esc(x.callsign)+'</small>':'')+'</span>'+
       '<span class="track">'+(hasNeg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.4,w)+'%;background:'+(val>=0?'#1E6B57':'#BE3A2B')+'"></i></span>'+
-      '<span class="val '+cls(val)+'">'+(M&&!nil(x.net)?money(val,true):pct(val))+'</span></div>';
+      '<span class="val '+cls(val)+'">'+fmt(val)+'</span></div>';
   }).join('');
+  const total=rows.reduce((a,x)=>a+(v(x)||0),0);
+  html+='<div class="pnltotal"><span>All bots</span><span></span><span class="val '+cls(total)+'">'+fmt(total)+'</span></div>';
+  if(M && !nil(ACC.net_profit) && Math.abs(ACC.net_profit-total)>=0.01){
+    html+='<p class="pnlnote">Whole account: <b class="'+cls(ACC.net_profit)+'">'+money(ACC.net_profit,true)+'</b>. The '+money(ACC.net_profit-total,true)+' difference is manual trades, magic numbers not assigned to any bot, or costs of positions still open.</p>';
+  }
+  $('pnlbars').innerHTML=html;
   $('pnlbars').querySelectorAll('.pnlrow').forEach(r=>r.addEventListener('click',()=>{ selectScope(r.dataset.id,true); $('record').scrollIntoView(); }));
   $('pnl-wrap').hidden=false;
 }
@@ -1629,6 +1666,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   SCOPES=normalise(s);
   SCOPES.forEach(sc=>{ if(sc.equity) sc.equity=normaliseEquity(sc.equity, sc.kind==='account'?ACC.starting_balance:null); });
   labelScopes(strats);
+  fixNets();
   drawTicket(s);
   if(s.updated_utc) $('stamp-updated').textContent='Published from the account '+ago(s.updated_utc)+'.';
   if(s.verified_url) $('stamp-verify').innerHTML='<a href="'+esc(s.verified_url)+'">Independently verified record</a>';
