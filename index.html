@@ -249,11 +249,17 @@ table.cmp tbody tr{cursor:pointer}
 table.cmp tbody tr:hover td{background:rgba(246,248,246,.7)}
 table.cmp tr.sel td{background:var(--panel);box-shadow:inset 0 2px 0 var(--sea),inset 0 -2px 0 var(--sea)}
 table.cmp tr.kind-account td{border-bottom:1px solid var(--rule-strong)}
-table.cmp tr.kind-magic td:first-child{padding-left:18px}
+table.cmp tr.kind-magic.child td:first-child{padding-left:22px}
+table.cmp tr.kind-magic.child .bn::before{content:"";width:10px;height:14px;border-left:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);margin:-10px 2px 0 0;flex:none}
+table.cmp .bn .cs{font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
 table.cmp .bn{display:flex;align-items:center;gap:10px}
 table.cmp .bn svg{width:27px;height:18px;flex:none;box-shadow:0 1px 0 rgba(15,44,66,.25)}
 table.cmp .bn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
-table.cmp td.spark svg{display:block}
+table.cmp td.spark svg{display:block;overflow:visible}
+.scopebar .meta a.prodlink{color:var(--brass);font-weight:600;text-decoration:none}
+.scopebar .meta a.prodlink:hover{text-decoration:underline}
+table.roster td.name a{color:inherit;text-decoration:underline;text-decoration-color:var(--brass);text-underline-offset:4px}
+table.roster td.name small{display:block;font:500 12px Archivo;color:var(--muted)}
 .tag{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--rule-strong);padding:0 5px;margin-left:6px;vertical-align:1px}
 
 /* correlation */
@@ -388,6 +394,19 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 .legendline i{display:inline-block;width:14px;height:8px;margin-right:6px;vertical-align:0}
 @media (max-width:980px){ .lab{grid-template-columns:1fr} }
 @media (max-width:720px){ .pnlrow{grid-template-columns:110px 1fr 84px;font-size:13px} .mcstats{grid-template-columns:1fr 1fr} .mcstats div:nth-child(3n){border-right:1px solid var(--rule)} .mcstats div:nth-child(2n){border-right:0} }
+
+/* ---- v6: chart polish and extra cards (from your version) ---- */
+#plot,#plot-dd{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
+#plot{min-height:330px}
+#plot svg,#plot-dd svg{shape-rendering:geometricPrecision}
+#eq path.eqline{filter:drop-shadow(0 2px 2px rgba(15,44,66,.12))}
+.extra-charts{display:grid;grid-template-columns:1.25fr .75fr;gap:20px;margin-top:24px}
+.extra-card{background:var(--panel);border:1px solid var(--rule);padding:18px 18px 12px}
+.extra-card h3{font:700 15px Archivo;margin:0 0 3px}
+.extra-card p{font:500 12px Archivo;color:var(--muted);margin:0 0 8px}
+.extra-chart{min-height:230px}
+.extra-chart svg{display:block;width:100%}
+@media(max-width:900px){.extra-charts{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -498,6 +517,11 @@ footer .legal p{margin:0 0 10px;max-width:74em}
     <dl class="ledger" id="ledger" hidden></dl>
     <div class="flows" id="flows" hidden></div>
 
+    <div class="extra-charts" id="extra-charts" hidden>
+      <article class="extra-card"><h3>Monthly performance</h3><p>Return for each month, with the compounded total as a line.</p><div class="extra-chart" id="extra-monthly"></div></article>
+      <article class="extra-card"><h3>Trade distribution</h3><p>How closed trades spread between losses and wins, % of balance.</p><div class="extra-chart" id="extra-hist"></div></article>
+    </div>
+
     <p class="stamp">
       <span id="stamp-updated">Waiting for first publication</span>
       <span id="stamp-verify"></span>
@@ -605,7 +629,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 <section id="fleet">
   <div class="wrap">
     <h2>The fleet</h2>
-    <p class="sub">Ten bots, added one at a time. A bot joins the account only once it has passed out-of-sample testing. Until then it stays in the yard.</p>
+    <p class="sub">Ten bots, added one at a time. A bot joins the account only once it has passed out-of-sample testing. Until then it stays in the yard. Flag A is CandleGrid Pro and flag B is RegimeSwitch Pro, both also sold on their own; their pages show their Armada record too.</p>
     <div class="scroll-roster">
       <table class="roster">
         <thead><tr><th>Flag</th><th>Bot</th><th>Instruments</th><th>Approach</th><th class="r">Trades</th><th class="r">Hits</th><th class="r">Profit factor</th><th class="r">Contribution</th><th>Status</th></tr></thead>
@@ -715,7 +739,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
           <li><a href="https://wisfli.com/">wisfli.com</a></li>
           <li><a href="https://jsgaston.github.io/candlegrid-web-en/">CandleGrid Pro</a></li>
           <li><a href="https://jsgaston.github.io/regimeswitch-web-en/">RegimeSwitch Pro</a></li>
-          <li><a href="mailto:jsgastoniriartecabrera@gmail.com">Email</a></li>
+          <li><a href="mailto:support@wisfli.com">support@wisfli.com</a></li>
         </ul>
       </div>
     </div>
@@ -745,6 +769,42 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
 const flagSVG = l => F[l] ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>' : '';
 const FALLBACK = LETTERS.map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
 const $ = id => document.getElementById(id);
+
+/* ---------- which flag is which product ----------
+   The publisher keeps the signal names (Alfa, Bravo, Charlie...). Bots that are
+   also sold on their own get their product name and a link to their page.
+   Matched by flag, so renaming a bot in config.json never breaks this. */
+const PRODUCTS = {
+  A:{name:'CandleGrid Pro',   url:'https://jsgaston.github.io/candlegrid-web-en/'},
+  B:{name:'RegimeSwitch Pro', url:'https://jsgaston.github.io/regimeswitch-web-en/'}
+};
+function applyProducts(strats){
+  strats.forEach(st=>{ const P=PRODUCTS[st.flag]; if(!P || st.product) return;
+    st.callsign = st.name!==P.name ? st.name : null; st.name=P.name; st.product=P; });
+}
+function labelScopes(strats){
+  const byFlag={}; strats.forEach(st=>byFlag[st.flag]=st);
+  const owner={};                                   // magic -> strategy that owns it
+  strats.forEach(st=>(st.magics||[]).forEach(m=>owner[m]=st));
+  SCOPES.filter(sc=>sc.kind==='group'&&sc.flag).forEach(g=>(g.magics||[]).forEach(m=>{ if(!owner[m]) owner[m]=byFlag[g.flag]; }));
+  SCOPES.forEach(sc=>{
+    if(sc.kind==='account') return;
+    if(sc.flag && PRODUCTS[sc.flag]){ const P=PRODUCTS[sc.flag]; if(sc.name!==P.name){ sc.callsign=sc.name; sc.name=P.name; } sc.product=P; }
+    if(sc.kind==='magic' && !sc.flag && sc.magics && owner[sc.magics[0]]){
+      const o=owner[sc.magics[0]]; sc.parent=o.name; sc.parentFlag=o.flag; sc.child=true;
+    }
+  });
+  // account first, then each flag with its own magic numbers underneath, then the rest
+  const order=[], used=new Set(), push=x=>{ if(x&&!used.has(x)){ used.add(x); order.push(x); } };
+  SCOPES.filter(x=>x.kind==='account').forEach(push);
+  LETTERS.forEach(l=>{
+    SCOPES.filter(x=>x.flag===l&&x.kind==='group').forEach(push);
+    SCOPES.filter(x=>x.flag===l&&x.kind!=='group').forEach(push);
+    SCOPES.filter(x=>x.child&&x.parentFlag===l).forEach(push);
+  });
+  SCOPES.forEach(push);
+  SCOPES=order;
+}
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- formatting ---------- */
@@ -776,6 +836,7 @@ let DATA=null, SCOPES=[], CUR_SCOPE=null, ACC={};
 const view={mode:'growth', range:0, series:'trade', roll:'pf'};
 const scopeById = id => SCOPES.find(x=>x.id===id);
 const magicLabel = sc => sc.magics && sc.magics.length ? (sc.magics.length===1?'magic '+sc.magics[0]:'magics '+sc.magics.join(', ')) : '';
+const subLabel = sc => [sc.callsign?'signal '+sc.callsign:'', magicLabel(sc), sc.parent?'part of '+sc.parent:''].filter(Boolean).join(' · ');
 
 /* ---------- adapter for older stats.json ---------- */
 function normalise(s){
@@ -832,10 +893,13 @@ function selectScope(id, push){
   const T=sc.trades||{};
   $('scope-meta').innerHTML=
     (sc.flag?'<span class="flagmini">'+flagSVG(sc.flag)+'</span>':'')+
+    (sc.callsign?'<span>signal <b>'+esc(sc.callsign)+'</b></span>':'')+
     (magicLabel(sc)?'<span>'+esc(magicLabel(sc))+'</span>':'')+
+    (sc.parent?'<span>part of <b>'+esc(sc.parent)+'</b></span>':'')+
     (T.trades?'<span><b>'+int(T.trades)+'</b> trades</span>':'')+
     (T.first_trade?'<span>trading since <b>'+fmtDate(T.first_trade)+'</b></span>':'')+
-    (!isAcc && !nil((sc.returns||{}).share_of_profit_pct)?'<span><b>'+pct(sc.returns.share_of_profit_pct,1).replace('+','')+'</b> of account profit</span>':'');
+    (!isAcc && !nil((sc.returns||{}).share_of_profit_pct)?'<span><b>'+pct(sc.returns.share_of_profit_pct,1).replace('+','')+'</b> of account profit</span>':'')+
+    (sc.product?'<a class="prodlink" href="'+esc(sc.product.url)+'">'+esc(sc.product.name)+' page →</a>':'');
   $('record-title').textContent = isAcc ? 'The account, as it stands' : sc.name+': its record';
   $('stats-title').textContent = isAcc ? 'Every number the account produces' : 'Every number for '+sc.name;
   const bb=$('btn-balance'); bb.disabled=!isAcc||!ACC.publish_money;
@@ -850,7 +914,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRolling(sc); drawMC(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
 }
@@ -912,13 +976,50 @@ const CMP_COLS=[
 ];
 let cmpSort={k:null,dir:-1};
 
+/* compact curve for the comparison table.
+   Uses the richest series available: closed trades once there are a few,
+   hourly equity before that, daily equity as a last resort. Drawn with the
+   same monotone cubic as the big chart, so it bends but never invents a peak. */
+function sparkSeries(sc){
+  const tl=sc.tl, n=(tl&&tl.t)?tl.t.length:0, live=sc.live||[], eq=sc.equity||[];
+  let out;
+  if(n>=6 || (n>=1 && live.length<3)){
+    out=[{x:0,v:100}]; let v=100;
+    for(let i=0;i<n;i++){ v*=1+tl.r[i]/100; out.push({x:i+1,v}); }
+  } else if(live.length>=3) out=live.map(([t,v])=>({x:t,v}));
+  else out=eq.map(e=>({x:Date.parse(e.d+'T00:00:00Z'),v:e.v}));
+  // a 96px curve needs no more than ~64 points; keep the lowest and highest of each bucket
+  if(out.length>64){
+    const k=Math.ceil(out.length/32), thin=[out[0]];
+    for(let i=1;i<out.length-1;i+=k){
+      const b=out.slice(i,Math.min(i+k,out.length-1)); if(!b.length) continue;
+      let lo=b[0],hi=b[0]; b.forEach(p=>{ if(p.v<lo.v) lo=p; if(p.v>hi.v) hi=p; });
+      (lo.x<=hi.x?[lo,hi]:[hi,lo]).forEach(p=>{ if(thin[thin.length-1]!==p) thin.push(p); });
+    }
+    thin.push(out[out.length-1]); out=thin;
+  }
+  return out;
+}
+function sparkPath(P){
+  if(P.length===2){ const h=(P[1][0]-P[0][0])/2;
+    return 'M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1)+'C'+(P[0][0]+h).toFixed(1)+' '+P[0][1].toFixed(1)+' '+(P[1][0]-h).toFixed(1)+' '+P[1][1].toFixed(1)+' '+P[1][0].toFixed(1)+' '+P[1][1].toFixed(1); }
+  return smoothPath(P);
+}
 function sparkline(sc){
-  const e=sc.equity||[]; if(e.length<2) return '';
-  const W=86,H=24, vs=e.map(p=>p.v), lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
-  const d=e.map((p,i)=>(i?'L':'M')+(i/(e.length-1)*W).toFixed(1)+' '+(H-2-(p.v-lo)/sp*(H-4)).toFixed(1)).join('');
-  const col=vs[vs.length-1]>=100?'#1E6B57':'#BE3A2B';
-  const y0=(H-2-(100-lo)/sp*(H-4)).toFixed(1);
-  return '<svg width="'+W+'" height="'+H+'" aria-hidden="true"><line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.2)" stroke-dasharray="2 2"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5"/></svg>';
+  const e=sparkSeries(sc); if(e.length<2) return '';
+  const W=96,H=28, vs=e.map(p=>p.v), lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
+  const x0=e[0].x, x1=e[e.length-1].x||x0+1;
+  const X=p=>(p.x-x0)/((x1-x0)||1)*W, Y=v=>H-3-(v-lo)/sp*(H-6);
+  const P=e.map(p=>[X(p),Y(p.v)]);
+  const d=sparkPath(P);
+  const up=vs[vs.length-1]>=100, col=up?'#1E6B57':'#BE3A2B';
+  const y0=Y(100).toFixed(1);
+  const area=d+'L'+P[P.length-1][0].toFixed(1)+' '+y0+'L'+P[0][0].toFixed(1)+' '+y0+'Z';
+  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+
+    '<line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.22)" stroke-dasharray="2 2"/>'+
+    '<path d="'+area+'" fill="'+col+'" fill-opacity=".13"/>'+
+    '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+P[P.length-1][0].toFixed(1)+'" cy="'+P[P.length-1][1].toFixed(1)+'" r="2" fill="'+col+'"/></svg>';
 }
 
 function drawCompare(){
@@ -935,8 +1036,8 @@ function drawCompare(){
     list=acc.concat(rest);
   }
   const head='<thead><tr>'+cols.map(c=>'<th scope="col" data-k="'+c.k+'"'+(c.nosort?'':' tabindex="0"')+(cmpSort.k===c.k?' aria-sort="'+(cmpSort.dir<0?'descending':'ascending')+'"':'')+'>'+c.t+'</th>').join('')+'</tr></thead>';
-  const body=list.map(sc=>'<tr class="kind-'+sc.kind+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
-    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':magicLabel(sc))+'</small></span></span></td>';
+  const body=list.map(sc=>'<tr class="kind-'+sc.kind+(sc.child?' child':'')+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
+    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':subLabel(sc))+'</small></span></span></td>';
     if(c.k==='spark') return '<td class="spark">'+sparkline(sc)+'</td>';
     const v=c.v(sc); return '<td class="'+(c.c?cls(v):'')+'">'+c.f(v)+'</td>';
   }).join('')+'</tr>').join('');
@@ -1180,7 +1281,7 @@ function drawEquity(animate){
     '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+col+'" stop-opacity=".22"/><stop offset="1" stop-color="'+col+'" stop-opacity="0"/></linearGradient></defs>'+ticks+
     '<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(ref).toFixed(1)+'" y2="'+Y(ref).toFixed(1)+'" stroke="rgba(15,44,66,.4)" stroke-dasharray="3 4"/>'+
     '<path d="'+area+'" fill="url(#'+gid+')"/>'+
-    '<path'+(animate?' class="draw" style="--len:'+len+'"':'')+' d="'+line+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>'+dots+xl+
+    '<path d="'+line+'" fill="none" stroke="'+col+'" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" class="eqline'+(animate?' draw':'')+'"'+(animate?' style="--len:'+len+'"':'')+'/>'+dots+xl+
     '<line id="cross" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#0F2C42" stroke-width="1" opacity="0"/><circle id="dot" r="5" fill="'+col+'" stroke="#F6F8F6" stroke-width="2" opacity="0"/></svg>');
 
   const DH=W<560?96:120, DT=28, DB=8, dmin=Math.min(-0.25,...pts.map(p=>p.wdd))*1.12;
@@ -1209,6 +1310,86 @@ function drawEquity(animate){
   };
   const leave=()=>{ [cross,cross2,dot].forEach(c=>c.setAttribute('opacity','0')); ro.hidden=true; };
   ['eq','ddsvg'].forEach(id=>{ $(id).addEventListener('pointermove',move); $(id).addEventListener('pointerleave',leave); });
+}
+
+
+/* ---------- equity adapter ----------
+   Accepts the fields other tools use (date/balance/profit/equity) and both
+   ways of storing the curve: an index level (starts near 100 and can go
+   anywhere: 60, 131, 250...) or a list of signed daily returns (-2.4 = -2.4%).
+   A curve is only treated as daily returns when no value could be an index,
+   i.e. every value is within ±50. Anything else stays an index, so a +31%
+   account is never divided by the balance. */
+function fnum(v){ return v!==null && v!==undefined && v!=='' && Number.isFinite(Number(v)); }
+function normaliseEquity(raw, starting){
+  if(!Array.isArray(raw)) return [];
+  const sb=fnum(starting)?Number(starting):null;
+  let rows=raw.filter(Boolean).map(p=>{
+    const d=p.d||p.date||p.day||p.time; if(!d) return null;
+    return { d:String(d).slice(0,10),
+      v: fnum(p.v)?Number(p.v):null,
+      b: fnum(p.b)?Number(p.b):(fnum(p.balance)?Number(p.balance):(fnum(p.equity)?Number(p.equity):null)),
+      p: fnum(p.p)?Number(p.p):(fnum(p.profit)?Number(p.profit):null),
+      dd: fnum(p.dd)?Number(p.dd):null };
+  }).filter(Boolean).sort((x,y)=>x.d.localeCompare(y.d));
+  if(!rows.length) return [];
+  const vs=rows.map(r=>r.v).filter(fnum);
+  const isReturns = vs.length>0 && vs.every(x=>Math.abs(x)<=50) && !vs.some(x=>Math.abs(x-100)<50);
+  let idx=100;
+  const out=[];
+  rows.forEach(r=>{
+    let level=null;
+    if(fnum(r.v)) level = isReturns ? (idx*=1+r.v/100) : r.v;
+    else if(fnum(r.b) && sb) level=r.b/sb*100;
+    else if(fnum(r.p) && sb) level=100+r.p/sb*100;
+    if(fnum(level)) out.push({d:r.d, v:level, b:r.b, p:r.p, dd:r.dd});
+  });
+  let peak=-Infinity;
+  out.forEach(p=>{ peak=Math.max(peak,p.v); if(!fnum(p.dd)) p.dd=(p.v/peak-1)*100; });
+  return out;
+}
+
+/* ---------- extra cards ---------- */
+function renderExtraCharts(sc){
+  const host=$('extra-charts'); if(!host) return;
+  const mon=(sc.monthly||[]).filter(m=>fnum(m.r)), hist=sc.trade_hist||[];
+  if(!mon.length && !hist.some(b=>b.n)){ host.hidden=true; return; }
+  host.hidden=false;
+
+  const mbox=$('extra-monthly');
+  if(mon.length){
+    const W=Math.max(300,mbox.clientWidth||520), H=230, PL=10, PR=54, PT=16, PB=28;
+    const cum=[]; let c=100; mon.forEach(m=>{ c*=1+m.r/100; cum.push(c-100); });
+    const vals=mon.map(m=>m.r).concat(cum,[0]);
+    let lo=Math.min(...vals), hi=Math.max(...vals); const pad=(hi-lo)*.12||.5; lo-=pad; hi+=pad;
+    const bw=(W-PL-PR)/mon.length, X=i=>PL+bw*i+bw/2, Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+    let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.07)"/>'+T(W-PR+6,Y(v)+4,pct(v,1))).join('');
+    g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="rgba(15,44,66,.35)"/>';
+    const step=Math.ceil(mon.length/(W<560?6:12));
+    mon.forEach((m,i)=>{
+      const y0=Y(0), y1=Y(m.r), w=Math.max(2,bw*.62);
+      g+='<rect x="'+(X(i)-w/2).toFixed(1)+'" y="'+Math.min(y0,y1).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(1,Math.abs(y1-y0)).toFixed(1)+'" fill="'+(m.r>=0?'#1E6B57':'#BE3A2B')+'" opacity=".85"><title>'+m.m+': '+pct(m.r)+'</title></rect>';
+      if(i%step===0) g+=T(X(i),H-9,MONTHS[+m.m.slice(5)-1]+(m.m.slice(5)==='01'||i===0?' '+m.m.slice(2,4):''),'middle',' font-size="11"');
+    });
+    if(mon.length>1) g+='<path d="'+smoothPath(cum.map((v,i)=>[X(i),Y(v)]))+'" fill="none" stroke="#E0A92C" stroke-width="2.4" stroke-linecap="round"/>';
+    g+='<circle cx="'+X(mon.length-1).toFixed(1)+'" cy="'+Y(cum[cum.length-1]).toFixed(1)+'" r="3.5" fill="#E0A92C"/>';
+    mbox.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Monthly returns and compounded total">'+g+'</svg>';
+  } else mbox.innerHTML='<p class="chart-cap">No closed months yet.</p>';
+
+  const hbox=$('extra-hist');
+  if(hist.some(b=>b.n)){
+    const W=Math.max(260,hbox.clientWidth||360), H=230, PB=26, PT=16;
+    const max=Math.max(1,...hist.map(b=>b.n||0)), bw=W/hist.length;
+    let g='';
+    hist.forEach((b,i)=>{
+      const h=(b.n||0)/max*(H-PT-PB), neg=((b.lo||0)+(b.hi||0))/2<0;
+      g+='<rect x="'+(i*bw+1.5).toFixed(1)+'" y="'+(H-PB-h).toFixed(1)+'" width="'+Math.max(1,bw-3).toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+(neg?'#BE3A2B':'#1E6B57')+'" opacity=".82"><title>'+pct(b.lo)+' to '+pct(b.hi)+': '+(b.n||0)+' trades</title></rect>';
+    });
+    // smooth outline over the bars
+    g+='<path d="'+smoothPath(hist.map((b,i)=>[i*bw+bw/2, H-PB-(b.n||0)/max*(H-PT-PB)]))+'" fill="none" stroke="#0F2C42" stroke-width="1.6" opacity=".55"/>';
+    g+='<line x1="0" x2="'+W+'" y1="'+(H-PB)+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.3)"/>'+T(2,H-8,pct(hist[0].lo))+T(W/2,H-8,'0','middle')+T(W-2,H-8,pct(hist[hist.length-1].hi),'end');
+    hbox.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trade result distribution">'+g+'</svg>';
+  } else hbox.innerHTML='<p class="chart-cap">No closed trades yet.</p>';
 }
 
 /* ---------- flows ---------- */
@@ -1421,11 +1602,11 @@ function drawRoster(strats){
     const live=s.status==='live', sc=byFlag[s.flag], T=sc?(sc.trades||{}):{}, r=sc?(sc.returns||{}).total_pct:null;
     const bar=!nil(r)?'<span class="contrib"><span class="'+cls(r)+'">'+pct(r)+'</span><i class="'+(r<0?'n':'')+'" style="width:'+Math.round(Math.abs(r)/maxAbs*60)+'px"></i></span>':'—';
     return '<tr class="'+(live?'':'pending')+'"'+(sc?' data-id="'+esc(sc.id)+'" style="cursor:pointer"':'')+'>'+
-      '<td>'+flagSVG(s.flag)+'</td><td class="name">'+esc(s.name)+'</td><td class="sym">'+esc(s.symbols)+'</td><td class="sym">'+esc(s.style)+'</td>'+
+      '<td>'+flagSVG(s.flag)+'</td><td class="name">'+(s.product?'<a href="'+esc(s.product.url)+'">'+esc(s.name)+'</a>':esc(s.name))+(s.callsign?'<small>signal '+esc(s.callsign)+'</small>':'')+'</td><td class="sym">'+esc(s.symbols)+'</td><td class="sym">'+esc(s.style)+'</td>'+
       '<td class="r">'+(sc?int(T.trades):'—')+'</td><td class="r">'+(sc?upct(T.win_rate_pct,1):'—')+'</td><td class="r">'+(sc?num(T.profit_factor):'—')+'</td>'+
       '<td class="r">'+bar+'</td><td class="st '+(live?'live':'testing')+'">'+(live?'Sailing since '+(s.since?fmtDate(s.since):'—'):(s.status==='paused'?'Paused':(s.status==='retired'?'Retired':'In the yard')))+'</td></tr>';
   }).join('');
-  $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>{ selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
+  $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',e=>{ if(e.target.closest('a')) return; selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
 }
 
 /* ---------- controls & boot ---------- */
@@ -1440,11 +1621,14 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   let s=null;
   try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
   const strats=(s&&s.strategies&&s.strategies.length===10)?s.strategies:FALLBACK;
+  applyProducts(strats);
   drawHoist(strats);
   if(!s){ drawRoster(strats); return; }
 
   DATA=s; ACC=s.account||{}; if(ACC.currency) CUR=ACC.currency;
   SCOPES=normalise(s);
+  SCOPES.forEach(sc=>{ if(sc.equity) sc.equity=normaliseEquity(sc.equity, sc.kind==='account'?ACC.starting_balance:null); });
+  labelScopes(strats);
   drawTicket(s);
   if(s.updated_utc) $('stamp-updated').textContent='Published from the account '+ago(s.updated_utc)+'.';
   if(s.verified_url) $('stamp-verify').innerHTML='<a href="'+esc(s.verified_url)+'">Independently verified record</a>';
@@ -1456,7 +1640,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
