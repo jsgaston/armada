@@ -650,16 +650,16 @@ footer .legal p{margin:0 0 10px;max-width:74em}
     <p class="sub">You keep your own broker, your own account and your own money. Nothing leaves your side — an Expert Advisor in your terminal reads what my account is doing and reproduces it.</p>
     <div class="steps">
       <div class="step">
-        <h3>Subscribe and get your token</h3>
-        <p>After payment you receive a private access token and the follower EA by email, usually within a few hours.</p>
+        <h3>Subscribe and get your key</h3>
+        <p>Right after payment, an email brings your licence key, your private access token and the follower EA. Delivery is automatic, so it arrives in minutes.</p>
       </div>
       <div class="step">
         <h3>Load the EA on a VPS</h3>
-        <p>Drop it on any chart in your MT5, paste the token, choose your risk factor. The setup guide walks through every field.</p>
+        <p>Drop it on any chart in your MT5, paste the key and the token, choose how your lot size is worked out. The setup guide walks through every field.</p>
       </div>
       <div class="step">
         <h3>It mirrors from then on</h3>
-        <p>Opens, closes, stop-loss and take-profit changes are followed within a second or two, at a lot size proportional to your balance.</p>
+        <p>Opens, closes, partial closes and stop-loss changes are followed within a second or two, at the size you chose — proportional to your balance, a fixed lot, a percentage of the signal, or by risk.</p>
       </div>
     </div>
     <p style="margin-top:30px;font-family:Archivo;font-size:15px"><a href="setup.html">Read the full setup guide before subscribing</a></p>
@@ -674,7 +674,8 @@ footer .legal p{margin:0 0 10px;max-width:74em}
         <p>The founding rate is open while the fleet is still being assembled. It is fixed for as long as you stay subscribed, including after the tenth bot joins and the rate goes to €99.</p>
         <ul>
           <li>All bots on the account, present and future</li>
-          <li>Follower EA, access token and setup support</li>
+          <li>Follower EA, licence key, access token and setup support</li>
+          <li>Seven ways to size your own trades, from a fraction of the signal to a fixed lot</li>
           <li>Monthly note on what changed and why</li>
           <li>Cancel from your receipt at any time</li>
         </ul>
@@ -682,23 +683,33 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <div class="price">
         <div class="amt">€59</div>
         <span class="per">per month, first 100 accounts</span>
-        <div id="paypal-button-container-P-6TC590247X0331525NKTMXCI"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=AWa_6Af93UGQdocFcdOmDgC6xGjFV4Kp-8yeFyZ6DhHqPDnHt6kK5xQdSenwitI1-a0kk4Sc4DeCYK9N&vault=true&intent=subscription&currency=EUR&disable-funding=card,credit" data-sdk-integration-source="button-factory"></script>
-<script>
-  if (window.paypal) paypal.Buttons({
-      style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
-      createSubscription: function(data, actions) {
-        return actions.subscription.create({ plan_id: 'P-6TC590247X0331525NKTMXCI' });
-      },
-      onApprove: function(data, actions) {
-        document.getElementById('paypal-button-container-P-6TC590247X0331525NKTMXCI').innerHTML =
-          '<p style="margin:0;color:#fff;font-family:Archivo;font-size:15px;line-height:1.5">Subscription confirmed. Your access token and the follower EA arrive by email, usually within a few hours. Reference: ' + data.subscriptionID + '</p>';
-      }
-  }).render('#paypal-button-container-P-6TC590247X0331525NKTMXCI');
-</script>
+        <p style="margin:18px 0 0"><a class="btn brass" href="https://buy.stripe.com/3cI5kw58n5UzaL23gD7ss06">Subscribe — €59/month</a></p>
+        <small>Card payment through Stripe. VAT included. Cancel any time from <a href="https://api.wisfli.com/manage" style="color:inherit">api.wisfli.com/manage</a>.</small>
         <small>Standard rate €99/month once all ten bots are sailing. Suggested account size €2,000 or more — see the setup guide for why.</small>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="licence">
+  <div class="wrap">
+    <h2>How the licence works</h2>
+    <p class="sub">The subscription is what keeps the follower running. Two things travel with it, and both arrive in the same email.</p>
+    <div class="steps">
+      <div class="step">
+        <h3>Your licence key</h3>
+        <p>A key starting with <code>WSF-</code>. The EA checks it with <code>api.wisfli.com</code> when it starts and every few hours after that, so the terminal has to be allowed to reach that address. A short internet outage changes nothing: the last valid check is trusted for a while.</p>
+      </div>
+      <div class="step">
+        <h3>Your access token</h3>
+        <p>The token is what reads the signal itself. It is personal to your subscription. Sharing either the token or the file with someone else is what gets a licence revoked.</p>
+      </div>
+      <div class="step">
+        <h3>If you cancel</h3>
+        <p>You keep access until the end of the period you paid for. After that the follower stops opening new trades. Anything still open is left under the signal's own stop loss and take profit — nothing is force-closed behind your back.</p>
+      </div>
+    </div>
+    <p style="margin-top:30px;font-family:Archivo;font-size:15px">Manage, pause or cancel the subscription yourself at <a href="https://api.wisfli.com/manage">api.wisfli.com/manage</a>. Questions: <a href="mailto:support@wisfli.com">support@wisfli.com</a>.</p>
   </div>
 </section>
 

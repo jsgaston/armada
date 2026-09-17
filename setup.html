@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Armada — setup guide for subscribers</title>
-<meta name="description" content="How to install the Armada follower EA in MetaTrader 5: whitelist, token, risk factor, symbol suffix and account size.">
+<meta name="description" content="How to install the Armada follower EA in MetaTrader 5: whitelist, licence key, token, position sizing modes and symbol suffix.">
 
 <meta name="theme-color" content="#06141F">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2306141F'/><rect x='9' y='7' width='4' height='18' fill='%2345C29A'/><rect x='19' y='11' width='4' height='14' fill='%23E0A92C'/></svg>">
@@ -198,7 +198,7 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
   </div>
 </div>
 
-<nav class="toc" aria-label="Contents"><ol><li><a href="#need">What you need</a></li><li><a href="#install">Install the EA</a></li><li><a href="#whitelist">Allow the connection</a></li><li><a href="#attach">Attach and configure</a></li><li><a href="#settings">Every setting explained</a></li><li><a href="#size">Account size and risk</a></li><li><a href="#check">Check it is working</a></li><li><a href="#trouble">When something is wrong</a></li></ol></nav>
+<nav class="toc" aria-label="Contents"><ol><li><a href="#need">What you need</a></li><li><a href="#install">Install the EA</a></li><li><a href="#whitelist">Allow the connection</a></li><li><a href="#attach">Attach and configure</a></li><li><a href="#settings">Every setting explained</a></li><li><a href="#size">Position size and risk</a></li><li><a href="#check">Check it is working</a></li><li><a href="#trouble">When something is wrong</a></li></ol></nav>
 
 <main id="main">
 
@@ -208,8 +208,8 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
     <ul>
       <li>A MetaTrader&nbsp;5 account with any broker. Hedging accounts are recommended; on a netting account several bots trading the same symbol will merge into one position and your results will drift from mine.</li>
       <li>A VPS, so the terminal stays connected. The MQL5 VPS built into MetaTrader (<kbd>Right-click the account → Register a Virtual Server</kbd>) is the cheapest route and works with this EA, since it uses no DLLs.</li>
-      <li>Your access token, sent by email after subscribing. It identifies your terminal. Do not share it — it is what your subscription unlocks.</li>
-      <li>The file <code>ArmadaFollower.ex5</code>, in the same email.</li>
+      <li>Your licence key (<code>WSF-…</code>) and your access token, both sent by email after subscribing. The key activates the EA, the token identifies your terminal. Do not share either — they are what your subscription unlocks.</li>
+      <li>The file <code>ArmadaFollower.ex5</code>, attached to the same email. It is not published for download and it will not trade without a valid licence key.</li>
     </ul>
     </div>
 </section>
@@ -219,7 +219,7 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
     <h2><span class="n">2</span>Install the EA</h2>
     <ol class="steps plain">
       <li>In MetaTrader 5, open <kbd>File → Open Data Folder</kbd>.</li>
-      <li>Go into <code>MQL5\Experts</code> and copy <code><a href="ArmadaFollower.ex5">ArmadaFollower.ex5</a></code> there.</li>
+      <li>Go into <code>MQL5\Experts</code> and copy <code>ArmadaFollower.ex5</code> — the file attached to your welcome email — there.</li>
       <li>Back in the terminal, right-click <b>Expert Advisors</b> in the Navigator panel and choose <kbd>Refresh</kbd>. Armada Follower now appears in the list.</li>
     </ol>
     </div>
@@ -241,7 +241,8 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
     <ol class="steps plain">
       <li>Open <kbd>Tools → Options → Expert Advisors</kbd>.</li>
       <li>Tick <b>Allow WebRequest for listed URL</b>.</li>
-      <li>Add the host exactly as written in your welcome email, for example <code>http://217.160.64.92:8080</code>. Include the port, no trailing slash.</li>
+      <li>Add the signal host exactly as written in your welcome email, for example <code>http://217.160.64.92:8080</code>. Include the port, no trailing slash.</li>
+      <li>Add <code>https://api.wisfli.com</code> on a second line. That is where the EA checks your licence.</li>
       <li>Press OK.</li>
     </ol>
     <div class="note">
@@ -270,11 +271,21 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
     <div class="table-scroll"><table class="data">
       <tr><th>Setting</th><th>What it does</th></tr>
       <tr><td>Hub URL</td><td>The address from your email. Must match the whitelist entry character for character.</td></tr>
-      <tr><td>Token</td><td>Your personal key. If it is wrong or your subscription has lapsed, the panel says so and nothing is copied.</td></tr>
-      <tr><td>Risk factor</td><td><code>1.0</code> means you take the same percentage risk as the Armada account. <code>0.5</code> means half. Start at <code>0.5</code> for the first weeks. Values above <code>1.0</code> are possible and are a bad idea.</td></tr>
+      <tr><td>Your access token</td><td>Your personal key to the signal. If it is wrong or your subscription has lapsed, the panel says so and nothing is copied.</td></tr>
+      <tr><td>Wisfli licence key</td><td>The <code>WSF-…</code> key from your email. Checked against <code>api.wisfli.com</code> when the EA starts and every few hours after that. Without it the EA runs but opens nothing.</td></tr>
+      <tr><td>Sizing mode</td><td>How your lot size is worked out. Seven modes, explained in the next section.</td></tr>
+      <tr><td>Value for the mode above</td><td>The one number the mode uses. It means a different thing in each mode, so read the table below before changing it. The panel on the chart always spells out what it is doing.</td></tr>
+      <tr><td>Lot rounding</td><td>Brokers only accept lots in steps of 0.01. Round down keeps you under the calculated size, which is the safe direction.</td></tr>
+      <tr><td>If the lot is below the broker minimum</td><td>Skip the trade, or open at the minimum lot. Skipping means a small account copies fewer trades; opening at the minimum means it carries more risk per trade than the signal does. On a small account, skipping is the honest choice.</td></tr>
+      <tr><td>Minimum / maximum lot</td><td>Your own floor and ceiling per trade, on top of the broker's. Leave at 0 for none.</td></tr>
+      <tr><td>Max copied positions / max total lots</td><td>Hard caps on how much is open at once. The signal can hold several bots' trades at the same time; this is how you bound that.</td></tr>
+      <tr><td>Stop copying if equity falls this %</td><td>Your own circuit breaker, measured from the equity the EA saw when it started. At that level it stops opening new copies, and optionally closes the ones it holds. Reload the EA to resume.</td></tr>
+      <tr><td>Copy only / never copy these symbols</td><td>Comma-separated instrument names, as the signal names them. Empty means everything.</td></tr>
+      <tr><td>Copy only / never copy these magics</td><td>Same idea, per bot. Each bot in the fleet has its own magic number, listed on the Armada page. Use it to follow, say, only Alfa and Bravo.</td></tr>
+      <tr><td>Stop loss / take profit mode</td><td>Copy the signal's levels (default, and the EA keeps tracking changes to them), run with none and let the signal close the trade, or set your own fixed distance in pips.</td></tr>
       <tr><td>Symbol prefix / suffix</td><td>Brokers rename instruments. If yours shows <code>EURUSD.m</code>, put <code>.m</code> in the suffix. Check the Market Watch and copy exactly, including case.</td></tr>
-      <tr><td>Copy SL and TP</td><td>Leave on. The follower then tracks every stop and target change made on the signal account.</td></tr>
       <tr><td>Skip trades already open</td><td>Leave on. On your first day it ignores positions opened before you joined, so you never enter a move hours late at a worse price. From then on it copies everything.</td></tr>
+      <tr><td>Mirror partial closes</td><td>Leave on. When the signal takes part of a position off, your copy is reduced by the same proportion.</td></tr>
       <tr><td>Max entry slippage</td><td>How far price may have moved since the signal opened before the follower gives up on that trade. <code>15</code> pips is a sensible default.</td></tr>
       <tr><td>Max spread</td><td>Skip a copy if your broker's spread is wider than this at that moment. Protects you on news spikes.</td></tr>
       <tr><td>Magic number</td><td>Leave as it is. It is how the EA recognises its own positions — anything you trade by hand is left untouched.</td></tr>
@@ -284,12 +295,23 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
 
 <section id="size" class="panel">
   <div class="doc">
-    <h2><span class="n">6</span>Account size and risk</h2>
-    <p>Lots are scaled to your balance, but your broker will not go below 0.01 lots. Below roughly €2,000 the rounding stops working in your favour: every trade is forced up to that minimum, and you end up carrying noticeably more risk per trade than the signal account does.</p>
+    <h2><span class="n">6</span>Position size and risk</h2>
+    <p>This is the only decision that really matters, so the EA gives you seven ways to make it. Pick one mode and one number; the panel on the chart then shows in plain words what it is doing on every trade.</p>
+    <div class="table-scroll"><table class="data">
+      <tr><th>Mode</th><th>What the value means</th><th>Use it when</th></tr>
+      <tr><td>Balance ratio</td><td><code>1.0</code> takes the same percentage risk as the Armada account, <code>0.5</code> half of it.</td><td>The default, and the right answer for most people.</td></tr>
+      <tr><td>Equity ratio</td><td>The same, measured on equity instead of balance, so open losses shrink new trades.</td><td>You want the copy to back off by itself during a drawdown.</td></tr>
+      <tr><td>Percent of the signal lot</td><td><code>25</code> copies a quarter of whatever the signal trades.</td><td>You want a fixed fraction and don't care about balances.</td></tr>
+      <tr><td>Multiplier</td><td><code>2.0</code> doubles the signal's lot, <code>0.5</code> halves it.</td><td>Same idea, expressed as a factor.</td></tr>
+      <tr><td>Fixed lot</td><td><code>0.03</code> opens 0.03 lots every time, whatever the signal did.</td><td>You want every trade the same size, full stop.</td></tr>
+      <tr><td>Lots per 10,000</td><td><code>0.05</code> means 0.05 lots for each 10,000 of your balance.</td><td>You think in lots per account size rather than in ratios.</td></tr>
+      <tr><td>Risk percent</td><td><code>1.0</code> sizes the trade so that the signal's stop loss costs about 1% of your balance.</td><td>You size by risk. Trades that arrive without a stop loss are skipped.</td></tr>
+    </table></div>
+    <p>Whatever the mode, your broker will not go below 0.01 lots, and that floor is what bites on small accounts. A calculated 0.004 either becomes nothing or becomes 0.01 — more than double the intended size. That is what the <b>below the broker minimum</b> setting decides.</p>
     <div class="note warn">
-      <p><b>Under €2,000, halve the risk factor.</b> Under €1,000, the mismatch is large enough that the copy stops resembling the signal at all, and a normal losing streak hurts far more on your side than on mine. Wait until the account is bigger rather than subscribing early.</p>
+      <p><b>Under €2,000, halve the value and leave the minimum-lot setting on “skip”.</b> Under €1,000 the rounding dominates: a normal losing streak hurts far more on your side than on the signal account, and the copy stops resembling it at all. Wait until the account is bigger rather than subscribing early.</p>
     </div>
-    <p>Two other things move your results away from mine, and neither is a fault: your spread and commission, and your execution speed. Expect a small, permanent gap in both directions.</p>
+    <p>Two other things move your results away from the signal's, and neither is a fault: your spread and commission, and your execution speed. Expect a small, permanent gap in both directions.</p>
     </div>
 </section>
 
@@ -308,6 +330,11 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
       <tr><th>The panel says</th><th>Do this</th></tr>
       <tr><td>Whitelist the URL</td><td>Step 3 again. Compare the address in the settings with the one in Options, character by character, including the port.</td></tr>
       <tr><td>Token rejected</td><td>Re-paste the token with no spaces at either end. If it still fails, your subscription may have lapsed — check your receipt email.</td></tr>
+      <tr><td>Enter your license key…</td><td>The licence field is empty. Paste the <code>WSF-…</code> key from your welcome email.</td></tr>
+      <tr><td>Invalid license key</td><td>Re-copy the key from the email, with no spaces at either end.</td></tr>
+      <tr><td>License expired</td><td>The subscription is no longer active. Restart it from <a href="https://api.wisfli.com/manage">api.wisfli.com/manage</a>. Positions already open keep being managed; nothing new is opened.</td></tr>
+      <tr><td>Account limit reached</td><td>The key is in use on more terminals than the plan allows. Free one at <a href="https://api.wisfli.com/manage">api.wisfli.com/manage</a>.</td></tr>
+      <tr><td>Allow WebRequest for https://api.wisfli.com</td><td>Step 3 again, this time with the licence address on its own line, then reload the EA.</td></tr>
       <tr><td>Symbol not found</td><td>Your prefix or suffix is wrong, or your broker does not offer that instrument. Open Market Watch, find the symbol, copy its exact name.</td></tr>
       <tr><td>Algo trading disabled</td><td>The toolbar button, or the Common tab of the EA settings, or both.</td></tr>
       <tr><td>Connected, no trades</td><td>Usually correct behaviour. The account is often flat, and some days it does not trade at all.</td></tr>
@@ -331,7 +358,7 @@ ol.steps.plain li b{display:inline;font:inherit;font-weight:600;color:var(--ink)
           <li><a href="index.html">The signal</a></li>
           <li><a href="index.html#compare">Compare the bots</a></li>
           <li><a href="index.html#berth">Subscribe</a></li>
-          <li><a href="ArmadaFollower.ex5">Follower EA (.ex5)</a></li>
+          <li><a href="https://api.wisfli.com/manage">Manage subscription</a></li>
         </ul>
       </div>
       <div>
