@@ -851,6 +851,9 @@ const money = (n,sign=false) => {
   return (n<0?'−':(sign&&n>0?'+':'')) + s;
 };
 const cls = n => nil(n)?'':(n>0?'pos':(n<0?'neg':''));
+/* recovery factor = net profit / largest drawdown. While the net is negative
+   the ratio is just the loss again with a minus sign, so it is left blank. */
+const rec = (n,d=2) => nil(n)||n<=0 ? '—' : num(n,d);
 const fmtDate = iso => { const d=new Date(iso+'T00:00:00Z'); return d.getUTCDate()+' '+MONTHS[d.getUTCMonth()]+' '+d.getUTCFullYear(); };
 const days = n => nil(n)?'—':(n===1?'1 day':int(n)+' days');
 const hours = n => nil(n)?'—':(n<48? n.toFixed(1)+' h' : (n/24).toFixed(1)+' d');
@@ -865,7 +868,24 @@ function ago(iso){
 let DATA=null, SCOPES=[], CUR_SCOPE=null, ACC={};
 const view={mode:'growth', range:0, series:'trade', roll:'pf'};
 const scopeById = id => SCOPES.find(x=>x.id===id);
-const magicLabel = sc => sc.magics && sc.magics.length ? (sc.magics.length===1?'magic '+sc.magics[0]:'magics '+sc.magics.join(', ')) : '';
+/* Magic numbers of a scope. A bot is configured with every magic number it may
+   ever use, but only the ones that have traded have a row and a figure. Listing
+   the idle ones next to a total that cannot include them reads as an error, so
+   they are counted, not named. */
+function tradedMagics(){
+  const on=new Set();
+  SCOPES.forEach(sc=>{ if(sc.kind==='magic' && !sc.empty && sc.magics && sc.magics.length) on.add(sc.magics[0]); });
+  return on;
+}
+const magicLabel = sc => {
+  const mg = (sc.magics||[]);
+  if(!mg.length) return '';
+  if(mg.length===1) return 'magic '+mg[0];
+  const on=tradedMagics(), live=mg.filter(m=>on.has(m)), idle=mg.length-live.length;
+  if(!live.length) return mg.length+' magic numbers, none trading yet';
+  if(!idle) return 'magics '+live.join(', ');
+  return 'magics '+live.join(', ')+' · '+idle+' more idle';
+};
 const subLabel = sc => [sc.callsign?'signal '+sc.callsign:'', magicLabel(sc), sc.parent?'part of '+sc.parent:''].filter(Boolean).join(' · ');
 
 /* ---------- adapter for older stats.json ---------- */
@@ -960,7 +980,7 @@ function drawRail(sc){
   else { setText('r-roi',pct(R.roi_pct),cls(R.roi_pct)); setText('r-roi-s','return on capital'); }
   setText('r-pf',num(T.profit_factor)); setText('r-pf-s', !nil(T.win_rate_pct)?'hits '+upct(T.win_rate_pct,1):'\u00a0');
   setText('r-dd',ddpct(K.max_drawdown_pct)); setText('r-dd-s', nil(K.current_drawdown_pct)?'\u00a0':'now '+(K.current_drawdown_pct>0?'−'+upct(K.current_drawdown_pct):'at peak'));
-  setText('r-rec',num(K.recovery_factor)); setText('r-rec-s', !nil(K.longest_underwater_days)?'longest under water '+days(K.longest_underwater_days):'\u00a0');
+  setText('r-rec',rec(K.recovery_factor)); setText('r-rec-s', !nil(K.longest_underwater_days)?'longest under water '+days(K.longest_underwater_days):'\u00a0');
   setText('r-sharpe',num(K.sharpe)); setText('r-sharpe-s', !nil(K.sortino)?'Sortino '+num(K.sortino):(nil(R.total_pct)?'\u00a0':'needs 5 trading days'));
 }
 
@@ -997,7 +1017,7 @@ const CMP_COLS=[
   {k:'ret', t:'Return', v:sc=>(sc.returns||{}).total_pct, f:pct, c:true},
   {k:'net', t:'Net', v:sc=>sc.kind==='account'?ACC.net_profit:sc.net, f:x=>money(x,true), c:true, money:true},
   {k:'mdd', t:'Max DD', v:sc=>(sc.risk||{}).max_drawdown_pct, f:ddpct, lowBest:true},
-  {k:'rec', t:'Recovery', v:sc=>(sc.risk||{}).recovery_factor, f:num},
+  {k:'rec', t:'Recovery', v:sc=>(sc.risk||{}).recovery_factor, f:rec},
   {k:'sharpe', t:'Sharpe', v:sc=>(sc.risk||{}).sharpe, f:num},
   {k:'exp', t:'Expectancy', v:sc=>(sc.trades||{}).expectancy_pct, f:x=>pct(x,3), c:true},
   {k:'wst', t:'Best streak', v:sc=>(sc.trades||{}).max_consec_wins, f:int},
@@ -1121,7 +1141,7 @@ function drawStats(sc){
     ['Longest time under water',days(K.longest_underwater_days),'','Longest stretch between a peak and the next new high.'],
     ['Drawdown periods',int(K.drawdown_episodes),'','How many times the curve fell below a previous peak.'],
     ['Average recovery',days(K.avg_recovery_days),'','Average time from a peak back to a new high.'],
-    ['Recovery factor',num(K.recovery_factor),'','Net profit divided by the largest drawdown in money. Above 3 is solid.'],
+    ['Recovery factor',rec(K.recovery_factor),'','Net profit divided by the largest drawdown in money. Above 3 is solid. Blank until the bot is in profit.'],
     ['Return / drawdown',num(K.return_dd_ratio),'','Total return divided by max drawdown, both in %.'],
     ['Sharpe ratio',num(K.sharpe),'','Average daily return divided by its volatility, annualised over 252 trading days.'],
     ['Sortino ratio',num(K.sortino),'','Like Sharpe, but only counts downside volatility.'],
@@ -1458,7 +1478,7 @@ function drawPnlBars(){
   }).join('');
   const total=rows.reduce((a,x)=>a+(v(x)||0),0);
   html+='<div class="pnltotal"><span>All bots</span><span></span><span class="val '+cls(total)+'">'+fmt(total)+'</span></div>';
-  if(M && !nil(ACC.net_profit) && Math.abs(ACC.net_profit-total)>=0.01){
+  if(M && !nil(ACC.net_profit) && Math.abs(ACC.net_profit-total)>=1){
     html+='<p class="pnlnote">Whole account: <b class="'+cls(ACC.net_profit)+'">'+money(ACC.net_profit,true)+'</b>. The '+money(ACC.net_profit-total,true)+' difference is manual trades, magic numbers not assigned to any bot, or costs of positions still open.</p>';
   }
   $('pnlbars').innerHTML=html;
