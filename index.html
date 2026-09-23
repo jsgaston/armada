@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Armada — copy-trading signal by Wisfli</title>
-<meta name="description" content="One MetaTrader 5 account running ten of my own algorithms. Your terminal mirrors every position, sized to your balance. Full statistics published straight from the account every 15 minutes.">
+<meta name="description" content="One MetaTrader 5 account running every trading bot I build, each added after validation. Your terminal mirrors every position, sized to your balance. Full statistics published straight from the account every 15 minutes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -249,17 +249,11 @@ table.cmp tbody tr{cursor:pointer}
 table.cmp tbody tr:hover td{background:rgba(246,248,246,.7)}
 table.cmp tr.sel td{background:var(--panel);box-shadow:inset 0 2px 0 var(--sea),inset 0 -2px 0 var(--sea)}
 table.cmp tr.kind-account td{border-bottom:1px solid var(--rule-strong)}
-table.cmp tr.kind-magic.child td:first-child{padding-left:22px}
-table.cmp tr.kind-magic.child .bn::before{content:"";width:10px;height:14px;border-left:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);margin:-10px 2px 0 0;flex:none}
-table.cmp .bn .cs{font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+table.cmp tr.kind-magic td:first-child{padding-left:18px}
 table.cmp .bn{display:flex;align-items:center;gap:10px}
 table.cmp .bn svg{width:27px;height:18px;flex:none;box-shadow:0 1px 0 rgba(15,44,66,.25)}
 table.cmp .bn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
-table.cmp td.spark svg{display:block;overflow:visible}
-.scopebar .meta a.prodlink{color:var(--brass);font-weight:600;text-decoration:none}
-.scopebar .meta a.prodlink:hover{text-decoration:underline}
-table.roster td.name a{color:inherit;text-decoration:underline;text-decoration-color:var(--brass);text-underline-offset:4px}
-table.roster td.name small{display:block;font:500 12px Archivo;color:var(--muted)}
+table.cmp td.spark svg{display:block}
 .tag{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--rule-strong);padding:0 5px;margin-left:6px;vertical-align:1px}
 
 /* correlation */
@@ -384,11 +378,6 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 .pnlrow .track i{position:absolute;top:0;height:16px;display:block}
 .pnlrow .track b{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--rule-strong)}
 .pnlrow .val{text-align:right;white-space:nowrap}
-.pnlrow .nm small{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
-.pnltotal{display:grid;grid-template-columns:minmax(120px,220px) 1fr 110px;gap:14px;padding:10px 0 0;border-top:2px solid var(--sea);margin-top:-1px;font:700 14px Archivo}
-.pnltotal .val{text-align:right;white-space:nowrap}
-.pnlnote{font:500 12.5px/1.5 Archivo;color:var(--muted);margin:8px 0 0}
-@media (max-width:720px){ .pnltotal{grid-template-columns:110px 1fr 84px;font-size:13px} }
 .lab{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 .mcstats{display:grid;grid-template-columns:repeat(3,1fr);margin:0;border:1px solid var(--rule);border-top:0;background:var(--panel)}
 .mcstats div{padding:12px 14px;border-right:1px solid var(--rule);border-top:1px solid var(--rule)}
@@ -399,6 +388,20 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 .legendline i{display:inline-block;width:14px;height:8px;margin-right:6px;vertical-align:0}
 @media (max-width:980px){ .lab{grid-template-columns:1fr} }
 @media (max-width:720px){ .pnlrow{grid-template-columns:110px 1fr 84px;font-size:13px} .mcstats{grid-template-columns:1fr 1fr} .mcstats div:nth-child(3n){border-right:1px solid var(--rule)} .mcstats div:nth-child(2n){border-right:0} }
+
+/* ---- v7: bigger fleets and exits ---- */
+.hero .hoist.many{gap:6px}
+.hero .hoist.many svg{width:40px;height:27px}
+.hero .hoist.lots svg{width:32px;height:21px}
+.exits{display:grid;grid-template-columns:1fr 1fr;gap:44px 48px}
+.exits>div{min-width:0}
+.exbar{display:flex;height:38px;margin:14px 0 18px;background:var(--panel);border:1px solid var(--rule);overflow:hidden}
+.exbar span{display:flex;align-items:center;justify-content:center;font:600 12px Archivo;white-space:nowrap;overflow:hidden;min-width:2px}
+.exbar b{font-weight:700;margin-right:4px}
+#exits-t{min-width:560px}
+#exits-t td i{display:inline-block;width:10px;height:10px;margin-right:8px;vertical-align:0}
+#exits-plot{min-height:250px}
+@media (max-width:980px){ .exits{grid-template-columns:1fr} }
 
 /* ---- v6: chart polish and extra cards (from your version) ---- */
 #plot,#plot-dd{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
@@ -424,6 +427,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
+      <a href="#exits" class="opt">Exits</a>
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
       <a href="setup.html" class="opt">Setup guide</a>
@@ -438,7 +442,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <h1>Armada</h1>
       <p class="kicker">A MetaTrader&nbsp;5 copy-trading signal</p>
       <p class="ticket" id="ticket" hidden></p>
-      <p class="lead">One account, ten algorithms. I am putting the first ten trading bots I build into this single signal, adding each one only after it finishes validation. Your terminal mirrors every position the account takes, scaled to your own balance.</p>
+      <p class="lead">One account, a growing fleet. Every trading bot I build joins this single signal, but only after it finishes validation. Your terminal mirrors every position the account takes, scaled to your own balance.</p>
       <div class="actions">
         <a class="btn brass" href="#berth">Subscribe from €59/month</a>
         <a class="btn line" href="#compare">Compare the bots</a>
@@ -587,6 +591,26 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   </div>
 </section>
 
+<section id="exits" hidden>
+  <div class="wrap">
+    <h2 id="exits-title">How the trades were closed</h2>
+    <p class="sub" id="exits-sub">Every closed position is labelled with what closed it: the take-profit or stop-loss the bot placed, the bot's own exit rule, or me by hand. Manual exits stay with the bot that opened the trade.</p>
+    <div class="exits">
+      <div>
+        <h3 class="col">Share of trades</h3>
+        <div class="exbar" id="exbar"></div>
+        <div class="scroll"><table class="split" id="exits-t"></table></div>
+      </div>
+      <div>
+        <h3 class="col">Running result by who closed</h3>
+        <div class="plot" id="exits-plot"></div>
+        <p class="chart-cap" id="exits-cap">Summed trade results, % of balance, against the trade number.</p>
+      </div>
+    </div>
+    <p class="note" id="exits-note">Stop-loss and take-profit mean the order sitting in the market was hit, even if I had moved it by hand beforehand. By hand covers any close from the terminal, the phone or the web, including a partial close.</p>
+  </div>
+</section>
+
 <section id="lab">
   <div class="wrap">
     <h2 id="lab-title">Stress-testing the record</h2>
@@ -634,7 +658,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 <section id="fleet">
   <div class="wrap">
     <h2>The fleet</h2>
-    <p class="sub">Ten bots, added one at a time. A bot joins the account only once it has passed out-of-sample testing. Until then it stays in the yard. Flag A is CandleGrid Pro and flag B is RegimeSwitch Pro, both also sold on their own; their pages show their Armada record too.</p>
+    <p class="sub">Bots are added one at a time and the fleet keeps growing. A bot joins the account only once it has passed out-of-sample testing. Until then it stays in the yard.</p>
     <div class="scroll-roster">
       <table class="roster">
         <thead><tr><th>Flag</th><th>Bot</th><th>Instruments</th><th>Approach</th><th class="r">Trades</th><th class="r">Hits</th><th class="r">Profit factor</th><th class="r">Contribution</th><th>Status</th></tr></thead>
@@ -650,16 +674,16 @@ footer .legal p{margin:0 0 10px;max-width:74em}
     <p class="sub">You keep your own broker, your own account and your own money. Nothing leaves your side — an Expert Advisor in your terminal reads what my account is doing and reproduces it.</p>
     <div class="steps">
       <div class="step">
-        <h3>Subscribe and get your key</h3>
-        <p>Right after payment, an email brings your licence key, your private access token and the follower EA. Delivery is automatic, so it arrives in minutes.</p>
+        <h3>Subscribe and get your token</h3>
+        <p>After payment you receive a private access token and the follower EA by email, usually within a few hours.</p>
       </div>
       <div class="step">
         <h3>Load the EA on a VPS</h3>
-        <p>Drop it on any chart in your MT5, paste the key and the token, choose how your lot size is worked out. The setup guide walks through every field.</p>
+        <p>Drop it on any chart in your MT5, paste the token, choose your risk factor. The setup guide walks through every field.</p>
       </div>
       <div class="step">
         <h3>It mirrors from then on</h3>
-        <p>Opens, closes, partial closes and stop-loss changes are followed within a second or two, at the size you chose — proportional to your balance, a fixed lot, a percentage of the signal, or by risk.</p>
+        <p>Opens, closes, stop-loss and take-profit changes are followed within a second or two, at a lot size proportional to your balance.</p>
       </div>
     </div>
     <p style="margin-top:30px;font-family:Archivo;font-size:15px"><a href="setup.html">Read the full setup guide before subscribing</a></p>
@@ -671,11 +695,10 @@ footer .legal p{margin:0 0 10px;max-width:74em}
     <div class="berth">
       <div>
         <h2>Take a berth</h2>
-        <p>The founding rate is open while the fleet is still being assembled. It is fixed for as long as you stay subscribed, including after the tenth bot joins and the rate goes to €99.</p>
+        <p>The founding rate is for the first 100 accounts. It stays fixed for as long as you stay subscribed, however many bots join the fleet and after the rate for new accounts goes to €99.</p>
         <ul>
           <li>All bots on the account, present and future</li>
-          <li>Follower EA, licence key, access token and setup support</li>
-          <li>Seven ways to size your own trades, from a fraction of the signal to a fixed lot</li>
+          <li>Follower EA, access token and setup support</li>
           <li>Monthly note on what changed and why</li>
           <li>Cancel from your receipt at any time</li>
         </ul>
@@ -683,33 +706,23 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <div class="price">
         <div class="amt">€59</div>
         <span class="per">per month, first 100 accounts</span>
-        <p style="margin:18px 0 0"><a class="btn brass" href="https://buy.stripe.com/3cI5kw58n5UzaL23gD7ss06">Subscribe — €59/month</a></p>
-        <small>Card payment through Stripe. VAT included. Cancel any time from <a href="https://api.wisfli.com/manage" style="color:inherit">api.wisfli.com/manage</a>.</small>
-        <small>Standard rate €99/month once all ten bots are sailing. Suggested account size €2,000 or more — see the setup guide for why.</small>
+        <div id="paypal-button-container-P-6TC590247X0331525NKTMXCI"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=AWa_6Af93UGQdocFcdOmDgC6xGjFV4Kp-8yeFyZ6DhHqPDnHt6kK5xQdSenwitI1-a0kk4Sc4DeCYK9N&vault=true&intent=subscription&currency=EUR&disable-funding=card,credit" data-sdk-integration-source="button-factory"></script>
+<script>
+  if (window.paypal) paypal.Buttons({
+      style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
+      createSubscription: function(data, actions) {
+        return actions.subscription.create({ plan_id: 'P-6TC590247X0331525NKTMXCI' });
+      },
+      onApprove: function(data, actions) {
+        document.getElementById('paypal-button-container-P-6TC590247X0331525NKTMXCI').innerHTML =
+          '<p style="margin:0;color:#fff;font-family:Archivo;font-size:15px;line-height:1.5">Subscription confirmed. Your access token and the follower EA arrive by email, usually within a few hours. Reference: ' + data.subscriptionID + '</p>';
+      }
+  }).render('#paypal-button-container-P-6TC590247X0331525NKTMXCI');
+</script>
+        <small>Standard rate €99/month after the first 100 accounts. Suggested account size €2,000 or more — see the setup guide for why.</small>
       </div>
     </div>
-  </div>
-</section>
-
-<section id="licence">
-  <div class="wrap">
-    <h2>How the licence works</h2>
-    <p class="sub">The subscription is what keeps the follower running. Two things travel with it, and both arrive in the same email.</p>
-    <div class="steps">
-      <div class="step">
-        <h3>Your licence key</h3>
-        <p>A key starting with <code>WSF-</code>. The EA checks it with <code>api.wisfli.com</code> when it starts and every few hours after that, so the terminal has to be allowed to reach that address. A short internet outage changes nothing: the last valid check is trusted for a while.</p>
-      </div>
-      <div class="step">
-        <h3>Your access token</h3>
-        <p>The token is what reads the signal itself. It is personal to your subscription. Sharing either the token or the file with someone else is what gets a licence revoked.</p>
-      </div>
-      <div class="step">
-        <h3>If you cancel</h3>
-        <p>You keep access until the end of the period you paid for. After that the follower stops opening new trades. Anything still open is left under the signal's own stop loss and take profit — nothing is force-closed behind your back.</p>
-      </div>
-    </div>
-    <p style="margin-top:30px;font-family:Archivo;font-size:15px">Manage, pause or cancel the subscription yourself at <a href="https://api.wisfli.com/manage">api.wisfli.com/manage</a>. Questions: <a href="mailto:support@wisfli.com">support@wisfli.com</a>.</p>
   </div>
 </section>
 
@@ -721,6 +734,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
         <h3>What you are buying</h3>
         <p>Access to the positions of one account, for as long as you subscribe. Not a course, not a bot licence, not advice about what you personally should do with your money.</p>
         <p>Every figure on this page comes out of that account automatically. There are no backtests on this page. Where a number is missing, it is missing because the account has not produced it yet.</p>
+        <p>The bots close their own trades. If I ever close one by hand, the record says so: every exit is labelled with who made it.</p>
         <p id="demo-talk" hidden>The account is currently a <b>demo account</b>. Demo fills are usually kinder than real ones — no requotes, no partial fills, no slippage on news. Read these figures as a record of how the strategies trade, not as proof of real-money execution. When the account moves to real money this page will say so, and the record will restart.</p>
       </div>
       <div>
@@ -755,7 +769,8 @@ footer .legal p{margin:0 0 10px;max-width:74em}
           <li><a href="https://wisfli.com/">wisfli.com</a></li>
           <li><a href="https://jsgaston.github.io/candlegrid-web-en/">CandleGrid Pro</a></li>
           <li><a href="https://jsgaston.github.io/regimeswitch-web-en/">RegimeSwitch Pro</a></li>
-          <li><a href="mailto:support@wisfli.com">support@wisfli.com</a></li>
+          <li><a href="https://jsgaston.github.io/helm/">Helm signal</a></li>
+          <li><a href="mailto:jsgastoniriartecabrera@gmail.com">Email</a></li>
         </ul>
       </div>
     </div>
@@ -767,74 +782,69 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 </footer>
 
 <script>
-/* ---------- international code of signals, A–J ---------- */
-const F = {
+/* ---------- international code of signals: A–Z, then numeral pennants 1–0 ---------- */
+var FLAG_ORDER='ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');
+var OL='<path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>';
+var F={
   A:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30L46 20l14 20H30z" fill="#14528C"/><path d="M0 0h30v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
   B:'<path d="M0 0h60L46 20l14 20H0z" fill="#C8322A"/>',
   C:'<path d="M0 0h60v8H0z" fill="#14528C"/><path d="M0 8h60v8H0z" fill="#fff"/><path d="M0 16h60v8H0z" fill="#C8322A"/><path d="M0 24h60v8H0z" fill="#fff"/><path d="M0 32h60v8H0z" fill="#14528C"/>',
   D:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M0 11h60v18H0z" fill="#14528C"/>',
   E:'<path d="M0 0h60v20H0z" fill="#14528C"/><path d="M0 20h60v20H0z" fill="#C8322A"/>',
-  F:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M30 3 57 20 30 37 3 20z" fill="#C8322A"/><path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
+  F:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M30 3 57 20 30 37 3 20z" fill="#C8322A"/>'+OL,
   G:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M10 0h10v40H10z" fill="#14528C"/><path d="M30 0h10v40H30z" fill="#14528C"/><path d="M50 0h10v40H50z" fill="#14528C"/>',
-  H:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30v40H30z" fill="#C8322A"/><path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
+  H:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30v40H30z" fill="#C8322A"/>'+OL,
   I:'<path d="M0 0h60v40H0z" fill="#F2C230"/><circle cx="30" cy="20" r="11" fill="#101820"/>',
-  J:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 13h60v14H0z" fill="#fff"/>'
+  J:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 13h60v14H0z" fill="#fff"/>',
+  K:'<path d="M0 0h30v40H0z" fill="#F2C230"/><path d="M30 0h30v40H30z" fill="#14528C"/>',
+  L:'<path d="M0 0h60v40H0z" fill="#101820"/><path d="M0 0h30v20H0zM30 20h30v20H30z" fill="#F2C230"/>',
+  M:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"/>',
+  N:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M0 0h15v10H0zM30 0h15v10H30zM15 10h15v10H15zM45 10h15v10H45zM0 20h15v10H0zM30 20h15v10H30zM15 30h15v10H15zM45 30h15v10H45z" fill="#14528C"/>'+OL,
+  O:'<path d="M0 0h60v40z" fill="#C8322A"/><path d="M0 0v40h60z" fill="#F2C230"/>',
+  P:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M18 12h24v16H18z" fill="#fff"/>',
+  Q:'<path d="M0 0h60v40H0z" fill="#F2C230"/>',
+  R:'<path d="M0 0h60v40H0z" fill="#C8322A"/><path d="M25 0h10v40H25zM0 15h60v10H0z" fill="#F2C230"/>',
+  S:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M18 12h24v16H18z" fill="#14528C"/>'+OL,
+  T:'<path d="M0 0h20v40H0z" fill="#C8322A"/><path d="M20 0h20v40H20z" fill="#fff"/><path d="M40 0h20v40H40z" fill="#14528C"/>',
+  U:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M0 0h30v20H0zM30 20h30v20H30z" fill="#C8322A"/>'+OL,
+  V:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M0 0 60 40M60 0 0 40" stroke="#C8322A" stroke-width="8"/>'+OL,
+  W:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M8 8h44v24H8z" fill="#fff"/><path d="M18 14h24v12H18z" fill="#C8322A"/>',
+  X:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M25 0h10v40H25zM0 15h60v10H0z" fill="#14528C"/>'+OL,
+  Y:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M-40 40 0 0M-26 40 14 0M-12 40 28 0M2 40 42 0M16 40 56 0M30 40 70 0M44 40 84 0" stroke="#C8322A" stroke-width="7"/>',
+  Z:'<path d="M0 0h60L30 20z" fill="#F2C230"/><path d="M60 0v40L30 20z" fill="#14528C"/><path d="M0 40h60L30 20z" fill="#C8322A"/><path d="M0 0v40l30-20z" fill="#101820"/>',
+  '1':'<path d="M0 0h60v40H0z" fill="#fff"/><circle cx="17" cy="20" r="8" fill="#C8322A"/>',
+  '2':'<path d="M0 0h60v40H0z" fill="#14528C"/><circle cx="17" cy="20" r="8" fill="#fff"/>',
+  '3':'<path d="M0 0h20v40H0z" fill="#C8322A"/><path d="M20 0h20v40H20z" fill="#fff"/><path d="M40 0h20v40H40z" fill="#14528C"/>',
+  '4':'<path d="M0 0h60v40H0z" fill="#C8322A"/><path d="M13 0h8v40h-8zM0 16h60v8H0z" fill="#fff"/>',
+  '5':'<path d="M0 0h24v40H0z" fill="#F2C230"/><path d="M24 0h36v40H24z" fill="#14528C"/>',
+  '6':'<path d="M0 0h60v20H0z" fill="#101820"/><path d="M0 20h60v20H0z" fill="#fff"/>',
+  '7':'<path d="M0 0h60v20H0z" fill="#F2C230"/><path d="M0 20h60v20H0z" fill="#C8322A"/>',
+  '8':'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M13 0h8v40h-8zM0 16h60v8H0z" fill="#C8322A"/>',
+  '9':'<path d="M0 0h20v20H0z" fill="#fff"/><path d="M20 0h40v20H20z" fill="#101820"/><path d="M0 20h20v20H0z" fill="#C8322A"/><path d="M20 20h40v20H20z" fill="#F2C230"/>',
+  '0':'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M16 0h12v40H16z" fill="#C8322A"/>'
 };
-const LETTERS = ['A','B','C','D','E','F','G','H','I','J'];
+var flagSeq=0;
+/* inner SVG for one flag; numeral pennants are clipped to their tapered shape */
+function flagInner(l){
+  l=String(l==null?'':l).toUpperCase();
+  if(!F[l]) return '';
+  if(!/^[0-9]$/.test(l)) return F[l];
+  var id='pn'+(++flagSeq), P='M0 0 60 15v10L0 40z';
+  return '<defs><clipPath id="'+id+'"><path d="'+P+'"/></clipPath></defs><g clip-path="url(#'+id+')">'+F[l]+'</g><path d="'+P+'" fill="none" stroke="rgba(15,44,66,.25)"/>';
+}
+const LETTERS = FLAG_ORDER.slice(0,10);
+
+/* ---------- page wording (the same script runs Armada and Helm) ---------- */
+const PAGE = {
+  hoistNone: 'No flags flying yet.',
+  hoistSome: (live,n) => live>=n ? 'All '+n+' flags flying.' : 'Flying: '+live+' of '+n+'. The faded flags are still in the yard.',
+  handRail: false,
+  exitsAlways: false
+};
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const flagSVG = l => F[l] ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>' : '';
+const flagSVG = l => { const i=flagInner(l); return i ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+esc(l)+'">'+i+'</svg>' : ''; };
 const FALLBACK = LETTERS.map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
 const $ = id => document.getElementById(id);
-
-/* ---------- which flag is which product ----------
-   The publisher keeps the signal names (Alfa, Bravo, Charlie...). Bots that are
-   also sold on their own get their product name and a link to their page.
-   Matched by flag, so renaming a bot in config.json never breaks this. */
-const PRODUCTS = {
-  A:{name:'CandleGrid Pro',   url:'https://jsgaston.github.io/candlegrid-web-en/'},
-  B:{name:'RegimeSwitch Pro', url:'https://jsgaston.github.io/regimeswitch-web-en/'}
-};
-function applyProducts(strats){
-  strats.forEach(st=>{ const P=PRODUCTS[st.flag]; if(!P || st.product) return;
-    st.callsign = st.name!==P.name ? st.name : null; st.name=P.name; st.product=P; });
-}
-/* A bot's net is the sum of its own closed trades (tl.p). Older publisher
-   versions filtered by the magic of each deal, so a position closed with a
-   different magic (by hand, by stop-out) dropped out of its bot's net. */
-function fixNets(){
-  if(!ACC.publish_money) return;
-  SCOPES.forEach(sc=>{
-    if(sc.kind==='account' || !sc.tl || !Array.isArray(sc.tl.p) || !sc.tl.p.length) return;
-    const sum=Math.round(sc.tl.p.reduce((a,b)=>a+(+b||0),0)*100)/100;
-    if(nil(sc.net) || Math.abs(sum-sc.net)>=0.01){
-      sc.net=sum;
-      if(sc.returns && !nil(ACC.net_profit) && ACC.net_profit) sc.returns.share_of_profit_pct=Math.round(sum/ACC.net_profit*1000)/10;
-    }
-  });
-}
-function labelScopes(strats){
-  const byFlag={}; strats.forEach(st=>byFlag[st.flag]=st);
-  const owner={};                                   // magic -> strategy that owns it
-  strats.forEach(st=>(st.magics||[]).forEach(m=>owner[m]=st));
-  SCOPES.filter(sc=>sc.kind==='group'&&sc.flag).forEach(g=>(g.magics||[]).forEach(m=>{ if(!owner[m]) owner[m]=byFlag[g.flag]; }));
-  SCOPES.forEach(sc=>{
-    if(sc.kind==='account') return;
-    if(sc.flag && PRODUCTS[sc.flag]){ const P=PRODUCTS[sc.flag]; if(sc.name!==P.name){ sc.callsign=sc.name; sc.name=P.name; } sc.product=P; }
-    if(sc.kind==='magic' && !sc.flag && sc.magics && owner[sc.magics[0]]){
-      const o=owner[sc.magics[0]]; sc.parent=o.name; sc.parentFlag=o.flag; sc.child=true;
-    }
-  });
-  // account first, then each flag with its own magic numbers underneath, then the rest
-  const order=[], used=new Set(), push=x=>{ if(x&&!used.has(x)){ used.add(x); order.push(x); } };
-  SCOPES.filter(x=>x.kind==='account').forEach(push);
-  LETTERS.forEach(l=>{
-    SCOPES.filter(x=>x.flag===l&&x.kind==='group').forEach(push);
-    SCOPES.filter(x=>x.flag===l&&x.kind!=='group').forEach(push);
-    SCOPES.filter(x=>x.child&&x.parentFlag===l).forEach(push);
-  });
-  SCOPES.forEach(push);
-  SCOPES=order;
-}
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- formatting ---------- */
@@ -851,9 +861,6 @@ const money = (n,sign=false) => {
   return (n<0?'−':(sign&&n>0?'+':'')) + s;
 };
 const cls = n => nil(n)?'':(n>0?'pos':(n<0?'neg':''));
-/* recovery factor = net profit / largest drawdown. While the net is negative
-   the ratio is just the loss again with a minus sign, so it is left blank. */
-const rec = (n,d=2) => nil(n)||n<=0 ? '—' : num(n,d);
 const fmtDate = iso => { const d=new Date(iso+'T00:00:00Z'); return d.getUTCDate()+' '+MONTHS[d.getUTCMonth()]+' '+d.getUTCFullYear(); };
 const days = n => nil(n)?'—':(n===1?'1 day':int(n)+' days');
 const hours = n => nil(n)?'—':(n<48? n.toFixed(1)+' h' : (n/24).toFixed(1)+' d');
@@ -868,25 +875,7 @@ function ago(iso){
 let DATA=null, SCOPES=[], CUR_SCOPE=null, ACC={};
 const view={mode:'growth', range:0, series:'trade', roll:'pf'};
 const scopeById = id => SCOPES.find(x=>x.id===id);
-/* Magic numbers of a scope. A bot is configured with every magic number it may
-   ever use, but only the ones that have traded have a row and a figure. Listing
-   the idle ones next to a total that cannot include them reads as an error, so
-   they are counted, not named. */
-function tradedMagics(){
-  const on=new Set();
-  SCOPES.forEach(sc=>{ if(sc.kind==='magic' && !sc.empty && sc.magics && sc.magics.length) on.add(sc.magics[0]); });
-  return on;
-}
-const magicLabel = sc => {
-  const mg = (sc.magics||[]);
-  if(!mg.length) return '';
-  if(mg.length===1) return 'magic '+mg[0];
-  const on=tradedMagics(), live=mg.filter(m=>on.has(m)), idle=mg.length-live.length;
-  if(!live.length) return mg.length+' magic numbers, none trading yet';
-  if(!idle) return 'magics '+live.join(', ');
-  return 'magics '+live.join(', ')+' · '+idle+' more idle';
-};
-const subLabel = sc => [sc.callsign?'signal '+sc.callsign:'', magicLabel(sc), sc.parent?'part of '+sc.parent:''].filter(Boolean).join(' · ');
+const magicLabel = sc => sc.magics && sc.magics.length ? (sc.magics.length===1?'magic '+sc.magics[0]:'magics '+sc.magics.join(', ')) : '';
 
 /* ---------- adapter for older stats.json ---------- */
 function normalise(s){
@@ -899,9 +888,12 @@ function normalise(s){
 
 /* ---------- hoist ---------- */
 function drawHoist(strats){
-  $('hoist').innerHTML = strats.map(s=>'<span class="'+(s.status==='live'?'':'dim')+'" title="'+esc(s.name)+'">'+flagSVG(s.flag)+'</span>').join('');
+  const shown=strats.filter(s=>s.flag && s.status!=='retired');
+  $('hoist').innerHTML = shown.map(s=>'<span class="'+(s.status==='live'?'':'dim')+'" title="'+esc(s.name)+'">'+flagSVG(s.flag)+'</span>').join('');
+  $('hoist').classList.toggle('many', shown.length>12);
+  $('hoist').classList.toggle('lots', shown.length>24);
   const live=strats.filter(s=>s.status==='live').length;
-  $('hoist-note').textContent = live===0 ? 'Ten flags, none flying yet.' : 'Flying: '+live+' of 10. The faded flags are still in the yard.';
+  $('hoist-note').textContent = live===0 ? PAGE.hoistNone : PAGE.hoistSome(live, shown.length);
 }
 
 function drawTicket(s){
@@ -943,13 +935,10 @@ function selectScope(id, push){
   const T=sc.trades||{};
   $('scope-meta').innerHTML=
     (sc.flag?'<span class="flagmini">'+flagSVG(sc.flag)+'</span>':'')+
-    (sc.callsign?'<span>signal <b>'+esc(sc.callsign)+'</b></span>':'')+
     (magicLabel(sc)?'<span>'+esc(magicLabel(sc))+'</span>':'')+
-    (sc.parent?'<span>part of <b>'+esc(sc.parent)+'</b></span>':'')+
     (T.trades?'<span><b>'+int(T.trades)+'</b> trades</span>':'')+
     (T.first_trade?'<span>trading since <b>'+fmtDate(T.first_trade)+'</b></span>':'')+
-    (!isAcc && !nil((sc.returns||{}).share_of_profit_pct)?'<span><b>'+pct(sc.returns.share_of_profit_pct,1).replace('+','')+'</b> of account profit</span>':'')+
-    (sc.product?'<a class="prodlink" href="'+esc(sc.product.url)+'">'+esc(sc.product.name)+' page →</a>':'');
+    (!isAcc && !nil((sc.returns||{}).share_of_profit_pct)?'<span><b>'+pct(sc.returns.share_of_profit_pct,1).replace('+','')+'</b> of account profit</span>':'');
   $('record-title').textContent = isAcc ? 'The account, as it stands' : sc.name+': its record';
   $('stats-title').textContent = isAcc ? 'Every number the account produces' : 'Every number for '+sc.name;
   const bb=$('btn-balance'); bb.disabled=!isAcc||!ACC.publish_money;
@@ -964,7 +953,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); renderExtraCharts(sc); drawExits(sc); drawRolling(sc); drawMC(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
 }
@@ -980,7 +969,12 @@ function drawRail(sc){
   else { setText('r-roi',pct(R.roi_pct),cls(R.roi_pct)); setText('r-roi-s','return on capital'); }
   setText('r-pf',num(T.profit_factor)); setText('r-pf-s', !nil(T.win_rate_pct)?'hits '+upct(T.win_rate_pct,1):'\u00a0');
   setText('r-dd',ddpct(K.max_drawdown_pct)); setText('r-dd-s', nil(K.current_drawdown_pct)?'\u00a0':'now '+(K.current_drawdown_pct>0?'−'+upct(K.current_drawdown_pct):'at peak'));
-  setText('r-rec',rec(K.recovery_factor)); setText('r-rec-s', !nil(K.longest_underwater_days)?'longest under water '+days(K.longest_underwater_days):'\u00a0');
+  setText('r-rec',num(K.recovery_factor)); setText('r-rec-s', !nil(K.longest_underwater_days)?'longest under water '+days(K.longest_underwater_days):'\u00a0');
+  if(PAGE.handRail){
+    const h=(sc.exits||[]).find(e=>e.k==='hand');
+    setText('r-rec', h?upct(h.share_pct,0):(sc.exits?'0%':'—'));
+    setText('r-rec-s', h&&T.trades?int(h.trades)+' of '+int(T.trades)+' trades':'\u00a0');
+  }
   setText('r-sharpe',num(K.sharpe)); setText('r-sharpe-s', !nil(K.sortino)?'Sortino '+num(K.sortino):(nil(R.total_pct)?'\u00a0':'needs 5 trading days'));
 }
 
@@ -1017,7 +1011,7 @@ const CMP_COLS=[
   {k:'ret', t:'Return', v:sc=>(sc.returns||{}).total_pct, f:pct, c:true},
   {k:'net', t:'Net', v:sc=>sc.kind==='account'?ACC.net_profit:sc.net, f:x=>money(x,true), c:true, money:true},
   {k:'mdd', t:'Max DD', v:sc=>(sc.risk||{}).max_drawdown_pct, f:ddpct, lowBest:true},
-  {k:'rec', t:'Recovery', v:sc=>(sc.risk||{}).recovery_factor, f:rec},
+  {k:'rec', t:'Recovery', v:sc=>(sc.risk||{}).recovery_factor, f:num},
   {k:'sharpe', t:'Sharpe', v:sc=>(sc.risk||{}).sharpe, f:num},
   {k:'exp', t:'Expectancy', v:sc=>(sc.trades||{}).expectancy_pct, f:x=>pct(x,3), c:true},
   {k:'wst', t:'Best streak', v:sc=>(sc.trades||{}).max_consec_wins, f:int},
@@ -1026,50 +1020,13 @@ const CMP_COLS=[
 ];
 let cmpSort={k:null,dir:-1};
 
-/* compact curve for the comparison table.
-   Uses the richest series available: closed trades once there are a few,
-   hourly equity before that, daily equity as a last resort. Drawn with the
-   same monotone cubic as the big chart, so it bends but never invents a peak. */
-function sparkSeries(sc){
-  const tl=sc.tl, n=(tl&&tl.t)?tl.t.length:0, live=sc.live||[], eq=sc.equity||[];
-  let out;
-  if(n>=6 || (n>=1 && live.length<3)){
-    out=[{x:0,v:100}]; let v=100;
-    for(let i=0;i<n;i++){ v*=1+tl.r[i]/100; out.push({x:i+1,v}); }
-  } else if(live.length>=3) out=live.map(([t,v])=>({x:t,v}));
-  else out=eq.map(e=>({x:Date.parse(e.d+'T00:00:00Z'),v:e.v}));
-  // a 96px curve needs no more than ~64 points; keep the lowest and highest of each bucket
-  if(out.length>64){
-    const k=Math.ceil(out.length/32), thin=[out[0]];
-    for(let i=1;i<out.length-1;i+=k){
-      const b=out.slice(i,Math.min(i+k,out.length-1)); if(!b.length) continue;
-      let lo=b[0],hi=b[0]; b.forEach(p=>{ if(p.v<lo.v) lo=p; if(p.v>hi.v) hi=p; });
-      (lo.x<=hi.x?[lo,hi]:[hi,lo]).forEach(p=>{ if(thin[thin.length-1]!==p) thin.push(p); });
-    }
-    thin.push(out[out.length-1]); out=thin;
-  }
-  return out;
-}
-function sparkPath(P){
-  if(P.length===2){ const h=(P[1][0]-P[0][0])/2;
-    return 'M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1)+'C'+(P[0][0]+h).toFixed(1)+' '+P[0][1].toFixed(1)+' '+(P[1][0]-h).toFixed(1)+' '+P[1][1].toFixed(1)+' '+P[1][0].toFixed(1)+' '+P[1][1].toFixed(1); }
-  return smoothPath(P);
-}
 function sparkline(sc){
-  const e=sparkSeries(sc); if(e.length<2) return '';
-  const W=96,H=28, vs=e.map(p=>p.v), lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
-  const x0=e[0].x, x1=e[e.length-1].x||x0+1;
-  const X=p=>(p.x-x0)/((x1-x0)||1)*W, Y=v=>H-3-(v-lo)/sp*(H-6);
-  const P=e.map(p=>[X(p),Y(p.v)]);
-  const d=sparkPath(P);
-  const up=vs[vs.length-1]>=100, col=up?'#1E6B57':'#BE3A2B';
-  const y0=Y(100).toFixed(1);
-  const area=d+'L'+P[P.length-1][0].toFixed(1)+' '+y0+'L'+P[0][0].toFixed(1)+' '+y0+'Z';
-  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+
-    '<line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.22)" stroke-dasharray="2 2"/>'+
-    '<path d="'+area+'" fill="'+col+'" fill-opacity=".13"/>'+
-    '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>'+
-    '<circle cx="'+P[P.length-1][0].toFixed(1)+'" cy="'+P[P.length-1][1].toFixed(1)+'" r="2" fill="'+col+'"/></svg>';
+  const e=sc.equity||[]; if(e.length<2) return '';
+  const W=86,H=24, vs=e.map(p=>p.v), lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
+  const d=e.map((p,i)=>(i?'L':'M')+(i/(e.length-1)*W).toFixed(1)+' '+(H-2-(p.v-lo)/sp*(H-4)).toFixed(1)).join('');
+  const col=vs[vs.length-1]>=100?'#1E6B57':'#BE3A2B';
+  const y0=(H-2-(100-lo)/sp*(H-4)).toFixed(1);
+  return '<svg width="'+W+'" height="'+H+'" aria-hidden="true"><line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.2)" stroke-dasharray="2 2"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5"/></svg>';
 }
 
 function drawCompare(){
@@ -1086,8 +1043,8 @@ function drawCompare(){
     list=acc.concat(rest);
   }
   const head='<thead><tr>'+cols.map(c=>'<th scope="col" data-k="'+c.k+'"'+(c.nosort?'':' tabindex="0"')+(cmpSort.k===c.k?' aria-sort="'+(cmpSort.dir<0?'descending':'ascending')+'"':'')+'>'+c.t+'</th>').join('')+'</tr></thead>';
-  const body=list.map(sc=>'<tr class="kind-'+sc.kind+(sc.child?' child':'')+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
-    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':subLabel(sc))+'</small></span></span></td>';
+  const body=list.map(sc=>'<tr class="kind-'+sc.kind+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
+    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':magicLabel(sc))+'</small></span></span></td>';
     if(c.k==='spark') return '<td class="spark">'+sparkline(sc)+'</td>';
     const v=c.v(sc); return '<td class="'+(c.c?cls(v):'')+'">'+c.f(v)+'</td>';
   }).join('')+'</tr>').join('');
@@ -1141,7 +1098,7 @@ function drawStats(sc){
     ['Longest time under water',days(K.longest_underwater_days),'','Longest stretch between a peak and the next new high.'],
     ['Drawdown periods',int(K.drawdown_episodes),'','How many times the curve fell below a previous peak.'],
     ['Average recovery',days(K.avg_recovery_days),'','Average time from a peak back to a new high.'],
-    ['Recovery factor',rec(K.recovery_factor),'','Net profit divided by the largest drawdown in money. Above 3 is solid. Blank until the bot is in profit.'],
+    ['Recovery factor',num(K.recovery_factor),'','Net profit divided by the largest drawdown in money. Above 3 is solid.'],
     ['Return / drawdown',num(K.return_dd_ratio),'','Total return divided by max drawdown, both in %.'],
     ['Sharpe ratio',num(K.sharpe),'','Average daily return divided by its volatility, annualised over 252 trading days.'],
     ['Sortino ratio',num(K.sortino),'','Like Sharpe, but only counts downside volatility.'],
@@ -1260,7 +1217,7 @@ function buildSeries(sc, kind){
     const pts=[{x:t0,v:100,p:0,b:sb,dd:0,i:0}]; let v=100,p=0,peak=100;
     tl.t.forEach((t,i)=>{
       v*=1+tl.r[i]/100; if(tl.p) p+=tl.p[i]; peak=Math.max(peak,v);
-      pts.push({x:t*1000,v,p:tl.p?p:null,b:(sb!=null&&tl.p)?sb+p:null,dd:(v/peak-1)*100,i:i+1,r:tl.r[i],pnl:tl.p?tl.p[i]:null});
+      pts.push({x:t*1000,v,p:tl.p?p:null,b:(sb!=null&&tl.p)?sb+p:null,dd:(v/peak-1)*100,i:i+1,r:tl.r[i],pnl:tl.p?tl.p[i]:null,ex:tl.x?tl.x[i]:null});
     });
     return pts;
   }
@@ -1353,6 +1310,7 @@ function drawEquity(animate){
     ro.innerHTML=(byIndex&&!nil(p.i)&&p.i>0?'<span>trade <b>#'+p.i+'</b></span>':'')+
       '<span>'+(p.day?fmtDate(new Date(p.x).toISOString().slice(0,10)):fmtTime(p.x)+' UTC')+'</span>'+
       (!nil(p.r)?'<span>result <b class="'+cls(p.r)+'">'+pct(p.r,3)+(ACC.publish_money&&!nil(p.pnl)?' ('+money(p.pnl,true)+')':'')+'</b></span>':'')+
+      (p.ex&&EXITS[p.ex]?'<span>closed <b>'+EXITS[p.ex].t.toLowerCase()+'</b></span>':'')+
       '<span>growth <b>'+pct((p.v/base-1)*100)+'</b></span>'+
       (!nil(p.p)&&ACC.publish_money?'<span>profit <b>'+money(p.p-basep,true)+'</b></span>':'')+
       (!nil(p.b)?'<span>balance <b>'+money(p.b)+'</b></span>':'')+
@@ -1451,39 +1409,71 @@ function drawFlows(sc){
   $('flows').hidden=false;
 }
 
-/* ---------- P&L by bot ----------
-   One row per bot (per signal flag): the flag's group if it has several
-   magic numbers, otherwise its single magic. Loose magic numbers are left out;
-   they are already inside their bot's row. */
-function botScopes(){
-  const out=[];
-  LETTERS.forEach(l=>{
-    const g=SCOPES.find(x=>x.flag===l&&x.kind==='group'&&!x.empty) || SCOPES.find(x=>x.flag===l&&x.kind!=='account'&&!x.empty);
-    if(g) out.push(g);
-  });
-  return out;
-}
+/* ---------- P&L by bot ---------- */
 function drawPnlBars(){
-  const rows=botScopes();
+  const rows=SCOPES.filter(x=>x.kind!=='account' && !x.empty);
   if(!rows.length){ $('pnl-wrap').hidden=true; return; }
   const M=ACC.publish_money, v=x=>M&&!nil(x.net)?x.net:(x.returns||{}).total_pct;
   rows.sort((a,b)=>(v(b)||0)-(v(a)||0));
   const max=Math.max(1e-9,...rows.map(x=>Math.abs(v(x)||0))), hasNeg=rows.some(x=>v(x)<0);
-  const fmt=val=>M?money(val,true):pct(val);
-  let html=rows.map(x=>{
+  $('pnlbars').innerHTML=rows.map(x=>{
     const val=v(x)||0, w=Math.abs(val)/max*(hasNeg?50:100), left=hasNeg?(val>=0?50:50-w):0;
-    return '<div class="pnlrow" data-id="'+esc(x.id)+'" title="'+esc(x.name)+'"><span class="nm">'+(x.flag?flagSVG(x.flag):'')+esc(x.name)+(x.callsign?'<small>'+esc(x.callsign)+'</small>':'')+'</span>'+
+    return '<div class="pnlrow" data-id="'+esc(x.id)+'" title="'+esc(x.name)+'"><span class="nm">'+(x.flag?flagSVG(x.flag):'')+esc(x.name)+(x.kind==='group'?' <span class="tag">group</span>':'')+'</span>'+
       '<span class="track">'+(hasNeg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.4,w)+'%;background:'+(val>=0?'#1E6B57':'#BE3A2B')+'"></i></span>'+
-      '<span class="val '+cls(val)+'">'+fmt(val)+'</span></div>';
+      '<span class="val '+cls(val)+'">'+(M&&!nil(x.net)?money(val,true):pct(val))+'</span></div>';
   }).join('');
-  const total=rows.reduce((a,x)=>a+(v(x)||0),0);
-  html+='<div class="pnltotal"><span>All bots</span><span></span><span class="val '+cls(total)+'">'+fmt(total)+'</span></div>';
-  if(M && !nil(ACC.net_profit) && Math.abs(ACC.net_profit-total)>=1){
-    html+='<p class="pnlnote">Whole account: <b class="'+cls(ACC.net_profit)+'">'+money(ACC.net_profit,true)+'</b>. The '+money(ACC.net_profit-total,true)+' difference is manual trades, magic numbers not assigned to any bot, or costs of positions still open.</p>';
-  }
-  $('pnlbars').innerHTML=html;
   $('pnlbars').querySelectorAll('.pnlrow').forEach(r=>r.addEventListener('click',()=>{ selectScope(r.dataset.id,true); $('record').scrollIntoView(); }));
   $('pnl-wrap').hidden=false;
+}
+
+/* ---------- exits: who closed each trade ---------- */
+const EXITS={
+  h:{k:'hand', t:'By hand',     c:'#E0A92C', ink:'#1A1206'},
+  t:{k:'tp',   t:'Take-profit', c:'#1E6B57', ink:'#fff'},
+  s:{k:'sl',   t:'Stop-loss',   c:'#BE3A2B', ink:'#fff'},
+  b:{k:'bot',  t:'By the bot',  c:'#0F2C42', ink:'#fff'},
+  o:{k:'so',   t:'Stop-out',    c:'#7A1E14', ink:'#fff'},
+  x:{k:'other',t:'Other',       c:'#8DA4B4', ink:'#0F2C42'}
+};
+const EXIT_BY_K={}; Object.keys(EXITS).forEach(c=>{ EXIT_BY_K[EXITS[c].k]=Object.assign({code:c},EXITS[c]); });
+function drawExits(sc){
+  const sec=$('exits'); if(!sec) return;
+  const ex=(sc.exits||[]).filter(e=>e.trades>0);
+  if(!ex.length){
+    if(!PAGE.exitsAlways){ sec.hidden=true; return; }
+    sec.hidden=false; $('exbar').innerHTML=''; $('exits-t').innerHTML='';
+    $('exits-plot').innerHTML='<div class="plot-empty" style="min-height:250px"><span>'+(sc.empty||!(sc.trades||{}).trades?'No closed trades yet.':'This record was published before exits were tracked.')+'</span></div>';
+    return;
+  }
+  sec.hidden=false;
+  const M=ACC.publish_money, TT=sc.trades||{};
+  $('exbar').innerHTML=ex.map(e=>{ const m=EXIT_BY_K[e.k]||EXIT_BY_K.other;
+    return '<span style="width:'+e.share_pct+'%;background:'+m.c+';color:'+m.ink+'" title="'+esc(m.t)+': '+e.trades+' trades, '+num(e.share_pct,1)+'%">'+(e.share_pct>=14?'<b>'+esc(m.t)+'</b>'+num(e.share_pct,0)+'%':(e.share_pct>=6?num(e.share_pct,0)+'%':''))+'</span>'; }).join('');
+  $('exits-t').innerHTML='<thead><tr><th>Closed</th><th>Trades</th><th>Share</th><th>Hits</th><th>PF</th><th>Average</th><th>Net</th><th>Avg hold</th></tr></thead><tbody>'+
+    ex.map(e=>{ const m=EXIT_BY_K[e.k]||EXIT_BY_K.other;
+      return '<tr><td><i style="background:'+m.c+'"></i>'+esc(m.t)+'</td><td>'+int(e.trades)+'</td><td>'+upct(e.share_pct,1)+'</td><td>'+upct(e.win_rate_pct,1)+'</td><td>'+num(e.profit_factor)+'</td>'+
+        '<td class="'+cls(e.avg_pct)+'">'+pct(e.avg_pct,3)+'</td><td class="'+cls(e.net_pct)+'">'+(M&&!nil(e.net)?money(e.net,true):pct(e.net_pct))+'</td><td>'+hours(e.avg_hold_hours)+'</td></tr>'; }).join('')+'</tbody>';
+
+  const box=$('exits-plot'), tl=sc.tl||{}, codes=tl.x||'', R=tl.r||[];
+  if(codes.length!==R.length || R.length<2){ box.innerHTML='<div class="plot-empty" style="min-height:250px"><span>The running result appears after two closed trades.</span></div>'; return; }
+  const N=R.length, lines={};
+  for(let i=0;i<N;i++){ const c=codes[i]; if(!lines[c]) lines[c]={pts:[[0,0]],sum:0}; lines[c].sum+=R[i]; lines[c].pts.push([i+1,lines[c].sum]); }
+  Object.values(lines).forEach(l=>{ if(l.pts[l.pts.length-1][0]<N) l.pts.push([N,l.sum]); });
+  const all=[0].concat(...Object.values(lines).map(l=>l.pts.map(p=>p[1])));
+  let lo=Math.min(...all), hi=Math.max(...all); const pad=(hi-lo)*.12||.5; lo-=pad; hi+=pad;
+  const W=Math.max(300,box.clientWidth), H=250, PL=12, PR=58, PT=16, PB=26;
+  const X=i=>PL+i/N*(W-PL-PR), Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+8,Y(v)+4,pct(v,1))).join('');
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.45)" stroke-dasharray="3 4"/>';
+  Object.keys(EXITS).forEach(c=>{ const l=lines[c]; if(!l) return;
+    const P=l.pts.map(p=>[X(p[0]),Y(p[1])]);
+    g+='<path d="'+smoothPath(P)+'" fill="none" stroke="'+EXITS[c].c+'" stroke-width="'+(c==='h'?2.8:2)+'" stroke-linejoin="round"><title>'+esc(EXITS[c].t)+'</title></path>'+
+       '<circle cx="'+P[P.length-1][0].toFixed(1)+'" cy="'+P[P.length-1][1].toFixed(1)+'" r="3.5" fill="'+EXITS[c].c+'"/>'; });
+  g+=T(PL,H-8,'trade 1')+T(W-PR,H-8,'trade '+N,'end');
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Running result by exit type">'+g+'</svg>'+
+    '<div class="legendline" style="padding-bottom:10px">'+Object.keys(EXITS).filter(c=>lines[c]).map(c=>'<span><i style="background:'+EXITS[c].c+'"></i>'+esc(EXITS[c].t)+'</span>').join('')+'</div>';
+  const hand=ex.find(e=>e.k==='hand');
+  $('exits-cap').textContent='Summed trade results, % of balance, against the trade number.'+(hand?' '+int(hand.trades)+' of '+int(TT.trades)+' trades were closed by hand.':' No trade in this record was closed by hand.');
 }
 
 /* ---------- rolling metrics ---------- */
@@ -1670,11 +1660,11 @@ function drawRoster(strats){
     const live=s.status==='live', sc=byFlag[s.flag], T=sc?(sc.trades||{}):{}, r=sc?(sc.returns||{}).total_pct:null;
     const bar=!nil(r)?'<span class="contrib"><span class="'+cls(r)+'">'+pct(r)+'</span><i class="'+(r<0?'n':'')+'" style="width:'+Math.round(Math.abs(r)/maxAbs*60)+'px"></i></span>':'—';
     return '<tr class="'+(live?'':'pending')+'"'+(sc?' data-id="'+esc(sc.id)+'" style="cursor:pointer"':'')+'>'+
-      '<td>'+flagSVG(s.flag)+'</td><td class="name">'+(s.product?'<a href="'+esc(s.product.url)+'">'+esc(s.name)+'</a>':esc(s.name))+(s.callsign?'<small>signal '+esc(s.callsign)+'</small>':'')+'</td><td class="sym">'+esc(s.symbols)+'</td><td class="sym">'+esc(s.style)+'</td>'+
+      '<td>'+flagSVG(s.flag)+'</td><td class="name">'+esc(s.name)+'</td><td class="sym">'+esc(s.symbols)+'</td><td class="sym">'+esc(s.style)+'</td>'+
       '<td class="r">'+(sc?int(T.trades):'—')+'</td><td class="r">'+(sc?upct(T.win_rate_pct,1):'—')+'</td><td class="r">'+(sc?num(T.profit_factor):'—')+'</td>'+
       '<td class="r">'+bar+'</td><td class="st '+(live?'live':'testing')+'">'+(live?'Sailing since '+(s.since?fmtDate(s.since):'—'):(s.status==='paused'?'Paused':(s.status==='retired'?'Retired':'In the yard')))+'</td></tr>';
   }).join('');
-  $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',e=>{ if(e.target.closest('a')) return; selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
+  $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>{ selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
 }
 
 /* ---------- controls & boot ---------- */
@@ -1688,28 +1678,25 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const src=new URLSearchParams(location.search).has('preview')?'stats.preview.json':'stats.json';
   let s=null;
   try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
-  const strats=(s&&s.strategies&&s.strategies.length===10)?s.strategies:FALLBACK;
-  applyProducts(strats);
+  const strats=(s&&s.strategies&&s.strategies.length)?s.strategies:FALLBACK;
   drawHoist(strats);
-  if(!s){ drawRoster(strats); return; }
+  if(!s){ drawRoster(strats); if(PAGE.exitsAlways) drawExits({}); return; }
 
   DATA=s; ACC=s.account||{}; if(ACC.currency) CUR=ACC.currency;
   SCOPES=normalise(s);
   SCOPES.forEach(sc=>{ if(sc.equity) sc.equity=normaliseEquity(sc.equity, sc.kind==='account'?ACC.starting_balance:null); });
-  labelScopes(strats);
-  fixNets();
   drawTicket(s);
   if(s.updated_utc) $('stamp-updated').textContent='Published from the account '+ago(s.updated_utc)+'.';
   if(s.verified_url) $('stamp-verify').innerHTML='<a href="'+esc(s.verified_url)+'">Independently verified record</a>';
   drawRoster(strats);
-  if(!SCOPES.length) return;
+  if(!SCOPES.length){ if(PAGE.exitsAlways) drawExits({}); return; }
 
   buildSelector(); drawCompare(); drawPnlBars(); drawCorr(s.correlation);
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawExits(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
