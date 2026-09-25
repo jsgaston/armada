@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Armada — copy-trading signal by Wisfli</title>
-<meta name="description" content="One MetaTrader 5 account running every trading bot I build, each added after validation. Your terminal mirrors every position, sized to your balance. Full statistics published straight from the account every 15 minutes.">
+<title>Armada — live results of the Wisfli bots</title>
+<meta name="description" content="One MetaTrader 5 account where every Wisfli bot trades in public. Full statistics published straight from the account every 15 minutes. A record to read, not a signal to copy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -161,24 +161,15 @@ tr.pending td{opacity:.5}
 .contrib i{display:block;height:8px;background:var(--up)}
 .contrib i.n{background:var(--down)}
 
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;counter-reset:s}
-.step{counter-increment:s;border-top:2px solid var(--sea);padding-top:14px}
-.step h3{font-size:17px;margin:0 0 6px;font-weight:700}
-.step h3::before{content:counter(s);font-size:13px;color:var(--muted);margin-right:10px;font-weight:600}
-.step p{margin:0;font-size:16px;color:#324B60}
-
-/* price */
+/* run a bot */
 .berth{background:var(--sea-deep);color:#E7EDEA;padding:44px 44px 40px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
 .berth h2{color:#fff;margin-bottom:14px}
 .berth p{max-width:30em;color:#AFC2CE;margin:0 0 18px}
 .berth ul{list-style:none;margin:0;padding:0;font-family:Archivo;font-size:15px;color:#CFDCE4}
 .berth li{padding:7px 0 7px 22px;position:relative}
 .berth li::before{content:"";position:absolute;left:0;top:16px;width:10px;height:1px;background:var(--brass)}
-.price{text-align:right}
-.price .amt{font-family:Archivo;font-size:70px;font-weight:800;font-stretch:112%;line-height:1;color:#fff}
-.price .per{font-family:Archivo;font-size:15px;color:#AFC2CE;display:block;margin-top:6px}
-.price small{display:block;margin-top:14px;font-family:Archivo;font-size:12.5px;color:#8FA6B4;max-width:20em;margin-left:auto}
+.run-cta{text-align:right}
+.run-cta small{display:block;margin-top:16px;font-family:Archivo;font-size:12.5px;line-height:1.5;color:#8FA6B4;max-width:20em;margin-left:auto}
 
 /* plain talk */
 .talk{display:grid;grid-template-columns:1fr 1fr;gap:44px}
@@ -211,9 +202,8 @@ footer p{max-width:52em;margin:0 0 10px}
   .ledger div{border-right:1px solid var(--rule)!important;border-bottom:1px solid var(--rule)}
   .ledger div:nth-child(2n){border-right:0!important}
   .cols,.trio{grid-template-columns:1fr;gap:34px}
-  .steps{grid-template-columns:1fr;gap:26px}
   .berth{grid-template-columns:1fr;padding:32px 26px;gap:26px}
-  .price{text-align:left}.price small{margin-left:0}
+  .run-cta{text-align:left}.run-cta small{margin-left:0}
   .talk{grid-template-columns:1fr;gap:26px}
   section{padding:56px 0}
 }
@@ -328,10 +318,9 @@ section h2{font-size:clamp(34px,4.3vw,54px);font-weight:800;font-stretch:108%;li
 .sub{font-size:18px;color:#34506A;margin-bottom:40px}
 h3.col{font-size:16px}
 .plot{background:var(--panel)}
-#berth{background:var(--panel);border-top:1px solid var(--rule)}
+#run{background:var(--panel);border-top:1px solid var(--rule)}
 .berth{background:var(--abyss);padding:56px 56px 52px}
 .berth h2{font-size:clamp(36px,4.6vw,60px)}
-.price .amt{font-size:84px}
 #plain{border-top:0}
 
 footer{background:var(--abyss);color:var(--dmuted);font:14px/1.6 Archivo;padding:72px 0 56px;border-top:0}
@@ -356,7 +345,6 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   .hero .rail-item .v{font-size:22px}
   section{padding:64px 0}
   .berth{padding:34px 24px}
-  .price .amt{font-size:64px}
   footer .cols{grid-template-columns:1fr;gap:32px}
 }
 
@@ -389,20 +377,6 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 @media (max-width:980px){ .lab{grid-template-columns:1fr} }
 @media (max-width:720px){ .pnlrow{grid-template-columns:110px 1fr 84px;font-size:13px} .mcstats{grid-template-columns:1fr 1fr} .mcstats div:nth-child(3n){border-right:1px solid var(--rule)} .mcstats div:nth-child(2n){border-right:0} }
 
-/* ---- v7: bigger fleets and exits ---- */
-.hero .hoist.many{gap:6px}
-.hero .hoist.many svg{width:40px;height:27px}
-.hero .hoist.lots svg{width:32px;height:21px}
-.exits{display:grid;grid-template-columns:1fr 1fr;gap:44px 48px}
-.exits>div{min-width:0}
-.exbar{display:flex;height:38px;margin:14px 0 18px;background:var(--panel);border:1px solid var(--rule);overflow:hidden}
-.exbar span{display:flex;align-items:center;justify-content:center;font:600 12px Archivo;white-space:nowrap;overflow:hidden;min-width:2px}
-.exbar b{font-weight:700;margin-right:4px}
-#exits-t{min-width:560px}
-#exits-t td i{display:inline-block;width:10px;height:10px;margin-right:8px;vertical-align:0}
-#exits-plot{min-height:250px}
-@media (max-width:980px){ .exits{grid-template-columns:1fr} }
-
 /* ---- v6: chart polish and extra cards (from your version) ---- */
 #plot,#plot-dd{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
 #plot{min-height:330px}
@@ -427,11 +401,10 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
-      <a href="#exits" class="opt">Exits</a>
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
-      <a href="setup.html" class="opt">Setup guide</a>
-      <a class="pill" href="#berth">Subscribe</a>
+      <a href="#plain" class="opt">Reading the figures</a>
+      <a class="pill" href="https://wisfli.com/#bots">Get a bot</a>
     </nav>
   </div>
 </header>
@@ -440,12 +413,12 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   <div class="wrap hero-grid">
     <div>
       <h1>Armada</h1>
-      <p class="kicker">A MetaTrader&nbsp;5 copy-trading signal</p>
+      <p class="kicker">Live results from one MetaTrader&nbsp;5 account</p>
       <p class="ticket" id="ticket" hidden></p>
-      <p class="lead">One account, a growing fleet. Every trading bot I build joins this single signal, but only after it finishes validation. Your terminal mirrors every position the account takes, scaled to your own balance.</p>
+      <p class="lead">Every bot I build trades here, in one account, each under its own flag and magic number, and each added only after it finishes validation. Armada is not for sale and cannot be copied: it is a public record, so you can see how each bot behaves before deciding whether to run one yourself.</p>
       <div class="actions">
-        <a class="btn brass" href="#berth">Subscribe from €59/month</a>
-        <a class="btn line" href="#compare">Compare the bots</a>
+        <a class="btn brass" href="#compare">Compare the bots</a>
+        <a class="btn line" href="https://wisfli.com/#bots">Bots for sale</a>
       </div>
     </div>
     <div>
@@ -492,7 +465,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 <section id="record">
   <div class="wrap">
     <h2 id="record-title">The account, as it stands</h2>
-    <p class="sub">Published directly from the trading account every 15 minutes. Growth is time-weighted, so deposits and withdrawals never move the curve. Open positions are never shown here — that part is what subscribers receive.</p>
+    <p class="sub">Published directly from the trading account every 15 minutes. Growth is time-weighted, so deposits and withdrawals never move the curve. Open positions and entry prices are never shown here.</p>
 
     <div class="bar">
       <div class="seg" role="group" aria-label="Series">
@@ -591,26 +564,6 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   </div>
 </section>
 
-<section id="exits" hidden>
-  <div class="wrap">
-    <h2 id="exits-title">How the trades were closed</h2>
-    <p class="sub" id="exits-sub">Every closed position is labelled with what closed it: the take-profit or stop-loss the bot placed, the bot's own exit rule, or me by hand. Manual exits stay with the bot that opened the trade.</p>
-    <div class="exits">
-      <div>
-        <h3 class="col">Share of trades</h3>
-        <div class="exbar" id="exbar"></div>
-        <div class="scroll"><table class="split" id="exits-t"></table></div>
-      </div>
-      <div>
-        <h3 class="col">Running result by who closed</h3>
-        <div class="plot" id="exits-plot"></div>
-        <p class="chart-cap" id="exits-cap">Summed trade results, % of balance, against the trade number.</p>
-      </div>
-    </div>
-    <p class="note" id="exits-note">Stop-loss and take-profit mean the order sitting in the market was hit, even if I had moved it by hand beforehand. By hand covers any close from the terminal, the phone or the web, including a partial close.</p>
-  </div>
-</section>
-
 <section id="lab">
   <div class="wrap">
     <h2 id="lab-title">Stress-testing the record</h2>
@@ -658,7 +611,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 <section id="fleet">
   <div class="wrap">
     <h2>The fleet</h2>
-    <p class="sub">Bots are added one at a time and the fleet keeps growing. A bot joins the account only once it has passed out-of-sample testing. Until then it stays in the yard.</p>
+    <p class="sub">Bots join one at a time, and only once they have passed out-of-sample testing. Until then they stay in the yard.</p>
     <div class="scroll-roster">
       <table class="roster">
         <thead><tr><th>Flag</th><th>Bot</th><th>Instruments</th><th>Approach</th><th class="r">Trades</th><th class="r">Hits</th><th class="r">Profit factor</th><th class="r">Contribution</th><th>Status</th></tr></thead>
@@ -668,59 +621,21 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   </div>
 </section>
 
-<section id="how">
-  <div class="wrap">
-    <h2>How copying works</h2>
-    <p class="sub">You keep your own broker, your own account and your own money. Nothing leaves your side — an Expert Advisor in your terminal reads what my account is doing and reproduces it.</p>
-    <div class="steps">
-      <div class="step">
-        <h3>Subscribe and get your token</h3>
-        <p>After payment you receive a private access token and the follower EA by email, usually within a few hours.</p>
-      </div>
-      <div class="step">
-        <h3>Load the EA on a VPS</h3>
-        <p>Drop it on any chart in your MT5, paste the token, choose your risk factor. The setup guide walks through every field.</p>
-      </div>
-      <div class="step">
-        <h3>It mirrors from then on</h3>
-        <p>Opens, closes, stop-loss and take-profit changes are followed within a second or two, at a lot size proportional to your balance.</p>
-      </div>
-    </div>
-    <p style="margin-top:30px;font-family:Archivo;font-size:15px"><a href="setup.html">Read the full setup guide before subscribing</a></p>
-  </div>
-</section>
-
-<section id="berth">
+<section id="run">
   <div class="wrap">
     <div class="berth">
       <div>
-        <h2>Take a berth</h2>
-        <p>The founding rate is for the first 100 accounts. It stays fixed for as long as you stay subscribed, however many bots join the fleet and after the rate for new accounts goes to €99.</p>
+        <h2>Run a bot yourself</h2>
+        <p>Armada has no subscription and nothing on this page is sold. Some of the bots trading in it are sold on their own, as Expert Advisors you run in your own terminal, on your own account.</p>
         <ul>
-          <li>All bots on the account, present and future</li>
-          <li>Follower EA, access token and setup support</li>
-          <li>Monthly note on what changed and why</li>
-          <li>Cancel from your receipt at any time</li>
+          <li>Each bot has its own page, with its tests, licence and terms</li>
+          <li>Here you can watch how it trades before you decide</li>
+          <li>Your broker, your account, your risk settings</li>
         </ul>
       </div>
-      <div class="price">
-        <div class="amt">€59</div>
-        <span class="per">per month, first 100 accounts</span>
-        <div id="paypal-button-container-P-6TC590247X0331525NKTMXCI"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=AWa_6Af93UGQdocFcdOmDgC6xGjFV4Kp-8yeFyZ6DhHqPDnHt6kK5xQdSenwitI1-a0kk4Sc4DeCYK9N&vault=true&intent=subscription&currency=EUR&disable-funding=card,credit" data-sdk-integration-source="button-factory"></script>
-<script>
-  if (window.paypal) paypal.Buttons({
-      style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
-      createSubscription: function(data, actions) {
-        return actions.subscription.create({ plan_id: 'P-6TC590247X0331525NKTMXCI' });
-      },
-      onApprove: function(data, actions) {
-        document.getElementById('paypal-button-container-P-6TC590247X0331525NKTMXCI').innerHTML =
-          '<p style="margin:0;color:#fff;font-family:Archivo;font-size:15px;line-height:1.5">Subscription confirmed. Your access token and the follower EA arrive by email, usually within a few hours. Reference: ' + data.subscriptionID + '</p>';
-      }
-  }).render('#paypal-button-container-P-6TC590247X0331525NKTMXCI');
-</script>
-        <small>Standard rate €99/month after the first 100 accounts. Suggested account size €2,000 or more — see the setup guide for why.</small>
+      <div class="run-cta">
+        <a class="btn brass" href="https://wisfli.com/#bots">Browse the bots</a>
+        <small>Prices and licence options are on each bot's page. Results on your account will differ from this one.</small>
       </div>
     </div>
   </div>
@@ -728,20 +643,19 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 
 <section id="plain">
   <div class="wrap">
-    <h2>Read this before you pay</h2>
+    <h2>How to read these figures</h2>
     <div class="talk" style="margin-top:26px">
       <div>
-        <h3>What you are buying</h3>
-        <p>Access to the positions of one account, for as long as you subscribe. Not a course, not a bot licence, not advice about what you personally should do with your money.</p>
+        <h3>What this page is</h3>
+        <p>A public record of one trading account. Not a signal, not a service you can subscribe to, and not advice about what you personally should do with your money.</p>
         <p>Every figure on this page comes out of that account automatically. There are no backtests on this page. Where a number is missing, it is missing because the account has not produced it yet.</p>
-        <p>The bots close their own trades. If I ever close one by hand, the record says so: every exit is labelled with who made it.</p>
         <p id="demo-talk" hidden>The account is currently a <b>demo account</b>. Demo fills are usually kinder than real ones — no requotes, no partial fills, no slippage on news. Read these figures as a record of how the strategies trade, not as proof of real-money execution. When the account moves to real money this page will say so, and the record will restart.</p>
       </div>
       <div>
-        <h3>What can go wrong</h3>
-        <p>Losing months happen, and a losing month is not a malfunction. Your results will also differ from mine: a different broker, spread, execution speed or account size all move the outcome, and copying is never exact.</p>
+        <h3>What they cannot tell you</h3>
+        <p>Losing months happen, and a losing month is not a malfunction. The same bot on another account will not produce the same numbers: a different broker, spread, execution speed or account size all move the outcome.</p>
         <p>Ratios such as Sharpe and Calmar are unstable over short periods. A few good weeks can make them look far better than they will be over a year, so give more weight to drawdown and to the number of months on record.</p>
-        <p>Leveraged trading can cost you more than you put in. Subscribe with money you can afford to lose, start at a reduced risk factor, and stop if it stops suiting you.</p>
+        <p>Leveraged trading can cost you more than you put in. If you run any of these bots yourself, use money you can afford to lose, start at reduced risk, and stop if it stops suiting you.</p>
       </div>
     </div>
   </div>
@@ -759,17 +673,17 @@ footer .legal p{margin:0 0 10px;max-width:74em}
         <ul>
           <li><a href="#compare">Compare the bots</a></li>
           <li><a href="#stats">Statistics</a></li>
-          <li><a href="setup.html">Setup guide</a></li>
-          <li><a href="#berth">Subscribe</a></li>
+          <li><a href="#fleet">The fleet</a></li>
+          <li><a href="#plain">Reading the figures</a></li>
         </ul>
       </div>
       <div>
         <h4>Wisfli</h4>
         <ul>
           <li><a href="https://wisfli.com/">wisfli.com</a></li>
+          <li><a href="https://wisfli.com/#bots">Bots for sale</a></li>
           <li><a href="https://jsgaston.github.io/candlegrid-web-en/">CandleGrid Pro</a></li>
           <li><a href="https://jsgaston.github.io/regimeswitch-web-en/">RegimeSwitch Pro</a></li>
-          <li><a href="https://jsgaston.github.io/helm/">Helm signal</a></li>
           <li><a href="mailto:jsgastoniriartecabrera@gmail.com">Email</a></li>
         </ul>
       </div>
@@ -782,67 +696,22 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 </footer>
 
 <script>
-/* ---------- international code of signals: A–Z, then numeral pennants 1–0 ---------- */
-var FLAG_ORDER='ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'.split('');
-var OL='<path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>';
-var F={
+/* ---------- international code of signals, A–J ---------- */
+const F = {
   A:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30L46 20l14 20H30z" fill="#14528C"/><path d="M0 0h30v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
   B:'<path d="M0 0h60L46 20l14 20H0z" fill="#C8322A"/>',
   C:'<path d="M0 0h60v8H0z" fill="#14528C"/><path d="M0 8h60v8H0z" fill="#fff"/><path d="M0 16h60v8H0z" fill="#C8322A"/><path d="M0 24h60v8H0z" fill="#fff"/><path d="M0 32h60v8H0z" fill="#14528C"/>',
   D:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M0 11h60v18H0z" fill="#14528C"/>',
   E:'<path d="M0 0h60v20H0z" fill="#14528C"/><path d="M0 20h60v20H0z" fill="#C8322A"/>',
-  F:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M30 3 57 20 30 37 3 20z" fill="#C8322A"/>'+OL,
+  F:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M30 3 57 20 30 37 3 20z" fill="#C8322A"/><path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
   G:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M10 0h10v40H10z" fill="#14528C"/><path d="M30 0h10v40H30z" fill="#14528C"/><path d="M50 0h10v40H50z" fill="#14528C"/>',
-  H:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30v40H30z" fill="#C8322A"/>'+OL,
+  H:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30v40H30z" fill="#C8322A"/><path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
   I:'<path d="M0 0h60v40H0z" fill="#F2C230"/><circle cx="30" cy="20" r="11" fill="#101820"/>',
-  J:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 13h60v14H0z" fill="#fff"/>',
-  K:'<path d="M0 0h30v40H0z" fill="#F2C230"/><path d="M30 0h30v40H30z" fill="#14528C"/>',
-  L:'<path d="M0 0h60v40H0z" fill="#101820"/><path d="M0 0h30v20H0zM30 20h30v20H30z" fill="#F2C230"/>',
-  M:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 0 60 40M60 0 0 40" stroke="#fff" stroke-width="8"/>',
-  N:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M0 0h15v10H0zM30 0h15v10H30zM15 10h15v10H15zM45 10h15v10H45zM0 20h15v10H0zM30 20h15v10H30zM15 30h15v10H15zM45 30h15v10H45z" fill="#14528C"/>'+OL,
-  O:'<path d="M0 0h60v40z" fill="#C8322A"/><path d="M0 0v40h60z" fill="#F2C230"/>',
-  P:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M18 12h24v16H18z" fill="#fff"/>',
-  Q:'<path d="M0 0h60v40H0z" fill="#F2C230"/>',
-  R:'<path d="M0 0h60v40H0z" fill="#C8322A"/><path d="M25 0h10v40H25zM0 15h60v10H0z" fill="#F2C230"/>',
-  S:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M18 12h24v16H18z" fill="#14528C"/>'+OL,
-  T:'<path d="M0 0h20v40H0z" fill="#C8322A"/><path d="M20 0h20v40H20z" fill="#fff"/><path d="M40 0h20v40H40z" fill="#14528C"/>',
-  U:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M0 0h30v20H0zM30 20h30v20H30z" fill="#C8322A"/>'+OL,
-  V:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M0 0 60 40M60 0 0 40" stroke="#C8322A" stroke-width="8"/>'+OL,
-  W:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M8 8h44v24H8z" fill="#fff"/><path d="M18 14h24v12H18z" fill="#C8322A"/>',
-  X:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M25 0h10v40H25zM0 15h60v10H0z" fill="#14528C"/>'+OL,
-  Y:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M-40 40 0 0M-26 40 14 0M-12 40 28 0M2 40 42 0M16 40 56 0M30 40 70 0M44 40 84 0" stroke="#C8322A" stroke-width="7"/>',
-  Z:'<path d="M0 0h60L30 20z" fill="#F2C230"/><path d="M60 0v40L30 20z" fill="#14528C"/><path d="M0 40h60L30 20z" fill="#C8322A"/><path d="M0 0v40l30-20z" fill="#101820"/>',
-  '1':'<path d="M0 0h60v40H0z" fill="#fff"/><circle cx="17" cy="20" r="8" fill="#C8322A"/>',
-  '2':'<path d="M0 0h60v40H0z" fill="#14528C"/><circle cx="17" cy="20" r="8" fill="#fff"/>',
-  '3':'<path d="M0 0h20v40H0z" fill="#C8322A"/><path d="M20 0h20v40H20z" fill="#fff"/><path d="M40 0h20v40H40z" fill="#14528C"/>',
-  '4':'<path d="M0 0h60v40H0z" fill="#C8322A"/><path d="M13 0h8v40h-8zM0 16h60v8H0z" fill="#fff"/>',
-  '5':'<path d="M0 0h24v40H0z" fill="#F2C230"/><path d="M24 0h36v40H24z" fill="#14528C"/>',
-  '6':'<path d="M0 0h60v20H0z" fill="#101820"/><path d="M0 20h60v20H0z" fill="#fff"/>',
-  '7':'<path d="M0 0h60v20H0z" fill="#F2C230"/><path d="M0 20h60v20H0z" fill="#C8322A"/>',
-  '8':'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M13 0h8v40h-8zM0 16h60v8H0z" fill="#C8322A"/>',
-  '9':'<path d="M0 0h20v20H0z" fill="#fff"/><path d="M20 0h40v20H20z" fill="#101820"/><path d="M0 20h20v20H0z" fill="#C8322A"/><path d="M20 20h40v20H20z" fill="#F2C230"/>',
-  '0':'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M16 0h12v40H16z" fill="#C8322A"/>'
+  J:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 13h60v14H0z" fill="#fff"/>'
 };
-var flagSeq=0;
-/* inner SVG for one flag; numeral pennants are clipped to their tapered shape */
-function flagInner(l){
-  l=String(l==null?'':l).toUpperCase();
-  if(!F[l]) return '';
-  if(!/^[0-9]$/.test(l)) return F[l];
-  var id='pn'+(++flagSeq), P='M0 0 60 15v10L0 40z';
-  return '<defs><clipPath id="'+id+'"><path d="'+P+'"/></clipPath></defs><g clip-path="url(#'+id+')">'+F[l]+'</g><path d="'+P+'" fill="none" stroke="rgba(15,44,66,.25)"/>';
-}
-const LETTERS = FLAG_ORDER.slice(0,10);
-
-/* ---------- page wording (the same script runs Armada and Helm) ---------- */
-const PAGE = {
-  hoistNone: 'No flags flying yet.',
-  hoistSome: (live,n) => live>=n ? 'All '+n+' flags flying.' : 'Flying: '+live+' of '+n+'. The faded flags are still in the yard.',
-  handRail: false,
-  exitsAlways: false
-};
+const LETTERS = ['A','B','C','D','E','F','G','H','I','J'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const flagSVG = l => { const i=flagInner(l); return i ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+esc(l)+'">'+i+'</svg>' : ''; };
+const flagSVG = l => F[l] ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>' : '';
 const FALLBACK = LETTERS.map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -888,12 +757,9 @@ function normalise(s){
 
 /* ---------- hoist ---------- */
 function drawHoist(strats){
-  const shown=strats.filter(s=>s.flag && s.status!=='retired');
-  $('hoist').innerHTML = shown.map(s=>'<span class="'+(s.status==='live'?'':'dim')+'" title="'+esc(s.name)+'">'+flagSVG(s.flag)+'</span>').join('');
-  $('hoist').classList.toggle('many', shown.length>12);
-  $('hoist').classList.toggle('lots', shown.length>24);
+  $('hoist').innerHTML = strats.map(s=>'<span class="'+(s.status==='live'?'':'dim')+'" title="'+esc(s.name)+'">'+flagSVG(s.flag)+'</span>').join('');
   const live=strats.filter(s=>s.status==='live').length;
-  $('hoist-note').textContent = live===0 ? PAGE.hoistNone : PAGE.hoistSome(live, shown.length);
+  $('hoist-note').textContent = live===0 ? 'No flags flying yet.' : 'Flying: '+live+' of '+strats.length+'. The faded flags are still in the yard.';
 }
 
 function drawTicket(s){
@@ -953,7 +819,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); renderExtraCharts(sc); drawExits(sc); drawRolling(sc); drawMC(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
 }
@@ -970,11 +836,6 @@ function drawRail(sc){
   setText('r-pf',num(T.profit_factor)); setText('r-pf-s', !nil(T.win_rate_pct)?'hits '+upct(T.win_rate_pct,1):'\u00a0');
   setText('r-dd',ddpct(K.max_drawdown_pct)); setText('r-dd-s', nil(K.current_drawdown_pct)?'\u00a0':'now '+(K.current_drawdown_pct>0?'−'+upct(K.current_drawdown_pct):'at peak'));
   setText('r-rec',num(K.recovery_factor)); setText('r-rec-s', !nil(K.longest_underwater_days)?'longest under water '+days(K.longest_underwater_days):'\u00a0');
-  if(PAGE.handRail){
-    const h=(sc.exits||[]).find(e=>e.k==='hand');
-    setText('r-rec', h?upct(h.share_pct,0):(sc.exits?'0%':'—'));
-    setText('r-rec-s', h&&T.trades?int(h.trades)+' of '+int(T.trades)+' trades':'\u00a0');
-  }
   setText('r-sharpe',num(K.sharpe)); setText('r-sharpe-s', !nil(K.sortino)?'Sortino '+num(K.sortino):(nil(R.total_pct)?'\u00a0':'needs 5 trading days'));
 }
 
@@ -1217,7 +1078,7 @@ function buildSeries(sc, kind){
     const pts=[{x:t0,v:100,p:0,b:sb,dd:0,i:0}]; let v=100,p=0,peak=100;
     tl.t.forEach((t,i)=>{
       v*=1+tl.r[i]/100; if(tl.p) p+=tl.p[i]; peak=Math.max(peak,v);
-      pts.push({x:t*1000,v,p:tl.p?p:null,b:(sb!=null&&tl.p)?sb+p:null,dd:(v/peak-1)*100,i:i+1,r:tl.r[i],pnl:tl.p?tl.p[i]:null,ex:tl.x?tl.x[i]:null});
+      pts.push({x:t*1000,v,p:tl.p?p:null,b:(sb!=null&&tl.p)?sb+p:null,dd:(v/peak-1)*100,i:i+1,r:tl.r[i],pnl:tl.p?tl.p[i]:null});
     });
     return pts;
   }
@@ -1310,7 +1171,6 @@ function drawEquity(animate){
     ro.innerHTML=(byIndex&&!nil(p.i)&&p.i>0?'<span>trade <b>#'+p.i+'</b></span>':'')+
       '<span>'+(p.day?fmtDate(new Date(p.x).toISOString().slice(0,10)):fmtTime(p.x)+' UTC')+'</span>'+
       (!nil(p.r)?'<span>result <b class="'+cls(p.r)+'">'+pct(p.r,3)+(ACC.publish_money&&!nil(p.pnl)?' ('+money(p.pnl,true)+')':'')+'</b></span>':'')+
-      (p.ex&&EXITS[p.ex]?'<span>closed <b>'+EXITS[p.ex].t.toLowerCase()+'</b></span>':'')+
       '<span>growth <b>'+pct((p.v/base-1)*100)+'</b></span>'+
       (!nil(p.p)&&ACC.publish_money?'<span>profit <b>'+money(p.p-basep,true)+'</b></span>':'')+
       (!nil(p.b)?'<span>balance <b>'+money(p.b)+'</b></span>':'')+
@@ -1424,56 +1284,6 @@ function drawPnlBars(){
   }).join('');
   $('pnlbars').querySelectorAll('.pnlrow').forEach(r=>r.addEventListener('click',()=>{ selectScope(r.dataset.id,true); $('record').scrollIntoView(); }));
   $('pnl-wrap').hidden=false;
-}
-
-/* ---------- exits: who closed each trade ---------- */
-const EXITS={
-  h:{k:'hand', t:'By hand',     c:'#E0A92C', ink:'#1A1206'},
-  t:{k:'tp',   t:'Take-profit', c:'#1E6B57', ink:'#fff'},
-  s:{k:'sl',   t:'Stop-loss',   c:'#BE3A2B', ink:'#fff'},
-  b:{k:'bot',  t:'By the bot',  c:'#0F2C42', ink:'#fff'},
-  o:{k:'so',   t:'Stop-out',    c:'#7A1E14', ink:'#fff'},
-  x:{k:'other',t:'Other',       c:'#8DA4B4', ink:'#0F2C42'}
-};
-const EXIT_BY_K={}; Object.keys(EXITS).forEach(c=>{ EXIT_BY_K[EXITS[c].k]=Object.assign({code:c},EXITS[c]); });
-function drawExits(sc){
-  const sec=$('exits'); if(!sec) return;
-  const ex=(sc.exits||[]).filter(e=>e.trades>0);
-  if(!ex.length){
-    if(!PAGE.exitsAlways){ sec.hidden=true; return; }
-    sec.hidden=false; $('exbar').innerHTML=''; $('exits-t').innerHTML='';
-    $('exits-plot').innerHTML='<div class="plot-empty" style="min-height:250px"><span>'+(sc.empty||!(sc.trades||{}).trades?'No closed trades yet.':'This record was published before exits were tracked.')+'</span></div>';
-    return;
-  }
-  sec.hidden=false;
-  const M=ACC.publish_money, TT=sc.trades||{};
-  $('exbar').innerHTML=ex.map(e=>{ const m=EXIT_BY_K[e.k]||EXIT_BY_K.other;
-    return '<span style="width:'+e.share_pct+'%;background:'+m.c+';color:'+m.ink+'" title="'+esc(m.t)+': '+e.trades+' trades, '+num(e.share_pct,1)+'%">'+(e.share_pct>=14?'<b>'+esc(m.t)+'</b>'+num(e.share_pct,0)+'%':(e.share_pct>=6?num(e.share_pct,0)+'%':''))+'</span>'; }).join('');
-  $('exits-t').innerHTML='<thead><tr><th>Closed</th><th>Trades</th><th>Share</th><th>Hits</th><th>PF</th><th>Average</th><th>Net</th><th>Avg hold</th></tr></thead><tbody>'+
-    ex.map(e=>{ const m=EXIT_BY_K[e.k]||EXIT_BY_K.other;
-      return '<tr><td><i style="background:'+m.c+'"></i>'+esc(m.t)+'</td><td>'+int(e.trades)+'</td><td>'+upct(e.share_pct,1)+'</td><td>'+upct(e.win_rate_pct,1)+'</td><td>'+num(e.profit_factor)+'</td>'+
-        '<td class="'+cls(e.avg_pct)+'">'+pct(e.avg_pct,3)+'</td><td class="'+cls(e.net_pct)+'">'+(M&&!nil(e.net)?money(e.net,true):pct(e.net_pct))+'</td><td>'+hours(e.avg_hold_hours)+'</td></tr>'; }).join('')+'</tbody>';
-
-  const box=$('exits-plot'), tl=sc.tl||{}, codes=tl.x||'', R=tl.r||[];
-  if(codes.length!==R.length || R.length<2){ box.innerHTML='<div class="plot-empty" style="min-height:250px"><span>The running result appears after two closed trades.</span></div>'; return; }
-  const N=R.length, lines={};
-  for(let i=0;i<N;i++){ const c=codes[i]; if(!lines[c]) lines[c]={pts:[[0,0]],sum:0}; lines[c].sum+=R[i]; lines[c].pts.push([i+1,lines[c].sum]); }
-  Object.values(lines).forEach(l=>{ if(l.pts[l.pts.length-1][0]<N) l.pts.push([N,l.sum]); });
-  const all=[0].concat(...Object.values(lines).map(l=>l.pts.map(p=>p[1])));
-  let lo=Math.min(...all), hi=Math.max(...all); const pad=(hi-lo)*.12||.5; lo-=pad; hi+=pad;
-  const W=Math.max(300,box.clientWidth), H=250, PL=12, PR=58, PT=16, PB=26;
-  const X=i=>PL+i/N*(W-PL-PR), Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
-  let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+8,Y(v)+4,pct(v,1))).join('');
-  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.45)" stroke-dasharray="3 4"/>';
-  Object.keys(EXITS).forEach(c=>{ const l=lines[c]; if(!l) return;
-    const P=l.pts.map(p=>[X(p[0]),Y(p[1])]);
-    g+='<path d="'+smoothPath(P)+'" fill="none" stroke="'+EXITS[c].c+'" stroke-width="'+(c==='h'?2.8:2)+'" stroke-linejoin="round"><title>'+esc(EXITS[c].t)+'</title></path>'+
-       '<circle cx="'+P[P.length-1][0].toFixed(1)+'" cy="'+P[P.length-1][1].toFixed(1)+'" r="3.5" fill="'+EXITS[c].c+'"/>'; });
-  g+=T(PL,H-8,'trade 1')+T(W-PR,H-8,'trade '+N,'end');
-  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Running result by exit type">'+g+'</svg>'+
-    '<div class="legendline" style="padding-bottom:10px">'+Object.keys(EXITS).filter(c=>lines[c]).map(c=>'<span><i style="background:'+EXITS[c].c+'"></i>'+esc(EXITS[c].t)+'</span>').join('')+'</div>';
-  const hand=ex.find(e=>e.k==='hand');
-  $('exits-cap').textContent='Summed trade results, % of balance, against the trade number.'+(hand?' '+int(hand.trades)+' of '+int(TT.trades)+' trades were closed by hand.':' No trade in this record was closed by hand.');
 }
 
 /* ---------- rolling metrics ---------- */
@@ -1678,9 +1488,9 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const src=new URLSearchParams(location.search).has('preview')?'stats.preview.json':'stats.json';
   let s=null;
   try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
-  const strats=(s&&s.strategies&&s.strategies.length)?s.strategies:FALLBACK;
+  const strats=(s&&s.strategies&&s.strategies.length===10)?s.strategies:FALLBACK;
   drawHoist(strats);
-  if(!s){ drawRoster(strats); if(PAGE.exitsAlways) drawExits({}); return; }
+  if(!s){ drawRoster(strats); return; }
 
   DATA=s; ACC=s.account||{}; if(ACC.currency) CUR=ACC.currency;
   SCOPES=normalise(s);
@@ -1689,14 +1499,14 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   if(s.updated_utc) $('stamp-updated').textContent='Published from the account '+ago(s.updated_utc)+'.';
   if(s.verified_url) $('stamp-verify').innerHTML='<a href="'+esc(s.verified_url)+'">Independently verified record</a>';
   drawRoster(strats);
-  if(!SCOPES.length){ if(PAGE.exitsAlways) drawExits({}); return; }
+  if(!SCOPES.length) return;
 
   buildSelector(); drawCompare(); drawPnlBars(); drawCorr(s.correlation);
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawExits(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
