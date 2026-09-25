@@ -711,7 +711,12 @@ const F = {
 };
 const LETTERS = ['A','B','C','D','E','F','G','H','I','J'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const flagSVG = l => F[l] ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>' : '';
+const flagSVG = l => {
+  if(F[l]) return '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>';
+  if(!l) return '';
+  const t=String(l).slice(0,2).replace(/[&<>"]/g,'');
+  return '<svg viewBox="0 0 60 40" role="img" aria-label="Flag '+t+'"><path d="M0 0h60v40H0z" fill="#0F2C42"/><path d="M0 0h60v40H0z" fill="none" stroke="#E0A92C" stroke-width="3"/><text x="30" y="28" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="22" fill="#E0A92C">'+t+'</text></svg>';
+};
 const FALLBACK = LETTERS.map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -882,12 +887,18 @@ const CMP_COLS=[
 let cmpSort={k:null,dir:-1};
 
 function sparkline(sc){
-  const e=sc.equity||[]; if(e.length<2) return '';
-  const W=86,H=24, vs=e.map(p=>p.v), lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
-  const d=e.map((p,i)=>(i?'L':'M')+(i/(e.length-1)*W).toFixed(1)+' '+(H-2-(p.v-lo)/sp*(H-4)).toFixed(1)).join('');
+  // same series as the main chart: trade by trade while the record is young,
+  // daily once it has history. A two-day daily curve is just a straight line.
+  const k=defaultSeries(sc);
+  let vs=buildSeries(sc,k).map(p=>p.v).filter(v=>Number.isFinite(v));
+  if(vs.length<2){ vs=(sc.equity||[]).map(p=>p.v); if(vs.length===1) vs=[100,vs[0]]; }
+  if(vs.length<2) return '';
+  const W=86,H=24, lo=Math.min(...vs,100), hi=Math.max(...vs,100), sp=hi-lo||1;
+  const Y=v=>H-2-(v-lo)/sp*(H-4);
+  const d=smoothPath(vs.map((v,i)=>[i/(vs.length-1)*W,Y(v)]));
   const col=vs[vs.length-1]>=100?'#1E6B57':'#BE3A2B';
-  const y0=(H-2-(100-lo)/sp*(H-4)).toFixed(1);
-  return '<svg width="'+W+'" height="'+H+'" aria-hidden="true"><line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.2)" stroke-dasharray="2 2"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5"/></svg>';
+  const y0=Y(100).toFixed(1);
+  return '<svg width="'+W+'" height="'+H+'" aria-hidden="true"><line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.2)" stroke-dasharray="2 2"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>';
 }
 
 function drawCompare(){
@@ -1082,10 +1093,14 @@ function buildSeries(sc, kind){
     });
     return pts;
   }
-  if(kind==='live' && sc.live && sc.live.length>1){
-    let peak=100; return sc.live.map(([t,v])=>{ peak=Math.max(peak,v); return {x:t*1000,v,dd:(v/peak-1)*100}; });
+  if(kind==='live' && liveSeries(sc).length>1){
+    let peak=100; return liveSeries(sc).map(([t,v])=>{ peak=Math.max(peak,v); return {x:t*1000,v,dd:(v/peak-1)*100}; });
   }
   return EQ.map(e=>({x:Date.parse(e.d+'T00:00:00Z'),v:e.v,p:e.p,b:e.b,dd:e.dd,day:true}));
+}
+function liveSeries(sc){
+  const L=sc.live||[], inc=DATA&&DATA.inception?Date.parse(DATA.inception+'T00:00:00Z')/1000:null;
+  return inc ? L.filter(p=>p[0]>=inc) : L;
 }
 function defaultSeries(sc){
   const n=(sc.tl&&sc.tl.t)?sc.tl.t.length:0, days=(sc.equity||[]).length;
@@ -1097,7 +1112,7 @@ function drawEquity(animate){
   const sc=CUR_SCOPE; if(!sc) return;
   const box=$('plot'), ddBox=$('plot-dd');
   box.querySelectorAll('svg').forEach(n=>n.remove()); ddBox.querySelectorAll('svg').forEach(n=>n.remove());
-  $('btn-live').disabled=!(sc.live&&sc.live.length>1);
+  $('btn-live').disabled=!(liveSeries(sc).length>1);
   if(view.series==='live' && $('btn-live').disabled) setSeries(defaultSeries(sc));
   let all=buildSeries(sc, view.series||defaultSeries(sc));
   if(!all.length){ ddBox.hidden=true; return; }
@@ -1488,7 +1503,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const src=new URLSearchParams(location.search).has('preview')?'stats.preview.json':'stats.json';
   let s=null;
   try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
-  const strats=(s&&s.strategies&&s.strategies.length===10)?s.strategies:FALLBACK;
+  const strats=(s&&s.strategies&&s.strategies.length)?s.strategies:FALLBACK;
   drawHoist(strats);
   if(!s){ drawRoster(strats); return; }
 
