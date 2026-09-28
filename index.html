@@ -712,7 +712,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
           <li><a href="https://wisfli.com/#bots">Bots for sale</a></li>
           <li><a href="https://jsgaston.github.io/candlegrid-web-en/">CandleGrid Pro</a></li>
           <li><a href="https://jsgaston.github.io/regimeswitch-web-en/">RegimeSwitch Pro</a></li>
-          <li><a href="mailto:jsgastoniriartecabrera@gmail.com">Email</a></li>
+          <li><a href="mailto:support@wisfli.com">support@wisfli.com</a></li>
         </ul>
       </div>
     </div>
@@ -954,7 +954,6 @@ const CMP_COLS=[
   {k:'exp', t:'Expectancy', v:sc=>(sc.trades||{}).expectancy_pct, f:x=>pct(x,3), c:true},
   {k:'wst', t:'Best streak', v:sc=>(sc.trades||{}).max_consec_wins, f:int},
   {k:'lst', t:'Worst streak', v:sc=>(sc.trades||{}).max_consec_losses, f:int, lowBest:true},
-  {k:'hand', t:'By hand', v:sc=>((sc.closes||{}).manual||{}).trades||0, f:x=>x?int(x):'—', lowBest:true},
   {k:'share', t:'Share', v:sc=>(sc.returns||{}).share_of_profit_pct, f:x=>nil(x)?'—':num(x,1)+'%'}
 ];
 let cmpMagics=false;
@@ -1110,9 +1109,15 @@ function drawStats(sc){
 const CLOSE_LABELS=[['bot','Closed by the bot','The EA closed the position by its own rule.'],['tp','Hit take profit',''],['sl','Hit stop loss',''],
   ['manual','Closed by hand','Positions I closed myself, from the terminal, phone or web. They count in every figure on this page.'],['stop_out','Stopped out','Closed by the broker for lack of margin.'],['other','Closed otherwise','Rollover, split or another broker action.']];
 function closeRows(sc, mp){
-  const C=sc.closes; if(!C) return [];
+  const C0=sc.closes; if(!C0) return [];
   const T=(sc.trades||{}).trades||0;
+  // what I close by hand stays with the bot: one row for the bot's own closes, hand closes included
+  const C=Object.assign({},C0), h=C0.manual;
+  if(h){ const b=C0.bot||{trades:0,wins:0,net_pct:0,net:0};
+    C.bot={trades:b.trades+h.trades, wins:b.wins+h.wins, net_pct:(b.net_pct||0)+(h.net_pct||0), net:nil(b.net)&&nil(h.net)?null:(b.net||0)+(h.net||0), hand:h.trades};
+    delete C.manual; }
   return CLOSE_LABELS.filter(([k])=>C[k]).map(([k,l,tip])=>{
+    if(k==='bot' && C.bot.hand){ l='Closed by the bot or by me'; tip=int(C.bot.hand)+' of these '+int(C.bot.trades)+' I closed by hand. They stay with the bot that opened them. '+int(C.bot.wins)+' ended in profit.'; }
     const x=C[k], share=T?' <small style="font-weight:500;color:var(--muted)">'+Math.round(x.trades/T*100)+'%</small>':'';
     return [l+' ('+int(x.trades)+')', (ACC.publish_money&&!nil(x.net)?money(x.net,true):pct(x.net_pct,2))+share, cls(nil(x.net)?x.net_pct:x.net), tip||(int(x.wins)+' of '+int(x.trades)+' ended in profit.')];
   });
@@ -1126,8 +1131,7 @@ function drawRecon(sc){
   const val=k=> M ? money(R[k],true) : (R.share_pct&&!nil(R.share_pct[k])?num(R.share_pct[k],1)+'%':'—');
   const cl=k=> M ? cls(R[k]) : '';
   if(M){ R.bots=(R.bots_auto||0)+(R.bots_hand||0); } else if(R.share_pct){ R.share_pct.bots=(R.share_pct.bots_auto||0)+(R.share_pct.bots_hand||0); }
-  const rows=[['Trades opened by the bots','bots',(n.bots_auto||0)+(n.bots_hand||0),true],
-    ['<span style="padding-left:18px;color:var(--muted)">of which I closed by hand</span>','bots_hand',n.bots_hand,n.bots_hand>0],
+  const rows=[['Trades of the bots'+(n.bots_hand?' <small style="color:var(--muted)">('+int(n.bots_hand)+' closed by me)</small>':''),'bots',(n.bots_auto||0)+(n.bots_hand||0),true],
     ['Trades I opened by hand','manual',n.manual,n.manual>0],
     ['Costs already charged on positions still open','open_costs',null,M&&Math.abs(R.open_costs||0)>=0.005],
     ['Broker adjustments that are not trades','adjustments',null,M&&Math.abs(R.adjustments||0)>=0.005]];
