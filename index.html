@@ -389,6 +389,30 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 .extra-chart{min-height:230px}
 .extra-chart svg{display:block;width:100%}
 @media(max-width:900px){.extra-charts{grid-template-columns:1fr}}
+
+/* ---- v7: a fleet of fifty, closes by hand, reconciliation ---- */
+.hero .hoist.many{gap:5px}.hero .hoist.many svg{width:36px;height:24px}
+.hero .hoist.lots{gap:4px}.hero .hoist.lots svg{width:28px;height:19px;box-shadow:0 1px 0 rgba(0,0,0,.35)}
+table.cmp tr.kind-child td{font-weight:500;color:#34506A}
+table.cmp tr.kind-child td:first-child{padding-left:26px}
+table.cmp tr.kind-child .bn svg{width:20px;height:13px;opacity:.7}
+.cmp-bar{margin:-14px 0 16px}
+table.corr.compact td{width:17px;height:17px;min-width:17px;font-size:0;border-width:1px;padding:0}
+table.corr.compact thead th{writing-mode:horizontal-tb;transform:none;height:auto;padding:0 1px 4px;vertical-align:bottom}
+table.corr.compact th svg{width:17px;height:11px;display:block;margin:0 auto}
+table.corr.compact tbody th{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:0 8px 0 0;height:17px;font-size:11.5px}
+table.corr.compact tbody th svg{width:18px;height:12px}
+.pairs{font:13.5px/1.5 Archivo;margin:18px 0 0;padding:0;list-style:none}
+.pairs li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--rule)}
+.pairs li b{font-weight:700}
+#recon table td:first-child{width:auto}
+#recon td.n{color:var(--muted);text-align:right;white-space:nowrap;width:1%;padding-right:18px}
+#recon tr.total td{border-top:2px solid var(--sea);font-weight:800}
+#recon .nt{font:500 12.5px Archivo;color:var(--muted);padding:8px 0 4px;margin:0}
+.eq-key{font:500 12.5px Archivo;color:var(--muted);margin:8px 0 0}
+.cols>div{min-width:0}
+@media (max-width:720px){ dl.stats dd{white-space:normal;text-align:right;font-size:15px} dl.stats dt{min-width:0;font-size:14px} .cols{grid-template-columns:minmax(0,1fr)} }
+.eq-key i{display:inline-block;width:10px;height:10px;border-radius:50%;background:#E0A92C;border:1px solid #0F2C42;vertical-align:-1px;margin-right:6px}
 </style>
 </head>
 <body>
@@ -454,6 +478,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   <div class="wrap">
     <h2>Every bot side by side</h2>
     <p class="sub">Each bot trades under its own magic number, and bots with several magic numbers are grouped under their flag. Returns are measured against the whole account, so a bot's figures show what it has contributed. Select a row to see its full record below, or sort by any column.</p>
+    <div class="bar cmp-bar" id="cmp-bar" hidden><div class="seg" role="group" aria-label="Rows"><button type="button" data-cmp="bots" aria-pressed="true">One row per bot</button><button type="button" data-cmp="magics" aria-pressed="false">Every magic number</button></div><span class="chart-cap" style="margin:0" id="cmp-count"></span></div>
     <div class="scroll"><table class="cmp" id="cmp"><tbody><tr><td class="empty-scope">No closed trades yet. The comparison fills in as the bots trade.</td></tr></tbody></table></div>
     <div class="pnl-wrap" id="pnl-wrap" hidden>
       <h3 class="col">Profit and loss by bot</h3>
@@ -495,9 +520,11 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <div class="readout" id="readout" hidden></div>
     </div>
     <div class="plot" id="plot-dd" hidden><span class="plot-label">Drawdown from peak</span></div>
+    <p class="eq-key" id="eq-key" hidden><i></i>Gold dots are trades I closed by hand. Each one stays with the bot that opened it and counts in every figure.</p>
 
     <dl class="ledger" id="ledger" hidden></dl>
     <div class="flows" id="flows" hidden></div>
+    <div class="flows" id="recon" hidden></div>
 
     <div class="extra-charts" id="extra-charts" hidden>
       <article class="extra-card"><h3>Monthly performance</h3><p>Return for each month, with the compounded total as a line.</p><div class="extra-chart" id="extra-monthly"></div></article>
@@ -603,6 +630,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
       <div>
         <p class="sub" style="margin-bottom:10px">Correlation of daily results between magic numbers. Close to +1, two bots win and lose on the same days and add risk together. Close to 0 or negative, they tend to offset each other, which is what keeps the account's drawdown smaller than the sum of its parts.</p>
         <div class="legend"><span>+1</span><i></i><span>−1</span></div>
+        <ul class="pairs" id="corr-pairs"></ul>
       </div>
     </div>
   </div>
@@ -696,28 +724,57 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 </footer>
 
 <script>
-/* ---------- international code of signals, A–J ---------- */
-const F = {
-  A:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30L46 20l14 20H30z" fill="#14528C"/><path d="M0 0h30v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
-  B:'<path d="M0 0h60L46 20l14 20H0z" fill="#C8322A"/>',
-  C:'<path d="M0 0h60v8H0z" fill="#14528C"/><path d="M0 8h60v8H0z" fill="#fff"/><path d="M0 16h60v8H0z" fill="#C8322A"/><path d="M0 24h60v8H0z" fill="#fff"/><path d="M0 32h60v8H0z" fill="#14528C"/>',
-  D:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M0 11h60v18H0z" fill="#14528C"/>',
-  E:'<path d="M0 0h60v20H0z" fill="#14528C"/><path d="M0 20h60v20H0z" fill="#C8322A"/>',
-  F:'<path d="M0 0h60v40H0z" fill="#fff"/><path d="M30 3 57 20 30 37 3 20z" fill="#C8322A"/><path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
-  G:'<path d="M0 0h60v40H0z" fill="#F2C230"/><path d="M10 0h10v40H10z" fill="#14528C"/><path d="M30 0h10v40H30z" fill="#14528C"/><path d="M50 0h10v40H50z" fill="#14528C"/>',
-  H:'<path d="M0 0h30v40H0z" fill="#fff"/><path d="M30 0h30v40H30z" fill="#C8322A"/><path d="M0 0h60v40H0z" fill="none" stroke="rgba(15,44,66,.25)"/>',
-  I:'<path d="M0 0h60v40H0z" fill="#F2C230"/><circle cx="30" cy="20" r="11" fill="#101820"/>',
-  J:'<path d="M0 0h60v40H0z" fill="#14528C"/><path d="M0 13h60v14H0z" fill="#fff"/>'
-};
-const LETTERS = ['A','B','C','D','E','F','G','H','I','J'];
+/* ---------- international code of signals, A–Z; A1, B1 ... add a numeral tab ---------- */
+var F = (function(){
+  var Y='#F2C230', B='#14528C', R='#C8322A', W='#fff', K='#101820';
+  var r=function(x,y,w,h,c){ return '<path d="M'+x+' '+y+'h'+w+'v'+h+'h-'+w+'z" fill="'+c+'"/>'; };
+  var edge='<path d="M.5 .5h59v39H.5z" fill="none" stroke="rgba(15,44,66,.25)"/>';
+  var saltire=function(c){ return '<path d="M0 0h7l53 34v6h-7L0 6z" fill="'+c+'"/><path d="M60 0v6L7 40H0v-6L53 0z" fill="'+c+'"/>'; };
+  var cross=function(c){ return r(25,0,10,40,c)+r(0,15,60,10,c); };
+  var checks=''; for(var i=0;i<4;i++) for(var j=0;j<4;j++) if((i+j)%2===0) checks+=r(i*15,j*10,15,10,B);
+  var stripes='<path d="M0 0L0 0L6 0L0 6zM0 12L12 0L18 0L0 18zM0 24L24 0L30 0L0 30zM0 40L0 36L36 0L42 0L2 40zM8 40L48 0L54 0L14 40zM20 40L60 0L60 0L60 6L26 40zM32 40L60 12L60 18L38 40zM44 40L60 24L60 30L50 40zM60 40L56 40L60 36z" fill="'+R+'"/>';
+  return {
+    A:r(0,0,30,40,W)+'<path d="M30 0h30L46 20l14 20H30z" fill="'+B+'"/>'+edge,
+    B:'<path d="M0 0h60L46 20l14 20H0z" fill="'+R+'"/>',
+    C:r(0,0,60,8,B)+r(0,8,60,8,W)+r(0,16,60,8,R)+r(0,24,60,8,W)+r(0,32,60,8,B),
+    D:r(0,0,60,40,Y)+r(0,11,60,18,B),
+    E:r(0,0,60,20,B)+r(0,20,60,20,R),
+    F:r(0,0,60,40,W)+'<path d="M30 3 57 20 30 37 3 20z" fill="'+R+'"/>'+edge,
+    G:r(0,0,60,40,Y)+r(10,0,10,40,B)+r(30,0,10,40,B)+r(50,0,10,40,B),
+    H:r(0,0,30,40,W)+r(30,0,30,40,R)+edge,
+    I:r(0,0,60,40,Y)+'<circle cx="30" cy="20" r="11" fill="'+K+'"/>',
+    J:r(0,0,60,40,B)+r(0,13,60,14,W),
+    K:r(0,0,30,40,Y)+r(30,0,30,40,B),
+    L:r(0,0,30,20,Y)+r(30,0,30,20,K)+r(0,20,30,20,K)+r(30,20,30,20,Y),
+    M:r(0,0,60,40,B)+saltire(W),
+    N:r(0,0,60,40,W)+checks,
+    O:r(0,0,60,40,Y)+'<path d="M0 0h60v40z" fill="'+R+'"/>',
+    P:r(0,0,60,40,B)+r(20,13,20,14,W),
+    Q:r(0,0,60,40,Y),
+    R:r(0,0,60,40,R)+cross(Y),
+    S:r(0,0,60,40,W)+r(20,13,20,14,B)+edge,
+    T:r(0,0,20,40,R)+r(20,0,20,40,W)+r(40,0,20,40,B),
+    U:r(0,0,30,20,R)+r(30,0,30,20,W)+r(0,20,30,20,W)+r(30,20,30,20,R)+edge,
+    V:r(0,0,60,40,W)+saltire(R)+edge,
+    W:r(0,0,60,40,B)+r(8,8,44,24,W)+r(18,14,24,12,R),
+    X:r(0,0,60,40,W)+cross(B)+edge,
+    Y:r(0,0,60,40,Y)+stripes,
+    Z:'<path d="M0 0h60L30 20z" fill="'+Y+'"/><path d="M60 0v40L30 20z" fill="'+B+'"/><path d="M60 40H0l30-20z" fill="'+R+'"/><path d="M0 40V0l30 20z" fill="'+K+'"/>'
+  };
+})();
+var LETTERS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+/* body of a flag for a code: "K", "A1", "C12". The numeral sits on a dark tab at the fly. */
+function flagBody(code){
+  code=String(code==null?'':code).toUpperCase();
+  var m=code.match(/^([A-Z])(\d{1,3})?$/);
+  if(!m){ var t=code.slice(0,2).replace(/[^A-Z0-9]/g,''); return t?'<path d="M0 0h60v40H0z" fill="#0F2C42"/><text x="30" y="28" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="22" fill="#E0A92C">'+t+'</text>':''; }
+  var b=F[m[1]]; if(!m[2]) return b;
+  var n=m[2], w=10+n.length*8;
+  return b+'<path d="M'+(60-w)+' 22h'+w+'v18h-'+w+'z" fill="#06141F"/><text x="'+(60-w/2)+'" y="36" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="15" fill="#E0A92C">'+n+'</text>';
+}
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const flagSVG = l => {
-  if(F[l]) return '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+l+'">'+F[l]+'</svg>';
-  if(!l) return '';
-  const t=String(l).slice(0,2).replace(/[&<>"]/g,'');
-  return '<svg viewBox="0 0 60 40" role="img" aria-label="Flag '+t+'"><path d="M0 0h60v40H0z" fill="#0F2C42"/><path d="M0 0h60v40H0z" fill="none" stroke="#E0A92C" stroke-width="3"/><text x="30" y="28" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="22" fill="#E0A92C">'+t+'</text></svg>';
-};
-const FALLBACK = LETTERS.map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
+const flagSVG = l => { const b=flagBody(l); return b ? '<svg viewBox="0 0 60 40" role="img" aria-label="Signal flag '+String(l).replace(/[^A-Za-z0-9]/g,'')+'">'+b+'</svg>' : ''; };
+const FALLBACK = LETTERS.slice(0,10).map((l,i)=>({flag:l,name:'Bot '+(i+1),symbols:'—',style:'—',status:'yard'}));
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -762,13 +819,15 @@ function normalise(s){
 
 /* ---------- hoist ---------- */
 function drawHoist(strats){
+  $('hoist').classList.toggle('many', strats.length>16 && strats.length<=32);
+  $('hoist').classList.toggle('lots', strats.length>32);
   $('hoist').innerHTML = strats.map(s=>'<span class="'+(s.status==='live'?'':'dim')+'" title="'+esc(s.name)+'">'+flagSVG(s.flag)+'</span>').join('');
   const live=strats.filter(s=>s.status==='live').length;
   $('hoist-note').textContent = live===0 ? 'No flags flying yet.' : 'Flying: '+live+' of '+strats.length+'. The faded flags are still in the yard.';
 }
 
 function drawTicket(s){
-  const A=s.account||{};
+  const A=Object.assign({},s.account||{}); A.type=String(A.type||'').toLowerCase();
   if(!A.type && !s.inception) return;
   const bits=[];
   if(A.publish_money && !nil(A.starting_balance)) bits.push(money(A.starting_balance)+' '+(A.type==='demo'?'demo account':'account'));
@@ -780,19 +839,32 @@ function drawTicket(s){
   if(A.type==='demo' && $('demo-talk')) $('demo-talk').hidden=false;
 }
 
+/* ---------- ordering: account, then each bot in flag order with its magics, then your groups ---------- */
+const flagKey = f => { const m=String(f||'').toUpperCase().match(/^([A-Z])(\d*)$/); return m ? (+(m[2]||0))*26+m[1].charCodeAt(0)-65 : 1e6; };
+const isBot = sc => (sc.kind==='group' && !sc.custom) || (sc.kind==='magic' && !sc.parent);
+let ORDER=[];
+function orderScopes(){
+  const out=SCOPES.filter(x=>x.kind==='account');
+  SCOPES.filter(isBot).sort((a,b)=>flagKey(a.flag)-flagKey(b.flag) || (a.magics&&b.magics?a.magics[0]-b.magics[0]:0)).forEach(b=>{
+    out.push(b); SCOPES.forEach(x=>{ if(x.parent===b.id) out.push(x); });
+  });
+  SCOPES.forEach(x=>{ if(!out.includes(x)) out.push(x); });
+  return out;
+}
+
 /* ---------- scope selector ---------- */
 function buildSelector(){
   if(!SCOPES.length) return;
-  const groups={account:[],group:[],magic:[]};
-  SCOPES.forEach(sc=>(groups[sc.kind]||groups.magic).push(sc));
-  const opt=sc=>'<option value="'+esc(sc.id)+'">'+esc(sc.name)+(sc.kind==='magic'&&sc.magics?' ('+sc.magics[0]+')':'')+(sc.empty?' — no trades yet':'')+'</option>';
-  let html=groups.account.map(opt).join('');
-  if(groups.group.length) html+='<optgroup label="Bots and groups">'+groups.group.map(opt).join('')+'</optgroup>';
-  if(groups.magic.length) html+='<optgroup label="Magic numbers">'+groups.magic.map(opt).join('')+'</optgroup>';
+  ORDER=orderScopes();
+  const opt=sc=>'<option value="'+esc(sc.id)+'">'+(sc.parent?'\u2003\u21b3 ':'')+(sc.flag&&!sc.parent?esc(sc.flag)+' \u00b7 ':'')+esc(sc.name)+(sc.kind==='magic'&&sc.magics&&!sc.parent?' ('+sc.magics[0]+')':'')+(sc.empty?' — no trades yet':'')+'</option>';
+  const bots=ORDER.filter(x=>x.kind!=='account' && !x.custom), mine=ORDER.filter(x=>x.custom);
+  let html=ORDER.filter(x=>x.kind==='account').map(opt).join('');
+  if(bots.length) html+='<optgroup label="Bots ('+bots.filter(isBot).length+')">'+bots.map(opt).join('')+'</optgroup>';
+  if(mine.length) html+='<optgroup label="Groups">'+mine.map(opt).join('')+'</optgroup>';
   $('scope').innerHTML=html;
   $('scopebar').hidden=false;
   $('scope').addEventListener('change',e=>selectScope(e.target.value,true));
-  const step=d=>{ const i=SCOPES.findIndex(x=>x.id===CUR_SCOPE.id); selectScope(SCOPES[(i+d+SCOPES.length)%SCOPES.length].id,true); };
+  const step=d=>{ const i=ORDER.findIndex(x=>x.id===CUR_SCOPE.id); selectScope(ORDER[(i+d+ORDER.length)%ORDER.length].id,true); };
   $('prev').addEventListener('click',()=>step(-1));
   $('next').addEventListener('click',()=>step(1));
 }
@@ -824,7 +896,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
 }
@@ -882,8 +954,10 @@ const CMP_COLS=[
   {k:'exp', t:'Expectancy', v:sc=>(sc.trades||{}).expectancy_pct, f:x=>pct(x,3), c:true},
   {k:'wst', t:'Best streak', v:sc=>(sc.trades||{}).max_consec_wins, f:int},
   {k:'lst', t:'Worst streak', v:sc=>(sc.trades||{}).max_consec_losses, f:int, lowBest:true},
+  {k:'hand', t:'By hand', v:sc=>((sc.closes||{}).manual||{}).trades||0, f:x=>x?int(x):'—', lowBest:true},
   {k:'share', t:'Share', v:sc=>(sc.returns||{}).share_of_profit_pct, f:x=>nil(x)?'—':num(x,1)+'%'}
 ];
+let cmpMagics=false;
 let cmpSort={k:null,dir:-1};
 
 function sparkline(sc){
@@ -902,8 +976,12 @@ function sparkline(sc){
 }
 
 function drawCompare(){
-  const rows=SCOPES.filter(sc=>!sc.empty);
+  const hasKids=SCOPES.some(sc=>sc.parent && !sc.empty);
+  $('cmp-bar').hidden=!hasKids;
+  const rows=(ORDER.length?ORDER:SCOPES).filter(sc=>!sc.empty && (cmpMagics || !sc.parent));
   if(rows.length<1) return;
+  const nb=rows.filter(isBot).length;
+  $('cmp-count').textContent=nb+(nb===1?' bot':' bots')+' with closed trades'+(cmpMagics?', '+rows.filter(x=>x.parent).length+' magic numbers':'');
   const cols=CMP_COLS.filter(c=>!c.money||ACC.publish_money);
   let list=rows.slice();
   if(cmpSort.k){
@@ -915,8 +993,8 @@ function drawCompare(){
     list=acc.concat(rest);
   }
   const head='<thead><tr>'+cols.map(c=>'<th scope="col" data-k="'+c.k+'"'+(c.nosort?'':' tabindex="0"')+(cmpSort.k===c.k?' aria-sort="'+(cmpSort.dir<0?'descending':'ascending')+'"':'')+'>'+c.t+'</th>').join('')+'</tr></thead>';
-  const body=list.map(sc=>'<tr class="kind-'+sc.kind+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
-    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':magicLabel(sc))+'</small></span></span></td>';
+  const body=list.map(sc=>'<tr class="kind-'+(sc.parent&&!cmpSort.k?'child':sc.kind)+(CUR_SCOPE&&CUR_SCOPE.id===sc.id?' sel':'')+'" data-id="'+esc(sc.id)+'" tabindex="0">'+cols.map(c=>{
+    if(c.k==='name') return '<td><span class="bn">'+(sc.flag?flagSVG(sc.flag):'')+'<span>'+esc(sc.name)+(sc.kind==='group'?'<span class="tag">group</span>':'')+'<small>'+esc(sc.kind==='account'?'all bots together':(sc.flag&&!sc.parent?'flag '+sc.flag+', ':'')+magicLabel(sc))+'</small></span></span></td>';
     if(c.k==='spark') return '<td class="spark">'+sparkline(sc)+'</td>';
     const v=c.v(sc); return '<td class="'+(c.c?cls(v):'')+'">'+c.f(v)+'</td>';
   }).join('')+'</tr>').join('');
@@ -1021,12 +1099,43 @@ function drawStats(sc){
     M ? ['Swap',money(T.swap),cls(T.swap)] : null,
     ['First trade',T.first_trade?fmtDate(T.first_trade):'—'],
     ['Last trade',T.last_trade?fmtDate(T.last_trade):'—'],
-  ]);
+  ].concat(closeRows(sc, mp)));
   $('symlist').textContent = sc.symbols&&sc.symbols.length ? 'Instruments traded: '+sc.symbols.map(x=>x.s+' ('+x.n+')').join(', ') : '';
   const cd=R.calendar_days;
   $('sample-note').textContent = sc.empty ? 'This bot has no closed trades yet.' :
     !cd ? '' : cd<90 ? 'The record covers '+cd+' days. Annualised figures and ratios are extrapolated from a short sample and will move a lot as more months come in.'
     : 'Based on '+cd+' calendar days, '+(R.trading_days||'—')+' trading days and '+(sc.monthly||[]).length+' months on record.';
+}
+
+const CLOSE_LABELS=[['bot','Closed by the bot','The EA closed the position by its own rule.'],['tp','Hit take profit',''],['sl','Hit stop loss',''],
+  ['manual','Closed by hand','Positions I closed myself, from the terminal, phone or web. They count in every figure on this page.'],['stop_out','Stopped out','Closed by the broker for lack of margin.'],['other','Closed otherwise','Rollover, split or another broker action.']];
+function closeRows(sc, mp){
+  const C=sc.closes; if(!C) return [];
+  const T=(sc.trades||{}).trades||0;
+  return CLOSE_LABELS.filter(([k])=>C[k]).map(([k,l,tip])=>{
+    const x=C[k], share=T?' <small style="font-weight:500;color:var(--muted)">'+Math.round(x.trades/T*100)+'%</small>':'';
+    return [l+' ('+int(x.trades)+')', (ACC.publish_money&&!nil(x.net)?money(x.net,true):pct(x.net_pct,2))+share, cls(nil(x.net)?x.net_pct:x.net), tip||(int(x.wins)+' of '+int(x.trades)+' ended in profit.')];
+  });
+}
+
+/* ---------- where the account's profit comes from ---------- */
+function drawRecon(sc){
+  const R=DATA&&DATA.reconcile, box=$('recon');
+  if(sc.kind!=='account' || !R){ box.hidden=true; return; }
+  const n=R.trades||{}, M=ACC.publish_money && !nil(R.net);
+  const val=k=> M ? money(R[k],true) : (R.share_pct&&!nil(R.share_pct[k])?num(R.share_pct[k],1)+'%':'—');
+  const cl=k=> M ? cls(R[k]) : '';
+  if(M){ R.bots=(R.bots_auto||0)+(R.bots_hand||0); } else if(R.share_pct){ R.share_pct.bots=(R.share_pct.bots_auto||0)+(R.share_pct.bots_hand||0); }
+  const rows=[['Trades opened by the bots','bots',(n.bots_auto||0)+(n.bots_hand||0),true],
+    ['<span style="padding-left:18px;color:var(--muted)">of which I closed by hand</span>','bots_hand',n.bots_hand,n.bots_hand>0],
+    ['Trades I opened by hand','manual',n.manual,n.manual>0],
+    ['Costs already charged on positions still open','open_costs',null,M&&Math.abs(R.open_costs||0)>=0.005],
+    ['Broker adjustments that are not trades','adjustments',null,M&&Math.abs(R.adjustments||0)>=0.005]];
+  box.innerHTML='<table><caption>How the net profit adds up</caption><tbody>'+
+    rows.filter(r=>r[3]).map(r=>'<tr><td>'+r[0]+'</td><td class="n">'+(r[2]==null?'':int(r[2])+(r[2]===1?' trade':' trades'))+'</td><td class="'+cl(r[1])+'">'+val(r[1])+'</td></tr>').join('')+
+    (M?'<tr class="total"><td>Net profit</td><td class="n">'+int((n.bots_auto||0)+(n.bots_hand||0)+(n.manual||0))+' trades</td><td class="'+cls(R.net)+'">'+money(R.net,true)+'</td></tr>':'')+
+    '</tbody></table>'+(M&&!nil(R.floating)?'<p class="nt">Floating on open positions, not counted until they close: '+money(R.floating,true)+'.</p>':'');
+  box.hidden=false;
 }
 
 /* ---------- heatmap ---------- */
@@ -1089,7 +1198,7 @@ function buildSeries(sc, kind){
     const pts=[{x:t0,v:100,p:0,b:sb,dd:0,i:0}]; let v=100,p=0,peak=100;
     tl.t.forEach((t,i)=>{
       v*=1+tl.r[i]/100; if(tl.p) p+=tl.p[i]; peak=Math.max(peak,v);
-      pts.push({x:t*1000,v,p:tl.p?p:null,b:(sb!=null&&tl.p)?sb+p:null,dd:(v/peak-1)*100,i:i+1,r:tl.r[i],pnl:tl.p?tl.p[i]:null});
+      pts.push({x:t*1000,v,p:tl.p?p:null,b:(sb!=null&&tl.p)?sb+p:null,dd:(v/peak-1)*100,i:i+1,r:tl.r[i],pnl:tl.p?tl.p[i]:null,c:tl.c?tl.c[i]:null});
     });
     return pts;
   }
@@ -1157,7 +1266,10 @@ function drawEquity(animate){
   }
   // trade markers when there are few trades
   let dots='';
-  if(byIndex && pts.length<=80) pts.forEach((p,i)=>{ if(nil(p.r)) return; dots+='<circle cx="'+P[i][0].toFixed(1)+'" cy="'+P[i][1].toFixed(1)+'" r="'+(pts.length<=30?3.4:2.4)+'" fill="'+(p.r>=0?'#1E6B57':'#BE3A2B')+'" stroke="#F7F9F8" stroke-width="1.5"/>'; });
+  const few=pts.length<=80;
+  if(byIndex) pts.forEach((p,i)=>{ if(nil(p.r)) return; const hand=p.c==='m'; if(!few && !hand) return;
+    dots+='<circle cx="'+P[i][0].toFixed(1)+'" cy="'+P[i][1].toFixed(1)+'" r="'+(hand?(few?4.4:3.4):(pts.length<=30?3.4:2.4))+'" fill="'+(hand?'#E0A92C':(p.r>=0?'#1E6B57':'#BE3A2B'))+'" stroke="'+(hand?'#0F2C42':'#F7F9F8')+'" stroke-width="'+(hand?1.2:1.5)+'"/>'; });
+  $('eq-key').hidden=!(byIndex && pts.some(p=>p.c==='m'));
 
   const len=pathLen(P);
   box.insertAdjacentHTML('afterbegin','<svg id="eq" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Curve for '+esc(sc.name)+'">'+
@@ -1186,6 +1298,7 @@ function drawEquity(animate){
     ro.innerHTML=(byIndex&&!nil(p.i)&&p.i>0?'<span>trade <b>#'+p.i+'</b></span>':'')+
       '<span>'+(p.day?fmtDate(new Date(p.x).toISOString().slice(0,10)):fmtTime(p.x)+' UTC')+'</span>'+
       (!nil(p.r)?'<span>result <b class="'+cls(p.r)+'">'+pct(p.r,3)+(ACC.publish_money&&!nil(p.pnl)?' ('+money(p.pnl,true)+')':'')+'</b></span>':'')+
+      (p.c?'<span>closed <b>'+({e:'by the bot',s:'at stop loss',t:'at take profit',m:'by hand',o:'by stop out'}[p.c]||'by the broker')+'</b></span>':'')+
       '<span>growth <b>'+pct((p.v/base-1)*100)+'</b></span>'+
       (!nil(p.p)&&ACC.publish_money?'<span>profit <b>'+money(p.p-basep,true)+'</b></span>':'')+
       (!nil(p.b)?'<span>balance <b>'+money(p.b)+'</b></span>':'')+
@@ -1286,7 +1399,7 @@ function drawFlows(sc){
 
 /* ---------- P&L by bot ---------- */
 function drawPnlBars(){
-  const rows=SCOPES.filter(x=>x.kind!=='account' && !x.empty);
+  const rows=SCOPES.filter(x=>x.kind!=='account' && !x.empty && !x.parent && !x.custom);
   if(!rows.length){ $('pnl-wrap').hidden=true; return; }
   const M=ACC.publish_money, v=x=>M&&!nil(x.net)?x.net:(x.returns||{}).total_pct;
   rows.sort((a,b)=>(v(b)||0)-(v(a)||0));
@@ -1458,19 +1571,30 @@ function drawSides(sc){
 /* ---------- correlation ---------- */
 function drawCorr(c){
   if(!c || !c.ids || c.ids.length<2) return;
+  { const pos=id=>{ const k=ORDER.findIndex(x=>x.id===id); return k<0?1e6:k; };
+    const idx=c.ids.map((id,i)=>i).sort((a,b)=>pos(c.ids[a])-pos(c.ids[b]));
+    c={ids:idx.map(i=>c.ids[i]), m:idx.map(i=>idx.map(j=>c.m[i][j]))}; }
   const name=id=>{ const sc=scopeById(id); return sc?sc.name:id; };
-  let h='<thead><tr><th></th>'+c.ids.map(id=>'<th scope="col">'+esc(name(id))+'</th>').join('')+'</tr></thead><tbody>';
+  const fl=id=>{ const sc=scopeById(id); return sc&&sc.flag?flagSVG(sc.flag):''; };
+  const compact=c.ids.length>12;
+  $('corr').classList.toggle('compact',compact);
+  let h='<thead><tr><th></th>'+c.ids.map(id=>'<th scope="col" title="'+esc(name(id))+'">'+(compact?(fl(id)||esc(name(id)).slice(0,2)):esc(name(id)))+'</th>').join('')+'</tr></thead><tbody>';
   c.ids.forEach((id,i)=>{
-    h+='<tr data-id="'+esc(id)+'"><th scope="row">'+esc(name(id))+'</th>';
+    h+='<tr data-id="'+esc(id)+'"><th scope="row">'+(compact?fl(id):'')+esc(name(id))+'</th>';
     c.m[i].forEach((v,j)=>{
       if(nil(v)) { h+='<td class="nil">·</td>'; return; }
       const a=i===j?0.12:Math.min(1,Math.abs(v))*.8+.05;
       const bg=v>=0?'rgba(30,107,87,'+a.toFixed(2)+')':'rgba(190,58,43,'+a.toFixed(2)+')';
-      h+='<td style="background:'+bg+';color:'+(a>.5?'#fff':'var(--sea)')+'" title="'+esc(name(id))+' vs '+esc(name(c.ids[j]))+'">'+(i===j?'—':v.toFixed(2))+'</td>';
+      h+='<td style="background:'+bg+';color:'+(a>.5?'#fff':'var(--sea)')+'" title="'+esc(name(id))+' vs '+esc(name(c.ids[j]))+': '+v.toFixed(2)+'">'+(i===j?'—':v.toFixed(2))+'</td>';
     });
     h+='</tr>';
   });
   $('corr').innerHTML=h+'</tbody>';
+  const pairs=[]; c.ids.forEach((a,i)=>c.ids.forEach((b,j)=>{ if(j>i && !nil(c.m[i][j])) pairs.push([a,b,c.m[i][j]]); }));
+  pairs.sort((x,y)=>y[2]-x[2]);
+  const top=pairs.slice(0,Math.min(5,pairs.length)).filter(p=>p[2]>0.3);
+  $('corr-pairs').innerHTML = compact && top.length ? '<li style="border:0;padding-bottom:2px"><span class="chart-cap" style="margin:0">Pairs that move together most</span></li>'+
+    top.map(p=>'<li><span>'+esc(name(p[0]))+' · '+esc(name(p[1]))+'</span><b>'+p[2].toFixed(2)+'</b></li>').join('') : '';
   $('corr').querySelectorAll('tbody tr').forEach(tr=>{ tr.style.cursor='pointer'; tr.addEventListener('click',()=>selectScope(tr.dataset.id,true)); });
   $('correlation').hidden=false;
 }
@@ -1503,7 +1627,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const src=new URLSearchParams(location.search).has('preview')?'stats.preview.json':'stats.json';
   let s=null;
   try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
-  const strats=(s&&s.strategies&&s.strategies.length)?s.strategies:FALLBACK;
+  const strats=(s&&s.strategies&&s.strategies.length)?s.strategies.slice().sort((a,b)=>flagKey(a.flag)-flagKey(b.flag)):FALLBACK;
   drawHoist(strats);
   if(!s){ drawRoster(strats); return; }
 
@@ -1517,6 +1641,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   if(!SCOPES.length) return;
 
   buildSelector(); drawCompare(); drawPnlBars(); drawCorr(s.correlation);
+  document.querySelectorAll('[data-cmp]').forEach(b=>b.addEventListener('click',()=>{ cmpMagics=b.dataset.cmp==='magics'; document.querySelectorAll('[data-cmp]').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawCompare(); }));
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
