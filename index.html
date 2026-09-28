@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Armada — live results of the Wisfli bots</title>
-<meta name="description" content="One MetaTrader 5 account where every Wisfli bot trades in public. Full statistics published straight from the account every 15 minutes. A record to read, not a signal to copy.">
+<meta name="description" content="One MetaTrader 5 account where every Wisfli bot trades in public. Full statistics published straight from the account. A record to read, not a signal to copy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Spectral:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -428,7 +428,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
       <a href="#plain" class="opt">Reading the figures</a>
-      <a class="pill" href="https://wisfli.com/#bots">Get a bot</a>
+      <a class="pill" href="https://wisfli.com/">The plan</a>
     </nav>
   </div>
 </header>
@@ -439,10 +439,10 @@ table.corr.compact tbody th svg{width:18px;height:12px}
       <h1>Armada</h1>
       <p class="kicker">Live results from one MetaTrader&nbsp;5 account</p>
       <p class="ticket" id="ticket" hidden></p>
-      <p class="lead">Every bot I build trades here, in one account, each under its own flag and magic number, and each added only after it finishes validation. Armada is not for sale and cannot be copied: it is a public record, so you can see how each bot behaves before deciding whether to run one yourself.</p>
+      <p class="lead">Every bot I build trades here, in one account, each under its own flag and magic number, and each added only after it finishes validation. Nothing here is for sale: it is a public record of how the fleet trades, losses included. The goal is a fleet of 50 to 100 bots.</p>
       <div class="actions">
         <a class="btn brass" href="#compare">Compare the bots</a>
-        <a class="btn line" href="https://wisfli.com/#bots">Bots for sale</a>
+        <a class="btn line" href="https://wisfli.com/">Read the plan</a>
       </div>
     </div>
     <div>
@@ -490,7 +490,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
 <section id="record">
   <div class="wrap">
     <h2 id="record-title">The account, as it stands</h2>
-    <p class="sub">Published directly from the trading account every 15 minutes. Growth is time-weighted, so deposits and withdrawals never move the curve. Open positions and entry prices are never shown here.</p>
+    <p class="sub">Published directly from the trading account each time the record is updated. Growth is time-weighted, so deposits and withdrawals never move the curve. Open positions and entry prices are never shown here.</p>
 
     <div class="bar">
       <div class="seg" role="group" aria-label="Series">
@@ -649,25 +649,6 @@ table.corr.compact tbody th svg{width:18px;height:12px}
   </div>
 </section>
 
-<section id="run">
-  <div class="wrap">
-    <div class="berth">
-      <div>
-        <h2>Run a bot yourself</h2>
-        <p>Armada has no subscription and nothing on this page is sold. Some of the bots trading in it are sold on their own, as Expert Advisors you run in your own terminal, on your own account.</p>
-        <ul>
-          <li>Each bot has its own page, with its tests, licence and terms</li>
-          <li>Here you can watch how it trades before you decide</li>
-          <li>Your broker, your account, your risk settings</li>
-        </ul>
-      </div>
-      <div class="run-cta">
-        <a class="btn brass" href="https://wisfli.com/#bots">Browse the bots</a>
-        <small>Prices and licence options are on each bot's page. Results on your account will differ from this one.</small>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section id="plain">
   <div class="wrap">
@@ -683,7 +664,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
         <h3>What they cannot tell you</h3>
         <p>Losing months happen, and a losing month is not a malfunction. The same bot on another account will not produce the same numbers: a different broker, spread, execution speed or account size all move the outcome.</p>
         <p>Ratios such as Sharpe and Calmar are unstable over short periods. A few good weeks can make them look far better than they will be over a year, so give more weight to drawdown and to the number of months on record.</p>
-        <p>Leveraged trading can cost you more than you put in. If you run any of these bots yourself, use money you can afford to lose, start at reduced risk, and stop if it stops suiting you.</p>
+        <p>Leveraged trading can cost you more than you put in. Never trade with money you cannot afford to lose.</p>
       </div>
     </div>
   </div>
@@ -708,10 +689,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
       <div>
         <h4>Wisfli</h4>
         <ul>
-          <li><a href="https://wisfli.com/">wisfli.com</a></li>
-          <li><a href="https://wisfli.com/#bots">Bots for sale</a></li>
-          <li><a href="https://jsgaston.github.io/candlegrid-web-en/">CandleGrid Pro</a></li>
-          <li><a href="https://jsgaston.github.io/regimeswitch-web-en/">RegimeSwitch Pro</a></li>
+          <li><a href="https://wisfli.com/">wisfli.com, the plan</a></li>
           <li><a href="mailto:support@wisfli.com">support@wisfli.com</a></li>
         </ul>
       </div>
@@ -1041,7 +1019,7 @@ function drawStats(sc){
   statRows('st-risk',[
     ['Max drawdown',ddpct(K.max_drawdown_pct),'neg','Largest fall from a peak, measured trade by trade and day by day, whichever is worse.'],
     M&&!nil(K.max_drawdown_money) ? ['Max drawdown, money','−'+money(K.max_drawdown_money),'neg','Largest fall in cumulative profit, in account currency.'] : null,
-    ['Max floating drawdown',ddpct(K.max_floating_drawdown_pct),'neg','Includes losses on open trades, sampled every 15 minutes.'],
+    ['Max floating drawdown',ddpct(K.max_floating_drawdown_pct),'neg','Includes losses on open trades, sampled each time the record is published.'],
     ['Current drawdown',nil(K.current_drawdown_pct)?'—':(K.current_drawdown_pct>0?'−'+upct(K.current_drawdown_pct):'at peak')],
     ['Days since last peak',days(K.days_since_peak)],
     ['Longest time under water',days(K.longest_underwater_days),'','Longest stretch between a peak and the next new high.'],
