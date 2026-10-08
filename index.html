@@ -413,6 +413,58 @@ table.corr.compact tbody th svg{width:18px;height:12px}
 .cols>div{min-width:0}
 @media (max-width:720px){ dl.stats dd{white-space:normal;text-align:right;font-size:15px} dl.stats dt{min-width:0;font-size:14px} .cols{grid-template-columns:minmax(0,1fr)} }
 .eq-key i{display:inline-block;width:10px;height:10px;border-radius:50%;background:#E0A92C;border:1px solid #0F2C42;vertical-align:-1px;margin-right:6px}
+/* ---- v8: today's session ---- */
+#today{border-bottom:1px solid var(--rule)}
+.day-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 28px;flex-wrap:wrap;margin-bottom:30px}
+.day-head .sub{margin:0}
+.day-stamp{display:inline-flex;align-items:center;gap:9px;font:600 13px Archivo;color:var(--sea);border:1px solid var(--rule-strong);background:var(--panel);padding:7px 12px;white-space:nowrap}
+.day-stamp i{display:block;width:8px;height:8px;border-radius:50%;background:var(--up)}
+.day-stamp.stale i{background:none;border:1px solid var(--muted)}
+.day-stamp small{font-weight:500;color:var(--muted)}
+.daytiles{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--rule);background:var(--panel);margin:0}
+.daytiles div{padding:15px 16px 14px;border-right:1px solid var(--rule);min-width:0}
+.daytiles div:last-child{border-right:0}
+.daytiles dt{font:600 12px Archivo;color:var(--muted);margin:0 0 3px}
+.daytiles dd{font:700 21px Archivo;font-stretch:106%;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.daytiles dd small{display:block;font:500 12.5px/1.35 Archivo;font-stretch:100%;color:var(--muted);margin-top:3px;white-space:normal}
+#day-plot{border-top:0;background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
+#day-plot .plot-empty{min-height:200px}
+.day-key{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 12.5px Archivo;color:var(--muted);margin:10px 0 0}
+.day-key i{display:inline-block;width:16px;height:0;border-top:2.5px solid var(--sea);vertical-align:3px;margin-right:7px}
+.day-key i.fl{border-top:2px dashed var(--brass)}
+.day-key i.dot{width:9px;height:9px;border:0;border-radius:50%;background:#E0A92C;box-shadow:0 0 0 1px #0F2C42;vertical-align:-1px}
+.day-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:40px 48px;margin-top:40px}
+.day-grid .chart-cap{margin-top:12px}
+.dayrow{display:grid;grid-template-columns:minmax(120px,1.2fr) 92px 1fr 104px;align-items:center;gap:14px;padding:8px 0;border-bottom:1px solid var(--rule);cursor:pointer;font:600 14px Archivo}
+.dayrow:hover{background:rgba(246,248,246,.8)}
+.dayrow .nm{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.dayrow .nm svg{width:24px;height:16px;flex:none;box-shadow:0 1px 0 rgba(15,44,66,.25)}
+.dayrow .ct{font-weight:500;color:var(--muted);font-size:13px;white-space:nowrap}
+.dayrow .track{position:relative;height:14px}
+.dayrow .track i{position:absolute;top:0;height:14px;display:block}
+.dayrow .track b{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--rule-strong)}
+.dayrow .val{text-align:right;white-space:nowrap}
+table.daytrades{width:100%;border-collapse:collapse;font:14px Archivo}
+table.daytrades th{font-size:12px;font-weight:600;color:var(--muted);text-align:right;padding:0 0 8px;border-bottom:1px solid var(--rule-strong)}
+table.daytrades th:first-child,table.daytrades td:first-child{text-align:left}
+table.daytrades td{padding:9px 0;border-bottom:1px solid var(--rule);text-align:right;font-weight:600;white-space:nowrap}
+table.daytrades td.how{font-weight:500;color:#34506A}
+table.daytrades td.how i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#E0A92C;border:1px solid #0F2C42;margin-right:6px;vertical-align:0}
+.day-none{font:500 15px Archivo;color:var(--muted);padding:14px 0;margin:0;border-bottom:1px solid var(--rule)}
+@media (max-width:980px){
+  .daytiles{grid-template-columns:repeat(3,1fr)}
+  .daytiles div:nth-child(3n){border-right:0}
+  .daytiles div:nth-child(-n+3){border-bottom:1px solid var(--rule)}
+  .day-grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .daytiles{grid-template-columns:repeat(2,1fr)}
+  .daytiles div{border-right:1px solid var(--rule)!important;border-bottom:1px solid var(--rule)}
+  .daytiles div:nth-child(2n){border-right:0!important}
+  .daytiles dd{font-size:18px}
+  .dayrow{grid-template-columns:minmax(0,1fr) 70px 92px;font-size:13px}
+  .dayrow .track{display:none}
+}
 </style>
 </head>
 <body>
@@ -422,6 +474,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
   <div class="wrap">
     <a class="brand" href="https://wisfli.com/"><svg viewBox="0 0 60 40" aria-hidden="true"><path d="M0 0h60v40H0z" fill="#14528C"/><path d="M8 8h44v24H8z" fill="#fff"/><path d="M18 14h24v12H18z" fill="#C8322A"/></svg>WISFLI <span class="prod">/ Armada</span></a>
     <nav aria-label="Page">
+      <a href="#today">Today</a>
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
@@ -473,6 +526,32 @@ table.corr.compact tbody th svg{width:18px;height:12px}
     </div>
   </div>
 </div>
+
+<section id="today" hidden>
+  <div class="wrap">
+    <div class="day-head">
+      <div>
+        <h2 id="today-title">Today's session</h2>
+        <p class="sub" id="today-sub">Trades closed during the current UTC day, and what was still open when the record was last published.</p>
+      </div>
+      <p class="day-stamp" id="today-stamp"></p>
+    </div>
+    <dl class="daytiles" id="today-tiles"></dl>
+    <div class="plot" id="day-plot"></div>
+    <p class="day-key" id="day-key"></p>
+    <div class="day-grid">
+      <div>
+        <h3 class="col" id="today-list-title">Bots that traded today</h3>
+        <div id="today-list"></div>
+      </div>
+      <div>
+        <h3 class="col">How today's trades closed</h3>
+        <table class="split" id="today-closes"><tbody><tr><td>—</td></tr></tbody></table>
+        <p class="chart-cap" id="today-note"></p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="compare">
   <div class="wrap">
@@ -680,6 +759,7 @@ table.corr.compact tbody th svg{width:18px;height:12px}
       <div>
         <h4>Armada</h4>
         <ul>
+          <li><a href="#today">Today's session</a></li>
           <li><a href="#compare">Compare the bots</a></li>
           <li><a href="#stats">Statistics</a></li>
           <li><a href="#fleet">The fleet</a></li>
@@ -874,7 +954,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
 }
@@ -1598,6 +1678,154 @@ function drawRoster(strats){
   $('roster').querySelectorAll('tr[data-id]').forEach(tr=>tr.addEventListener('click',()=>{ selectScope(tr.dataset.id,true); $('record').scrollIntoView(); }));
 }
 
+/* ---------- today's session ---------- */
+const pad2 = n => String(n).padStart(2,'0');
+const hm = ms => { const d=new Date(ms); return pad2(d.getUTCHours())+':'+pad2(d.getUTCMinutes()); };
+const HOW = {e:'By the bot',s:'Stop loss',t:'Take profit',m:'By hand',o:'Stop out',x:'By the broker'};
+// the session shown is the UTC day of the last publication; if nothing has been
+// published yet today the page says so instead of passing yesterday off as today
+function sessionDay(){ return DATA && DATA.updated_utc ? DATA.updated_utc.slice(0,10) : new Date().toISOString().slice(0,10); }
+function daySummary(sc, day){
+  const d0=Date.parse(day+'T00:00:00Z'), d1=d0+864e5, tl=sc.tl||{}, tr=[];
+  (tl.t||[]).forEach((t,i)=>{ const x=t*1000; if(x>=d0 && x<d1) tr.push({x, r:tl.r[i], p:tl.p?tl.p[i]:null, h:tl.h?tl.h[i]:null, c:tl.c?tl.c[i]:null}); });
+  tr.sort((a,b)=>a.x-b.x);
+  const wins=tr.filter(t=>t.r>0), gw=wins.reduce((a,t)=>a+t.r,0), gl=-tr.filter(t=>t.r<=0).reduce((a,t)=>a+t.r,0);
+  // trade results are % of the day's opening balance, so they add up to the day's result
+  let ret=tr.reduce((a,t)=>a+t.r,0), net=tr.length && tr.every(t=>!nil(t.p)) ? tr.reduce((a,t)=>a+t.p,0) : (tr.length?null:0);
+  const eq=sc.equity||[], k=eq.findIndex(e=>e.d===day);
+  let base=100;
+  if(k>0) base=eq[k-1].v; else if(k<0 && eq.length && eq[eq.length-1].d<day) base=eq[eq.length-1].v;
+  if(k>=0){   // the daily ledger also holds costs and broker adjustments, so it wins when present
+    ret=(eq[k].v/base-1)*100;
+    if(!nil(eq[k].p)) net=eq[k].p-(k>0&&!nil(eq[k-1].p)?eq[k-1].p:0);
+  }
+  const live=liveSeries(sc).filter(p=>p[0]*1000>=d0 && p[0]*1000<d1).map(p=>({x:p[0]*1000, v:(p[1]/base-1)*100}));
+  return {day,d0,d1,tr,wins:wins.length,ret,net,pf:gl>0?gw/gl:null,noLoss:tr.length>0&&gl===0,live,
+    best:tr.length?tr.reduce((a,t)=>t.r>a.r?t:a):null, worst:tr.length?tr.reduce((a,t)=>t.r<a.r?t:a):null};
+}
+function botName(sc){ return sc.kind==='magic' && sc.magics && sc.magics[0]===0 ? 'Trades I opened by hand' : sc.name; }
+
+let DAY=null;
+function drawToday(sc){
+  if(!DATA || !sc){ return; }
+  $('today').hidden=false;
+  const day=sessionDay(), S=daySummary(sc,day), isAcc=sc.kind==='account', M=ACC.publish_money;
+  const asof=DATA.updated_utc ? Date.parse(DATA.updated_utc) : Date.now();
+  const stale=day!==new Date().toISOString().slice(0,10);
+  DAY={sc,S,asof,stale};
+  const who=isAcc?'':' · '+botName(sc);
+  $('today-title').textContent=(stale?'Last session published':"Today's session")+who;
+  $('today-sub').textContent = stale
+    ? 'Nothing has been published yet today, so this is '+fmtDate(day)+', the last UTC day on record. It fills in again with the next publication.'
+    : 'Trades closed so far on '+fmtDate(day)+' (UTC day), and what was still open when the record was last published.';
+  $('today-stamp').className='day-stamp'+(stale?' stale':'');
+  $('today-stamp').innerHTML='<i></i>As of '+hm(asof)+' UTC <small>'+esc(ago(DATA.updated_utc||new Date(asof).toISOString()))+'</small>';
+
+  const n=S.tr.length;
+  const resMain = M && !nil(S.net) ? money(S.net,true) : pct(S.ret);
+  const resSub = M && !nil(S.net) ? pct(S.ret)+' of opening balance' : (isAcc?'of opening balance':'contribution to the account');
+  const tradeCell=t=>!t?'—':(M&&!nil(t.p)?money(t.p,true):pct(t.r,3));
+  const tiles=[
+    [stale?'Result that day':'Result today','<span class="'+cls(S.ret)+'">'+resMain+'</span><small>'+resSub+'</small>'],
+    ['Trades closed',int(n)+'<small>'+(n?int(S.wins)+' won, '+int(n-S.wins)+' lost':'none yet')+'</small>'],
+    ['Hits',n?upct(S.wins/n*100,0):'—','<small>'+(n?'share of trades in profit':' ')+'</small>'],
+    ['Profit factor',S.noLoss?'no loss':num(S.pf),'<small>'+(n?'gross profit ÷ gross loss':' ')+'</small>']
+  ].map(x=>[x[0],x[1]+(x[2]||'')]);
+  if(isAcc){
+    const fl=!nil(ACC.equity)&&!nil(ACC.balance)?ACC.equity-ACC.balance:null;
+    const botsToday=SCOPES.filter(x=>isBot(x)&&!x.empty&&!(x.magics&&x.magics[0]===0)&&daySummary(x,day).tr.length).length;
+    tiles.push(['Open at publication', M&&!nil(fl) ? '<span class="'+cls(fl)+'">'+money(fl,true)+'</span><small>'+pct(ACC.floating_pct)+' of balance, not counted yet</small>'
+                                                  : '<span class="'+cls(ACC.floating_pct)+'">'+pct(ACC.floating_pct)+'</span><small>of balance, not counted yet</small>']);
+    tiles.push([stale?'Bots that traded':'Bots trading today',int(botsToday)+'<small>of '+int(SCOPES.filter(x=>isBot(x)&&!x.empty&&!(x.magics&&x.magics[0]===0)).length)+' with a record</small>']);
+  } else {
+    tiles.push(['Best trade','<span class="'+cls(S.best&&S.best.r)+'">'+tradeCell(S.best)+'</span><small>'+(S.best?'closed '+hm(S.best.x)+' UTC':' ')+'</small>']);
+    tiles.push(['Worst trade','<span class="'+cls(S.worst&&S.worst.r)+'">'+tradeCell(S.worst)+'</span><small>'+(S.worst?'closed '+hm(S.worst.x)+' UTC':' ')+'</small>']);
+  }
+  $('today-tiles').innerHTML=tiles.map(t=>'<div><dt>'+t[0]+'</dt><dd>'+t[1]+'</dd></div>').join('');
+
+  drawDayChart();
+
+  // left column: which bots traded (account) or the trades themselves (one bot)
+  if(isAcc){
+    $('today-list-title').textContent='Who traded today';
+    const rows=SCOPES.filter(x=>isBot(x)&&!x.empty).map(x=>({x,S:daySummary(x,day)})).filter(o=>o.S.tr.length);
+    if(!rows.length){ $('today-list').innerHTML='<p class="day-none">No trades closed yet '+(stale?'that day':'today')+'.</p>'; }
+    else {
+      const v=o=>M&&!nil(o.S.net)?o.S.net:o.S.ret;
+      rows.sort((a,b)=>v(b)-v(a));
+      const max=Math.max(1e-9,...rows.map(o=>Math.abs(v(o)))), hasNeg=rows.some(o=>v(o)<0);
+      $('today-list').innerHTML=rows.map(o=>{
+        const val=v(o), w=Math.abs(val)/max*(hasNeg?50:100), left=hasNeg?(val>=0?50:50-w):0;
+        return '<div class="dayrow" data-id="'+esc(o.x.id)+'" tabindex="0" title="'+esc(botName(o.x))+'"><span class="nm">'+(o.x.flag?flagSVG(o.x.flag):'')+esc(botName(o.x))+'</span>'+
+          '<span class="ct">'+int(o.S.tr.length)+(o.S.tr.length===1?' trade':' trades')+'</span>'+
+          '<span class="track">'+(hasNeg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.5,w)+'%;background:'+(val>=0?'#1E6B57':'#BE3A2B')+'"></i></span>'+
+          '<span class="val '+cls(val)+'">'+(M&&!nil(o.S.net)?money(val,true):pct(val))+'</span></div>';
+      }).join('');
+      $('today-list').querySelectorAll('.dayrow').forEach(r=>{
+        const go=()=>selectScope(r.dataset.id,true);
+        r.addEventListener('click',go); r.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+      });
+    }
+  } else {
+    $('today-list-title').textContent='Trades closed '+(stale?'that day':'today');
+    if(!n){ $('today-list').innerHTML='<p class="day-none">'+esc(botName(sc))+' has not closed a trade '+(stale?'that day':'today')+'.</p>'; }
+    else $('today-list').innerHTML='<table class="daytrades"><thead><tr><th>Closed (UTC)</th><th>Held</th><th>How</th><th>Result</th></tr></thead><tbody>'+
+      S.tr.slice().reverse().map(t=>'<tr><td>'+hm(t.x)+'</td><td>'+hours(t.h)+'</td><td class="how">'+(t.c==='m'?'<i></i>':'')+(HOW[t.c]||'—')+'</td><td class="'+cls(t.r)+'">'+(M&&!nil(t.p)?money(t.p,true)+' <small style="font-weight:500;color:var(--muted)">'+pct(t.r,2)+'</small>':pct(t.r,3))+'</td></tr>').join('')+'</tbody></table>';
+  }
+
+  // right column: how the day's trades closed
+  const by={}; S.tr.forEach(t=>{ const k=t.c||'x'; (by[k]=by[k]||{n:0,w:0,r:0,p:0,hasP:true}); by[k].n++; if(t.r>0) by[k].w++; by[k].r+=t.r; if(nil(t.p)) by[k].hasP=false; else by[k].p+=t.p; });
+  const keys=['e','t','s','m','o','x'].filter(k=>by[k]);
+  $('today-closes').innerHTML = keys.length
+    ? '<thead><tr><th></th><th>Trades</th><th>Won</th><th>Result</th></tr></thead><tbody>'+keys.map(k=>{ const b=by[k], val=M&&b.hasP?b.p:b.r;
+        return '<tr><td>'+HOW[k]+'</td><td>'+int(b.n)+'</td><td>'+int(b.w)+'</td><td class="'+cls(val)+'">'+(M&&b.hasP?money(b.p,true):pct(b.r))+'</td></tr>'; }).join('')+'</tbody>'
+    : '<tbody><tr><td>No closed trades yet.</td></tr></tbody>';
+  const hand=S.tr.filter(t=>t.c==='m').length;
+  $('today-note').textContent=(hand?hand+(hand===1?' trade was':' trades were')+' closed by hand. A bot’s trade closed by hand still counts for that bot. ':'')+
+    'The record is updated a few times a day, not streamed, so trades after '+hm(asof)+' UTC appear with the next update.';
+}
+
+function drawDayChart(){
+  const box=$('day-plot'); if(!DAY) return;
+  const {S,asof,stale}=DAY, M=ACC.publish_money;
+  if(!S.tr.length && S.live.length<1){
+    box.innerHTML='<div class="plot-empty"><b>No trades closed yet '+(stale?'that day':'today')+'.</b><span style="font-size:15px">The day’s curve starts with the first closed trade.</span></div>';
+    $('day-key').innerHTML=''; return;
+  }
+  const W=Math.max(320,box.clientWidth), H=W<560?220:260, PL=14, PR=W<560?60:76, PT=36, PB=30;
+  const end=Math.min(S.d1, Math.max(asof, S.tr.length?S.tr[S.tr.length-1].x:0, S.live.length?S.live[S.live.length-1].x:0));
+  // cumulative closed result, as steps: nothing moves between two closes
+  const cum=[{x:S.d0,v:0}]; let c=0; S.tr.forEach(t=>{ c+=t.r; cum.push({x:t.x,v:c,t}); });
+  const vals=cum.map(p=>p.v).concat(S.live.map(p=>p.v),[0]);
+  let lo=Math.min(...vals), hi=Math.max(...vals); const pad=(hi-lo)*.16||0.25; lo-=pad; hi+=pad;
+  const X=x=>PL+(x-S.d0)/864e5*(W-PL-PR), Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  let step='M'+X(S.d0).toFixed(1)+' '+Y(0).toFixed(1);
+  cum.slice(1).forEach((p,i)=>{ step+='H'+X(p.x).toFixed(1)+'V'+Y(p.v).toFixed(1); });
+  step+='H'+X(end).toFixed(1);
+  const last=cum[cum.length-1].v, col=last>=0?'#1E6B57':'#BE3A2B';
+  const area=step+'V'+Y(0).toFixed(1)+'H'+X(S.d0).toFixed(1)+'Z';
+  let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+8,Y(v)+4,pct(v,Math.abs(hi-lo)<2?2:1))).join('');
+  [0,6,12,18,24].forEach(h=>{ const x=X(S.d0+h*36e5); g+='<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.06)"/>'+T(Math.min(Math.max(x,PL+18),W-PR-18),H-9,pad2(h%24===0&&h?24:h)+':00','middle'); });
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.4)" stroke-dasharray="3 4"/>';
+  // the rest of the day has not happened yet
+  if(!stale && end<S.d1) g+='<rect x="'+X(end).toFixed(1)+'" y="'+PT+'" width="'+(X(S.d1)-X(end)).toFixed(1)+'" height="'+(H-PT-PB)+'" fill="rgba(15,44,66,.035)"/>'+
+    '<line x1="'+X(end).toFixed(1)+'" x2="'+X(end).toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="#0F2C42" stroke-width="1" opacity=".45"/>'+
+    (X(end)>W-PR-90 ? T(X(end)-6,PT+14,'as of '+hm(asof),'end',' font-weight="600" fill="#0F2C42"') : T(X(end)+6,PT+14,'as of '+hm(asof),'start',' font-weight="600" fill="#0F2C42"'));
+  g+='<path d="'+area+'" fill="'+(last>=0?'rgba(30,107,87,.13)':'rgba(190,58,43,.13)')+'"/>';
+  g+='<path d="'+step+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linejoin="round"/>';
+  // equity including open positions, from each publication of the day
+  if(S.live.length){
+    if(S.live.length>1) g+='<path d="'+smoothPath(S.live.map(p=>[X(p.x),Y(p.v)]))+'" fill="none" stroke="#E0A92C" stroke-width="2" stroke-dasharray="5 4"/>';
+    S.live.forEach(p=>{ g+='<circle cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3.2" fill="#F7F9F8" stroke="#E0A92C" stroke-width="1.8"><title>'+hm(p.x)+' UTC, open positions included: '+pct(p.v)+'</title></circle>'; });
+  }
+  cum.slice(1).forEach(p=>{ const t=p.t, hand=t.c==='m';
+    g+='<circle cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="'+(hand?4.4:3.6)+'" fill="'+(hand?'#E0A92C':(t.r>=0?'#1E6B57':'#BE3A2B'))+'" stroke="'+(hand?'#0F2C42':'#F7F9F8')+'" stroke-width="'+(hand?1.2:1.5)+'"><title>'+hm(t.x)+' UTC · '+(HOW[t.c]||'closed')+' · '+(M&&!nil(t.p)?money(t.p,true)+' ('+pct(t.r,3)+')':pct(t.r,3))+' · day so far '+pct(p.v)+'</title></circle>'; });
+  box.innerHTML='<span class="plot-label">Closed result through the day, % of the opening balance</span><svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Result through the day">'+g+'</svg>';
+  $('day-key').innerHTML='<span><i style="border-color:'+col+'"></i>Closed trades, adding up through the day</span>'+
+    (S.live.length?'<span><i class="fl"'+(S.live.length>1?'':' style="width:9px;height:9px;border:1.8px solid #E0A92C;border-radius:50%;vertical-align:-1px"')+'></i>Including open positions, at each publication</span>':'')+
+    (S.tr.some(t=>t.c==='m')?'<span><i class="dot"></i>Closed by hand</span>':'')+'<span>Hover a dot for details.</span>';
+}
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -1628,7 +1856,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); },150); }).observe(document.body);
 })();
 </script>
 </body>
