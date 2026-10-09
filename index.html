@@ -465,6 +465,65 @@ table.daytrades td.how i{display:inline-block;width:8px;height:8px;border-radius
   .dayrow{grid-template-columns:minmax(0,1fr) 70px 92px;font-size:13px}
   .dayrow .track{display:none}
 }
+
+/* ---- v9: the study ---- */
+#study{border-top:1px solid var(--rule)}
+.study-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px;padding:12px 0;margin:0 0 24px;border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule)}
+@media (min-width:900px){ .study-bar{position:sticky;top:116px;z-index:3;background:rgba(228,234,232,.96);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)} }
+.fsel{display:inline-flex;align-items:center;gap:9px;font:600 13px Archivo;color:var(--muted);margin:0}
+.fsel select{font:700 14px Archivo;color:var(--sea);background-color:var(--panel);border:1px solid var(--rule-strong);padding:7px 32px 7px 11px;appearance:none;-webkit-appearance:none;cursor:pointer;max-width:250px;
+  background-image:linear-gradient(45deg,transparent 50%,#0F2C42 50%),linear-gradient(135deg,#0F2C42 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+.fsel select:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.fsel select:disabled{opacity:.5;cursor:default}
+.study-bar .chart-cap{margin:0 0 0 auto}
+.st-old{border-left:3px solid var(--brass);background:var(--panel);padding:10px 14px;margin:0 0 22px;max-width:none}
+.st-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin:0}
+.st-tiles div{background:var(--panel);padding:15px 16px 14px;min-width:0}
+.st-tiles dt{font:600 12px Archivo;color:var(--muted);margin:0 0 3px}
+.st-tiles dd{font:700 21px Archivo;font-stretch:106%;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-tiles dd small{display:block;font:500 12.5px/1.35 Archivo;font-stretch:100%;color:var(--muted);margin-top:3px;white-space:normal}
+.st-block{margin-top:72px}
+.st-h{font:800 28px/1.08 Archivo;font-stretch:108%;letter-spacing:-.01em;margin:0 0 8px}
+.st-p{font-size:16.5px;color:#34506A;margin:0 0 24px;max-width:46em}
+.st-two{display:grid;grid-template-columns:1fr 1fr;gap:40px 48px;margin-top:36px}
+.st-two>div{min-width:0}
+table.cmp.sym{min-width:1060px}
+table.cmp tr.pick td{background:var(--panel);box-shadow:inset 0 2px 0 var(--brass),inset 0 -2px 0 var(--brass)}
+table.cmp td small.mu,.mu{font-weight:500;color:var(--muted)}
+table.cmp .sb{font-weight:700}
+table.cmp th.nos{cursor:default}
+.symbars{margin-top:34px}
+table.botsym td{min-width:58px;width:58px;height:34px;font-size:11.5px;cursor:pointer;white-space:nowrap;padding:0 3px}
+table.botsym tbody th{display:flex;align-items:center;gap:7px;justify-content:flex-end;height:34px;padding:0 10px 0 0;font-size:12.5px;cursor:pointer}
+table.botsym tbody th svg{width:21px;height:14px;flex:none}
+table.botsym thead th.on{color:var(--sea)}
+table.botsym td.on{outline:2px solid var(--brass);outline-offset:-2px}
+#st-heat,#st-scatter,#st-expo{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
+#st-heat svg text,#st-expo svg text{pointer-events:none}
+.st-keys{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 12.5px Archivo;color:var(--muted);margin:10px 0 0}
+.st-keys i{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+.okrow{display:grid;grid-template-columns:92px 1fr 64px;gap:12px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule);font:600 13.5px Archivo}
+.okrow i{display:block;height:12px;background:var(--sea)}
+.okrow span:last-child{text-align:right}
+#st-orders-grid h3.col + div{margin-bottom:26px}
+table.daytrades.log td{padding:9px 10px 9px 0}
+table.daytrades.log th{padding-right:10px}
+table.daytrades.log td.bt{text-align:left;font-weight:600}
+table.daytrades.log td.bt span{display:inline-flex;align-items:center;gap:7px}
+table.daytrades.log td.bt svg{width:21px;height:14px;flex:none;box-shadow:0 1px 0 rgba(15,44,66,.25)}
+table.daytrades.log td.sy{text-align:left;font-weight:700}
+.sd{display:inline-block;font:700 11px Archivo;padding:1px 6px;border:1px solid var(--rule-strong)}
+.sd.l{color:var(--up)} .sd.s{color:var(--down)}
+.st-btn{font:600 13px Archivo;background:transparent;border:1px solid var(--rule-strong);color:var(--sea);padding:8px 14px;cursor:pointer;margin-top:14px}
+.st-btn:hover{border-color:var(--sea)}
+@media (max-width:980px){ .st-two{grid-template-columns:1fr} }
+@media (max-width:720px){
+  .st-tiles{grid-template-columns:repeat(2,1fr)}
+  .st-tiles dd{font-size:18px}
+  .study-bar .chart-cap{margin-left:0;width:100%}
+  .fsel select{max-width:200px}
+  .st-h{font-size:24px}
+}
 </style>
 </head>
 <body>
@@ -478,6 +537,7 @@ table.daytrades td.how i{display:inline-block;width:8px;height:8px;border-radius
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
+      <a href="#study">Study</a>
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
       <a href="#plain" class="opt">Reading the figures</a>
@@ -670,6 +730,143 @@ table.daytrades td.how i{display:inline-block;width:8px;height:8px;border-radius
   </div>
 </section>
 
+<section id="study" hidden>
+  <div class="wrap">
+    <h2 id="study-title">The study</h2>
+    <p class="sub">Every closed trade taken apart: which instruments carry the result, which hours and sessions work, how long positions stay open, how much is open at once and how the orders behave. Pick an instrument or a direction and every figure in this section follows it.</p>
+
+    <div class="study-bar">
+      <label class="fsel"><span>Instrument</span><select id="st-sym"></select></label>
+      <div class="seg" role="group" aria-label="Direction">
+        <button type="button" data-side="" aria-pressed="true">Both ways</button>
+        <button type="button" data-side="l" aria-pressed="false">Long</button>
+        <button type="button" data-side="s" aria-pressed="false">Short</button>
+      </div>
+      <div class="seg" role="group" aria-label="Clock">
+        <button type="button" data-clock="utc" aria-pressed="true">UTC</button>
+        <button type="button" data-clock="local" aria-pressed="false">Your time</button>
+      </div>
+      <span class="chart-cap" id="st-count"></span>
+    </div>
+    <p class="note st-old" id="st-old" hidden></p>
+    <dl class="st-tiles" id="st-tiles"></dl>
+
+    <div class="st-block">
+      <h3 class="st-h">Instruments</h3>
+      <p class="st-p">What each instrument has added to the record, with the direction filter applied. Select a row to study that instrument alone; sort by any column.</p>
+      <div class="scroll"><table class="cmp sym" id="st-symtab"></table></div>
+      <div class="symbars"><h3 class="col">Result by instrument</h3><div id="st-symbars"></div></div>
+    </div>
+
+    <div class="st-block" id="st-botsym-wrap" hidden>
+      <h3 class="st-h">Which bot trades what</h3>
+      <p class="st-p">Result of every bot on every instrument it has traded. Green adds to the account, red takes away; hover a cell for the count. Select a bot to open its own record.</p>
+      <div class="scroll"><table class="corr botsym" id="st-botsym"></table></div>
+      <p class="chart-cap" id="st-botsym-cap"></p>
+    </div>
+
+    <div class="st-block">
+      <h3 class="st-h">When the trades happen</h3>
+      <p class="st-p">Each cell is one hour of one weekday, by the time the position opened. It shows where the activity sits and where the result comes from.</p>
+      <div class="bar">
+        <div class="seg" role="group" aria-label="Heatmap shows">
+          <button type="button" data-heat="res" aria-pressed="true">Result</button>
+          <button type="button" data-heat="n" aria-pressed="false">Trades</button>
+          <button type="button" data-heat="hit" aria-pressed="false">Hits</button>
+        </div>
+      </div>
+      <div class="plot" id="st-heat"></div>
+      <p class="chart-cap" id="st-heat-cap"></p>
+      <div class="st-two">
+        <div>
+          <h3 class="col">Market sessions</h3>
+          <table class="split" id="st-sessions"><tbody><tr><td>—</td></tr></tbody></table>
+          <p class="chart-cap">By the hour the position opened, always in UTC: Asia 00–07, London 07–12, both London and New York 12–16, New York 16–21, late evening 21–24.</p>
+        </div>
+        <div>
+          <h3 class="col">Week by week</h3>
+          <div id="st-weeks"></div>
+          <p class="chart-cap">Trades closed each week (bar height), coloured by the week's result. Last 52 weeks.</p>
+        </div>
+      </div>
+      <div class="st-two">
+        <div>
+          <h3 class="col">By weekday of entry</h3>
+          <div id="st-dow"></div>
+          <p class="chart-cap" id="st-dow-cap"></p>
+        </div>
+        <div>
+          <h3 class="col">By hour of exit</h3>
+          <div id="st-exit"></div>
+          <p class="chart-cap" id="st-exit-cap"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="st-block">
+      <h3 class="st-h">How long positions stay open</h3>
+      <p class="st-p">Trades grouped by holding time, and each trade's result against how long it was held.</p>
+      <div class="st-two" style="margin-top:0">
+        <div>
+          <table class="split" id="st-hold"><tbody><tr><td>—</td></tr></tbody></table>
+          <p class="chart-cap" id="st-hold-cap"></p>
+        </div>
+        <div>
+          <div class="plot" id="st-scatter"></div>
+          <p class="st-keys" id="st-scatter-key"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="st-block">
+      <h3 class="st-h">Exposure</h3>
+      <p class="st-p">How many positions were open at the same time, worked out from the open and close time of every closed trade. Positions still open are never shown.</p>
+      <dl class="st-tiles" id="st-expo-tiles"></dl>
+      <div class="plot" id="st-expo" style="border-top:0"></div>
+      <p class="chart-cap" id="st-expo-cap"></p>
+    </div>
+
+    <div class="st-block">
+      <h3 class="st-h">Orders</h3>
+      <p class="st-p">Every order sent to the broker: market orders, pending orders and how many of them filled, were cancelled or expired. Order prices, stop and target levels are never published.</p>
+      <div class="st-two" id="st-orders-grid" style="margin-top:0">
+        <div><dl class="stats" id="st-orders"></dl></div>
+        <div>
+          <h3 class="col">Order types</h3>
+          <div id="st-okinds"></div>
+          <h3 class="col">Orders placed by hour</h3>
+          <div id="st-ohours"></div>
+        </div>
+      </div>
+      <p class="chart-cap" id="st-orders-cap"></p>
+    </div>
+
+    <div class="st-block">
+      <h3 class="st-h">One trade after another</h3>
+      <p class="st-p">Does a loss make the next trade worse? Each row looks at the trades that came right after a given situation.</p>
+      <table class="split" id="st-seq"><tbody><tr><td>—</td></tr></tbody></table>
+      <p class="chart-cap" id="st-seq-cap"></p>
+    </div>
+
+    <div class="st-block">
+      <h3 class="st-h">Trade log</h3>
+      <p class="st-p">Closed trades only, with no prices. Times follow the clock chosen above.</p>
+      <div class="bar">
+        <div class="seg" role="group" aria-label="Trade log">
+          <button type="button" data-log="latest" aria-pressed="true">Latest</button>
+          <button type="button" data-log="best" aria-pressed="false">Best</button>
+          <button type="button" data-log="worst" aria-pressed="false">Worst</button>
+          <button type="button" data-log="long" aria-pressed="false">Held longest</button>
+          <button type="button" data-log="hand" aria-pressed="false">Closed by hand</button>
+        </div>
+        <span class="chart-cap" style="margin:0" id="st-log-count"></span>
+      </div>
+      <div class="scroll"><table class="daytrades log" id="st-log"></table></div>
+      <button type="button" class="st-btn" id="st-more" hidden></button>
+    </div>
+  </div>
+</section>
+
 <section id="lab">
   <div class="wrap">
     <h2 id="lab-title">Stress-testing the record</h2>
@@ -743,6 +940,7 @@ table.daytrades td.how i{display:inline-block;width:8px;height:8px;border-radius
         <h3>What they cannot tell you</h3>
         <p>Losing months happen, and a losing month is not a malfunction. The same bot on another account will not produce the same numbers: a different broker, spread, execution speed or account size all move the outcome.</p>
         <p>Ratios such as Sharpe and Calmar are unstable over short periods. A few good weeks can make them look far better than they will be over a year, so give more weight to drawdown and to the number of months on record.</p>
+        <p>The study section splits the record by instrument, direction, hour and session. Each slice holds far fewer trades than the whole, so a strong hour or instrument on a handful of trades is more likely chance than a pattern.</p>
         <p>Leveraged trading can cost you more than you put in. Never trade with money you cannot afford to lose.</p>
       </div>
     </div>
@@ -762,6 +960,7 @@ table.daytrades td.how i{display:inline-block;width:8px;height:8px;border-radius
           <li><a href="#today">Today's session</a></li>
           <li><a href="#compare">Compare the bots</a></li>
           <li><a href="#stats">Statistics</a></li>
+          <li><a href="#study">The study</a></li>
           <li><a href="#fleet">The fleet</a></li>
           <li><a href="#plain">Reading the figures</a></li>
         </ul>
@@ -955,6 +1154,7 @@ function renderScope(){
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
   setSeries(defaultSeries(sc));
   drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc);
+  ST.more=false; drawStudy(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
 }
@@ -1826,6 +2026,453 @@ function drawDayChart(){
     (S.tr.some(t=>t.c==='m')?'<span><i class="dot"></i>Closed by hand</span>':'')+'<span>Hover a dot for details.</span>';
 }
 
+/* ---------- v9: the study ----------
+   Built from the trade list of the selected scope (tl). Newer publications
+   add the instrument (tl.sy + tl.s), direction (tl.d), lots (tl.v), costs
+   (tl.k), the magic number on the account's list (tl.m), a by_symbol table
+   and an orders summary. With an older stats.json the section still shows
+   everything the trade list allows and says what is still to come. */
+const ST={sym:'', side:'', clock:'utc', heat:'res', log:'latest', more:false, sort:{k:'n',dir:-1}};
+const SESSIONS=[['Asia',0,7],['London',7,12],['London and New York',12,16],['New York',16,21],['Late evening',21,24]];
+const HOLDS=[['Under 15 minutes',0,.25],['15 minutes to 1 hour',.25,1],['1 to 4 hours',1,4],['4 to 24 hours',4,24],['1 to 3 days',24,72],['Over 3 days',72,Infinity]];
+const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TZ=(()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone||'local time'; }catch(e){ return 'local time'; } })();
+const KIND_LAB={market:'Market',limit:'Limit',stop:'Stop',stop_limit:'Stop limit',close_by:'Close by',other:'Other'};
+
+function stAll(sc){
+  if(sc._st) return sc._st;
+  const tl=sc.tl||{}, n=(tl.t||[]).length, sy=tl.sy||null;
+  const one=!sy && sc.symbols && sc.symbols.length===1 ? sc.symbols[0].s : null;
+  const out=[];
+  for(let i=0;i<n;i++){
+    const x=tl.t[i]*1000, h=tl.h?tl.h[i]:null;
+    out.push({i, x, o:fnum(h)?x-h*36e5:null, h:fnum(h)?h:null, r:tl.r[i], p:tl.p?tl.p[i]:null, c:tl.c?tl.c[i]:null,
+      s:sy&&tl.s?sy[tl.s[i]]:one, d:tl.d?tl.d[i]:null, v:tl.v?tl.v[i]:null, k:tl.k?tl.k[i]:null, m:tl.m?tl.m[i]:null});
+  }
+  return sc._st=out;
+}
+const stHasSym=sc=>!!(sc.tl&&sc.tl.sy) || !!(sc.symbols&&sc.symbols.length===1);
+const stHasSide=sc=>!!(sc.tl&&sc.tl.d);
+const stPick=ts=>ts.filter(t=>(!ST.sym||t.s===ST.sym)&&(!ST.side||t.d===ST.side));
+const ckH=ms=>ST.clock==='utc'?new Date(ms).getUTCHours():new Date(ms).getHours();
+const ckD=ms=>((ST.clock==='utc'?new Date(ms).getUTCDay():new Date(ms).getDay())+6)%7;
+const ckName=()=>ST.clock==='utc'?'UTC':'your time, '+TZ;
+function ckStamp(ms){
+  const d=new Date(ms), u=ST.clock==='utc';
+  return (u?d.getUTCDate():d.getDate())+' '+MONTHS[u?d.getUTCMonth():d.getMonth()]+' '+String(u?d.getUTCFullYear():d.getFullYear()).slice(2)+
+    ', '+pad2(u?d.getUTCHours():d.getHours())+':'+pad2(u?d.getUTCMinutes():d.getMinutes());
+}
+const holdTxt=h=>nil(h)?'—':(h<1?Math.max(1,Math.round(h*60))+' min':hours(h));
+const minTxt=m=>nil(m)?'—':(m<60?Math.max(1,Math.round(m))+' min':hours(m/60));
+const mu=s=>' <small class="mu">'+s+'</small>';
+
+/* totals for a set of trades; money when every trade carries it */
+function agg(ts){
+  const n=ts.length, W=ts.filter(t=>t.r>0), w=W.length;
+  const gw=W.reduce((a,t)=>a+t.r,0), gl=-ts.filter(t=>t.r<=0).reduce((a,t)=>a+t.r,0);
+  const hasP=n>0&&ts.every(t=>!nil(t.p));
+  const pw=hasP?ts.filter(t=>t.p>0).reduce((a,t)=>a+t.p,0):null, pl=hasP?-ts.filter(t=>t.p<=0).reduce((a,t)=>a+t.p,0):null;
+  return {n, w, hit:n?w/n*100:null, r:gw-gl, net:hasP?pw-pl:null, avg:n?(gw-gl)/n:null,
+    pf:hasP?(pl>0?pw/pl:null):(gl>0?gw/gl:null), noLoss:n>0&&(hasP?pl===0:gl===0)};
+}
+const useMoney=a=>ACC.publish_money&&!nil(a.net);
+const aVal=a=>useMoney(a)?a.net:a.r;
+const aTxt=a=>!a.n?'—':(useMoney(a)?money(a.net,true):pct(a.r,2));
+const aAvg=a=>!a.n?'—':(useMoney(a)?money(a.net/a.n,true):pct(a.avg,3));
+const pfTxt=a=>!a.n?'—':(a.noLoss?'no loss':num(a.pf));
+const tVal=t=>ACC.publish_money&&!nil(t.p)?t.p:t.r;
+const tTxt=t=>ACC.publish_money&&!nil(t.p)?money(t.p,true)+mu(pct(t.r,2)):pct(t.r,3);
+const shade=(v,max)=>{ if(nil(v)||!max) return null; const a=Math.min(1,Math.abs(v)/max)*.78+.08; return {bg:(v>=0?'rgba(30,107,87,':'rgba(190,58,43,')+a.toFixed(2)+')', fg:a>.45?'#fff':'#0F2C42'}; };
+const tiles=(id,items)=>{ const fill=(4-items.length%4)%4; $(id).innerHTML=items.map(t=>'<div><dt>'+t[0]+'</dt><dd>'+t[1]+'<small>'+(t[2]||'&nbsp;')+'</small></dd></div>').join('')+'<div></div>'.repeat(fill); };
+const emptyPlot=(id,msg,h)=>{ $(id).innerHTML='<div class="plot-empty" style="min-height:'+(h||200)+'px"><span>'+msg+'</span></div>'; };
+let MAGIC_OWNER=null;
+function magicOwner(m){
+  if(!MAGIC_OWNER){ MAGIC_OWNER={}; SCOPES.forEach(x=>{ if(x.kind==='magic'&&x.magics) MAGIC_OWNER[x.magics[0]]=x.parent?(scopeById(x.parent)||x):x; }); }
+  return MAGIC_OWNER[m]||null;
+}
+
+function drawStudy(sc){
+  const sec=$('study'), all=sc&&!sc.empty?stAll(sc):[];
+  if(!all.length){ sec.hidden=true; return; }
+  sec.hidden=false;
+  $('study-title').textContent=sc.kind==='account'?'The study':'The study: '+botName(sc);
+  const counts={}; all.forEach(t=>{ if(t.s) counts[t.s]=(counts[t.s]||0)+1; });
+  const syms=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]||a.localeCompare(b));
+  if(ST.sym && !counts[ST.sym]) ST.sym='';
+  $('st-sym').innerHTML='<option value="">All instruments ('+syms.length+')</option>'+syms.map(s=>'<option value="'+esc(s)+'"'+(s===ST.sym?' selected':'')+'>'+esc(s)+' · '+counts[s]+(counts[s]===1?' trade':' trades')+'</option>').join('');
+  $('st-sym').disabled=syms.length<2;
+  const sideOK=stHasSide(sc); if(!sideOK) ST.side='';
+  document.querySelectorAll('[data-side]').forEach(b=>{ b.disabled=!sideOK&&b.dataset.side!==''; b.setAttribute('aria-pressed',b.dataset.side===ST.side); });
+  document.querySelectorAll('[data-clock]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.clock===ST.clock));
+  const old=!sideOK;
+  $('st-old').hidden=!old;
+  if(old) $('st-old').textContent='This record was published before the study section existed. Results instrument by instrument, long against short, lot sizes and the order history appear with the next publication. Everything else below is already worked out from the trades on record.';
+  const ts=stPick(all);
+  $('st-count').textContent=(ST.sym||ST.side)?int(ts.length)+' of '+int(all.length)+' trades match':int(all.length)+' closed trades';
+  stTiles(sc,ts); stInstruments(sc,all); stBotSym(sc);
+  stHeat(ts); stSessions(ts); stWeeks(ts); stEntryDay(ts); stExitHour(ts);
+  stHold(ts); stScatter(ts); stExpo(ts); stOrders(sc); stSeq(sc,ts); stLog(sc,ts);
+}
+
+function stTiles(sc,ts){
+  const a=agg(ts), hs=ts.map(t=>t.h).filter(fnum).sort((x,y)=>x-y);
+  const avgH=hs.length?hs.reduce((x,y)=>x+y,0)/hs.length:null, med=hs.length?hs[Math.floor(hs.length/2)]:null;
+  const syms={}; ts.forEach(t=>{ if(t.s) syms[t.s]=(syms[t.s]||0)+1; });
+  const top=Object.keys(syms).sort((x,y)=>syms[y]-syms[x])[0];
+  const vs=ts.map(t=>t.v).filter(fnum), lots=vs.reduce((x,y)=>x+y,0);
+  const ks=ts.map(t=>t.k).filter(fnum), cost=ks.reduce((x,y)=>x+y,0);
+  const L=ts.filter(t=>t.d==='l').length, S=ts.filter(t=>t.d==='s').length;
+  const items=[
+    ['Trades',int(a.n),a.n?int(a.w)+' won, '+int(a.n-a.w)+' lost':'none match the filter'],
+    ['Hits',a.n?upct(a.hit,1):'—','share of trades in profit'],
+    ['Profit factor',pfTxt(a),'gross profit ÷ gross loss'],
+    ['Result','<span class="'+cls(aVal(a))+'">'+aTxt(a)+'</span>',a.n?'average '+aAvg(a)+' a trade':''],
+    ['Average hold',holdTxt(avgH),nil(med)?'':'median '+holdTxt(med)],
+    stHasSide(sc)?['Long / short',int(L)+' / '+int(S),a.n?upct(L/a.n*100,0)+' of trades long':'']:['Long / short','—','with the next publication'],
+    Object.keys(syms).length ? ['Instruments',int(Object.keys(syms).length),'most traded: '+esc(top)+' ('+int(syms[top])+')']
+      : ['Instruments',int((sc.symbols||[]).length)||'—',(sc.symbols||[]).length?'most traded: '+esc(sc.symbols[0].s)+' ('+int(sc.symbols[0].n)+')':'']
+  ];
+  const costTxt=ks.length&&ACC.publish_money?'costs '+money(cost,true):'';
+  if(vs.length) items.push(['Lots traded',num(lots,2),'average '+num(lots/vs.length,2)+' a trade'+(costTxt?', '+costTxt:'')]);
+  else if(costTxt) items.push(['Costs','<span class="'+cls(cost)+'">'+money(cost,true)+'</span>','commission and swap']);
+  tiles('st-tiles',items);
+}
+
+function stSpark(ts){
+  if(ts.length<2) return '';
+  let c=0; const vs=[0].concat(ts.map(t=>c+=t.r));
+  const W=80,H=22, lo=Math.min(...vs), hi=Math.max(...vs), sp=hi-lo||1, Y=v=>H-2-(v-lo)/sp*(H-4);
+  const col=vs[vs.length-1]>=0?'#1E6B57':'#BE3A2B', y0=Y(0).toFixed(1);
+  return '<svg width="'+W+'" height="'+H+'" aria-hidden="true"><line x1="0" x2="'+W+'" y1="'+y0+'" y2="'+y0+'" stroke="rgba(15,44,66,.2)" stroke-dasharray="2 2"/><path d="'+smoothPath(vs.map((v,i)=>[i/(vs.length-1)*W,Y(v)]))+'" fill="none" stroke="'+col+'" stroke-width="1.5"/></svg>';
+}
+
+function stInstruments(sc,all){
+  const M=ACC.publish_money, pool=all.filter(t=>!ST.side||t.d===ST.side);
+  let rows;
+  if(pool.some(t=>t.s)){
+    const by={}; pool.forEach(t=>{ const k=t.s||'—'; (by[k]=by[k]||[]).push(t); });
+    rows=Object.keys(by).map(s=>{
+      const ts=by[s], a=agg(ts), hs=ts.map(t=>t.h).filter(fnum), vs=ts.map(t=>t.v).filter(fnum), ks=ts.map(t=>t.k).filter(fnum);
+      const L=agg(ts.filter(t=>t.d==='l')), S=agg(ts.filter(t=>t.d==='s'));
+      return {s,ts,n:a.n,share:a.n/pool.length*100,hit:a.hit,pf:a.noLoss?1e9:a.pf,pfT:pfTxt(a),val:aVal(a),txt:aTxt(a),avg:a.n?aVal(a)/a.n:null,avgT:aAvg(a),
+        L:L.n,Lv:aVal(L),LT:aTxt(L),S:S.n,Sv:aVal(S),ST:aTxt(S),hold:hs.length?hs.reduce((x,y)=>x+y,0)/hs.length:null,
+        cost:ks.length?ks.reduce((x,y)=>x+y,0):null,lots:vs.length?vs.reduce((x,y)=>x+y,0):null,last:ts[ts.length-1].x};
+    });
+  } else {
+    // older publication: what it already holds for each instrument
+    const B=sc.by_symbol, S0=sc.symbols||[], tot=S0.reduce((a,x)=>a+x.n,0)||1;
+    rows=B&&B.length ? B.map(b=>{ const m=M&&!nil(b.net); return {s:b.s,ts:[],n:b.n,share:b.n/tot*100,hit:b.win_rate_pct,pf:b.profit_factor,pfT:num(b.profit_factor),
+        val:m?b.net:b.net_pct,txt:m?money(b.net,true):pct(b.net_pct),avg:m?b.net/b.n:b.avg_pct,avgT:m?money(b.net/b.n,true):pct(b.avg_pct,3),
+        L:b.long,Lv:b.long_pct,LT:pct(b.long_pct),S:b.short,Sv:b.short_pct,ST:pct(b.short_pct),hold:b.avg_hold_hours,
+        cost:m&&!nil(b.commission)?(b.commission||0)+(b.swap||0):null,lots:b.lots,last:b.last?Date.parse(b.last+'T12:00:00Z'):null}; })
+      : S0.map(x=>({s:x.s,ts:[],n:x.n,share:x.n/tot*100}));
+  }
+  const hasRes=rows.some(r=>!nil(r.val)), hasSide=rows.some(r=>!nil(r.L)), hasCost=M&&rows.some(r=>!nil(r.cost)), hasLots=rows.some(r=>!nil(r.lots));
+  const cols=[
+    {k:'s',t:'Instrument',v:r=>r.s,f:r=>'<span class="sb">'+esc(r.s)+'</span>'},
+    rows.some(r=>r.ts.length>1)&&{k:'spark',t:'Curve',nos:true,f:r=>stSpark(r.ts)},
+    {k:'n',t:'Trades',v:r=>r.n,f:r=>int(r.n)},
+    {k:'share',t:'Share',v:r=>r.share,f:r=>upct(r.share,1)},
+    hasRes&&{k:'hit',t:'Hits',v:r=>r.hit,f:r=>upct(r.hit,1)},
+    hasRes&&{k:'pf',t:'Profit factor',v:r=>r.pf,f:r=>r.pfT||'—'},
+    hasRes&&{k:'val',t:'Result',v:r=>r.val,f:r=>'<span class="'+cls(r.val)+'">'+(r.txt||'—')+'</span>'},
+    hasRes&&{k:'avg',t:'Average trade',v:r=>r.avg,f:r=>'<span class="'+cls(r.avg)+'">'+(r.avgT||'—')+'</span>'},
+    hasSide&&{k:'L',t:'Long',v:r=>r.Lv,f:r=>r.L?int(r.L)+mu(r.LT):'—'},
+    hasSide&&{k:'S',t:'Short',v:r=>r.Sv,f:r=>r.S?int(r.S)+mu(r.ST):'—'},
+    rows.some(r=>!nil(r.hold))&&{k:'hold',t:'Average hold',v:r=>r.hold,f:r=>holdTxt(r.hold)},
+    hasCost&&{k:'cost',t:'Costs',v:r=>r.cost,f:r=>money(r.cost,true)},
+    hasLots&&{k:'lots',t:'Lots',v:r=>r.lots,f:r=>nil(r.lots)?'—':num(r.lots,2)},
+    rows.some(r=>r.last)&&{k:'last',t:'Last trade',v:r=>r.last,f:r=>r.last?fmtDate(new Date(r.last).toISOString().slice(0,10)):'—'}
+  ].filter(Boolean);
+  if(!cols.some(c=>c.k===ST.sort.k)) ST.sort={k:'n',dir:-1};
+  const col=cols.find(c=>c.k===ST.sort.k);
+  rows.sort((a,b)=>{ const va=col.v(a), vb=col.v(b); if(nil(va)) return 1; if(nil(vb)) return -1;
+    return typeof va==='string'?ST.sort.dir*va.localeCompare(vb):ST.sort.dir*(va-vb); });
+  const clickable=rows.length>1 && all.some(t=>t.s);
+  $('st-symtab').innerHTML='<thead><tr>'+cols.map(c=>'<th scope="col"'+(c.nos?' class="nos"':' data-k="'+c.k+'" tabindex="0"')+(ST.sort.k===c.k?' aria-sort="'+(ST.sort.dir<0?'descending':'ascending')+'"':'')+'>'+c.t+'</th>').join('')+'</tr></thead><tbody>'+
+    rows.map(r=>'<tr data-s="'+esc(r.s)+'"'+(clickable?' tabindex="0"':' style="cursor:default"')+(r.s===ST.sym?' class="pick"':'')+'>'+cols.map(c=>'<td'+(c.k==='spark'?' class="spark"':'')+'>'+c.f(r)+'</td>').join('')+'</tr>').join('')+'</tbody>';
+  $('st-symtab').querySelectorAll('th[data-k]').forEach(th=>{
+    const go=()=>{ const k=th.dataset.k; if(ST.sort.k===k) ST.sort.dir*=-1; else ST.sort={k,dir:k==='s'?1:-1}; stInstruments(sc,all); };
+    th.addEventListener('click',go); th.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
+  if(clickable) $('st-symtab').querySelectorAll('tbody tr').forEach(tr=>{
+    const go=()=>{ ST.sym=ST.sym===tr.dataset.s?'':tr.dataset.s; drawStudy(CUR_SCOPE); };
+    tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  });
+
+  // result by instrument, as bars
+  const bars=rows.filter(r=>!nil(r.val)).sort((a,b)=>b.val-a.val);
+  if(!bars.length){ $('st-symbars').innerHTML='<p class="chart-cap">Results by instrument appear with the next publication.</p>'; return; }
+  const max=Math.max(1e-9,...bars.map(r=>Math.abs(r.val))), hasNeg=bars.some(r=>r.val<0);
+  $('st-symbars').innerHTML=bars.map(r=>{
+    const w=Math.abs(r.val)/max*(hasNeg?50:100), left=hasNeg?(r.val>=0?50:50-w):0;
+    return '<div class="pnlrow" data-s="'+esc(r.s)+'" title="'+esc(r.s)+': '+int(r.n)+' trades"'+(r.s===ST.sym?' style="background:var(--panel)"':'')+'><span class="nm">'+esc(r.s)+mu(int(r.n))+'</span>'+
+      '<span class="track">'+(hasNeg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.4,w)+'%;background:'+(r.val>=0?'#1E6B57':'#BE3A2B')+'"></i></span>'+
+      '<span class="val '+cls(r.val)+'">'+r.txt+'</span></div>';
+  }).join('');
+  if(clickable) $('st-symbars').querySelectorAll('.pnlrow').forEach(el=>el.addEventListener('click',()=>{ ST.sym=ST.sym===el.dataset.s?'':el.dataset.s; drawStudy(CUR_SCOPE); }));
+}
+
+function stBotSym(sc){
+  const wrap=$('st-botsym-wrap');
+  const bots=sc.kind==='account'?ORDER.filter(x=>isBot(x)&&!x.empty):[];
+  if(bots.length<2 || !bots.every(stHasSym)){ wrap.hidden=true; return; }
+  const cell={}, symN={};
+  bots.forEach(b=>stAll(b).forEach(t=>{ if(ST.side&&t.d!==ST.side) return; const k=b.id+'|'+t.s; (cell[k]=cell[k]||[]).push(t); symN[t.s]=(symN[t.s]||0)+1; }));
+  let syms=Object.keys(symN).sort((a,b)=>symN[b]-symN[a]||a.localeCompare(b));
+  const cap=syms.length>18; if(cap) syms=syms.slice(0,18);
+  if(ST.sym && !syms.includes(ST.sym) && symN[ST.sym]) syms.push(ST.sym);
+  const rows=bots.filter(b=>syms.some(s=>cell[b.id+'|'+s]));
+  if(!rows.length){ wrap.hidden=true; return; }
+  const vals=[]; rows.forEach(b=>syms.forEach(s=>{ const c=cell[b.id+'|'+s]; if(c) vals.push(Math.abs(aVal(agg(c)))); }));
+  const max=Math.max(1e-9,...vals), M=ACC.publish_money;
+  const sym$=money(0).replace(/[\d.,\s]/g,'');
+  const short=a=>{ if(!useMoney(a)) return pct(a.r,1); const v=a.net, s=v<0?'−':'+', x=Math.abs(v);
+    return s+sym$+(x>=1000?(x/1000).toFixed(x>=1e4?0:1)+'k':x>=100?Math.round(x):x.toFixed(x>=10?0:1)); };
+  let h='<thead><tr><th></th>'+syms.map(s=>'<th scope="col"'+(s===ST.sym?' class="on"':'')+'>'+esc(s)+'</th>').join('')+'</tr></thead><tbody>';
+  rows.forEach(b=>{
+    h+='<tr data-id="'+esc(b.id)+'"><th scope="row">'+(b.flag?flagSVG(b.flag):'')+esc(botName(b))+'</th>';
+    syms.forEach(s=>{ const c=cell[b.id+'|'+s];
+      if(!c){ h+='<td class="nil'+(s===ST.sym?' on':'')+'" style="color:rgba(15,44,66,.25)">·</td>'; return; }
+      const a=agg(c), v=aVal(a), sh=shade(v,max);
+      h+='<td'+(s===ST.sym?' class="on"':'')+' style="background:'+sh.bg+';color:'+sh.fg+'" title="'+esc(botName(b))+' on '+esc(s)+': '+a.n+(a.n===1?' trade':' trades')+', hits '+Math.round(a.hit)+'%, '+(useMoney(a)?money(a.net,true):pct(a.r,2))+'">'+short(a)+'</td>'; });
+    h+='</tr>';
+  });
+  $('st-botsym').innerHTML=h+'</tbody>';
+  $('st-botsym').querySelectorAll('tbody tr').forEach(tr=>tr.addEventListener('click',()=>{ selectScope(tr.dataset.id,true); $('study').scrollIntoView(); }));
+  $('st-botsym-cap').textContent=(cap?'The 18 most traded instruments. ':'')+(M?'Net result in account currency, costs included.':'Result as % of the account balance.')+(ST.side?' '+(ST.side==='l'?'Long':'Short')+' trades only.':'');
+  wrap.hidden=false;
+}
+
+function stHeat(ts){
+  const box=$('st-heat');
+  if(!ts.length){ emptyPlot('st-heat','No trades match the filter.',180); $('st-heat-cap').textContent=''; return; }
+  const grid=[0,1,2,3,4,5,6].map(()=>Array.from({length:24},()=>[]));
+  ts.forEach(t=>{ const ms=t.o!=null?t.o:t.x; grid[ckD(ms)][ckH(ms)].push(t); });
+  const days=[0,1,2,3,4,5,6].filter(d=>d<5||grid[d].some(c=>c.length));
+  const mode=ST.heat;
+  const val=c=>!c.length?null:(mode==='n'?c.length:(mode==='hit'?c.filter(t=>t.r>0).length/c.length*100:aVal(agg(c))));
+  let max=0; days.forEach(d=>grid[d].forEach(c=>{ const v=val(c); if(!nil(v)) max=Math.max(max,mode==='hit'?Math.abs(v-50):Math.abs(v)); }));
+  if(mode==='hit') max=Math.max(max,10);
+  const W=Math.max(320,box.clientWidth), small=W<560, LW=small?34:44, RW=small?62:92, cw=(W-LW-RW)/24, rh=small?26:32, top=22, H=top+days.length*rh+26;
+  let g='';
+  for(let h=0;h<24;h+=small?3:2) g+=T(LW+h*cw+cw/2,14,pad2(h),'middle',' font-size="11"');
+  g+=T(W-RW+8,14,'day','start',' font-size="11"');
+  days.forEach((d,ri)=>{
+    const y=top+ri*rh;
+    g+=T(0,y+rh/2+4,DOW[d],'start',' font-weight="600" fill="#0F2C42"');
+    grid[d].forEach((c,h)=>{
+      const v=val(c), x=LW+h*cw;
+      let fill='rgba(15,44,66,.035)', fg='#0F2C42';
+      if(!nil(v)){
+        if(mode==='n'){ const a=.1+.75*v/(max||1); fill='rgba(15,44,66,'+a.toFixed(2)+')'; fg=a>.45?'#fff':'#0F2C42'; }
+        else { const s=shade(mode==='hit'?v-50:v,max); fill=s.bg; fg=s.fg; }
+      }
+      const a=c.length?agg(c):null;
+      g+='<rect x="'+(x+1).toFixed(1)+'" y="'+(y+1)+'" width="'+Math.max(1,cw-2).toFixed(1)+'" height="'+(rh-2)+'" fill="'+fill+'"><title>'+DOW[d]+' '+pad2(h)+':00–'+pad2((h+1)%24)+':00 ('+esc(ckName())+')'+(a?' · '+a.n+(a.n===1?' trade':' trades')+' · hits '+Math.round(a.hit)+'% · '+(useMoney(a)?money(a.net,true):pct(a.r,2)):' · no trades')+'</title></rect>';
+      if(!nil(v)&&cw>=24&&mode!=='res') g+=T(x+cw/2,y+rh/2+4,mode==='n'?String(v):Math.round(v)+'','middle',' font-size="10.5" font-weight="600" fill="'+fg+'"');
+    });
+    const ra=agg(grid[d].flat());
+    g+=T(W-RW+8,y+rh/2+4,ra.n?(mode==='n'?int(ra.n):(mode==='hit'?Math.round(ra.hit)+'%':aTxt(ra))):'—','start',' font-size="11.5" font-weight="600" fill="'+(mode==='res'&&ra.n?(aVal(ra)>=0?'#1E6B57':'#BE3A2B'):'#0F2C42')+'"');
+  });
+  const yb=top+days.length*rh+16;
+  for(let h=0;h<24;h++){ const n=days.reduce((s,d)=>s+grid[d][h].length,0); if(n&&cw>=16) g+=T(LW+h*cw+cw/2,yb,String(n),'middle',' font-size="10"'); }
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trades by weekday and hour">'+g+'</svg>';
+  const unk=ts.filter(t=>t.o==null).length;
+  $('st-heat-cap').textContent='Hour the position opened, '+ckName()+'. '+
+    (mode==='res'?'Green cells added to the result, red ones took away; the column on the right is each day’s total.':mode==='n'?'Darker cells hold more trades. The small figures underneath count trades per hour.':'Share of trades in profit; green above 50%, red below.')+
+    (unk?' '+int(unk)+' trades without an open time are placed at their close.':'');
+}
+
+function stSessions(ts){
+  const tb=$('st-sessions');
+  if(!ts.length){ tb.innerHTML='<tbody><tr><td>No trades match the filter.</td></tr></tbody>'; return; }
+  const rows=SESSIONS.map(([n,a,b])=>[n,a,b,agg(ts.filter(t=>{ const h=new Date(t.o!=null?t.o:t.x).getUTCHours(); return h>=a&&h<b; }))]);
+  const best=rows.filter(r=>r[3].n).reduce((m,r)=>!m||aVal(r[3])>aVal(m[3])?r:m,null);
+  tb.innerHTML='<thead><tr><th></th><th>Trades</th><th>Hits</th><th>PF</th><th>Result</th></tr></thead><tbody>'+rows.map(([n,a,b,x])=>
+    '<tr><td>'+n+mu(pad2(a)+'–'+pad2(b))+(best&&best[0]===n&&rows.filter(r=>r[3].n).length>1?' <span class="tag">best</span>':'')+'</td><td>'+int(x.n)+'</td><td>'+(x.n?upct(x.hit,0):'—')+'</td><td>'+pfTxt(x)+'</td><td class="'+cls(aVal(x))+'">'+aTxt(x)+'</td></tr>').join('')+'</tbody>';
+}
+
+function colBars(id,items,o){
+  o=o||{}; const box=$(id);
+  if(!items.some(x=>x.n)) return emptyChart(id);
+  const W=Math.max(240,box.clientWidth), H=o.h||180, PT=12, PB=22, bw=W/items.length;
+  const neg=items.some(x=>(x.v||0)<0), max=Math.max(1e-9,...items.map(x=>Math.abs(x.v||0)));
+  const base=neg?PT+(H-PT-PB)/2:H-PB, span=neg?(H-PT-PB)/2:(H-PT-PB);
+  let g='<line x1="0" x2="'+W+'" y1="'+base.toFixed(1)+'" y2="'+base.toFixed(1)+'" stroke="rgba(15,44,66,.3)"/>';
+  items.forEach((x,i)=>{
+    const v=x.v||0, len=Math.abs(v)/max*span, y=v>=0?base-len:base, c=o.color||(v>=0?'#1E6B57':'#BE3A2B');
+    g+='<rect x="'+(i*bw+1).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(1,bw-2).toFixed(1)+'" height="'+Math.max(x.n?1:0,len).toFixed(1)+'" fill="'+c+'"><title>'+esc(x.title||'')+'</title></rect>';
+    if(i%(o.every||1)===0) g+=T(i*bw+bw/2,H-6,esc(x.lab),'middle',' font-size="11"');
+  });
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+esc(o.label||'Bar chart')+'">'+g+'</svg>';
+}
+function stWeeks(ts){
+  const box=$('st-weeks');
+  if(!ts.length) return emptyChart('st-weeks');
+  const wk=ms=>{ const d=new Date(ms); return Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-(d.getUTCDay()+6)%7); };
+  const by=new Map(); ts.forEach(t=>{ const k=wk(t.x); if(!by.has(k)) by.set(k,[]); by.get(k).push(t); });
+  const keys=[...by.keys()].sort((a,b)=>a-b), weeks=[];
+  for(let k=keys[0];k<=keys[keys.length-1];k+=7*864e5) weeks.push({k,a:agg(by.get(k)||[])});
+  const show=weeks.slice(-52);
+  const W=Math.max(260,box.clientWidth), H=190, PL=4, PR=34, PT=12, PB=24, bw=(W-PL-PR)/show.length, max=Math.max(1,...show.map(w=>w.a.n));
+  let g='';
+  niceTicks(0,max,3).forEach(v=>{ const y=H-PB-v/max*(H-PT-PB); g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+6,y+4,String(v)); });
+  show.forEach((w,i)=>{ if(!w.a.n) return; const h=w.a.n/max*(H-PT-PB), v=aVal(w.a);
+    g+='<rect x="'+(PL+i*bw+1).toFixed(1)+'" y="'+(H-PB-h).toFixed(1)+'" width="'+Math.max(1,bw-2).toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+(v>=0?'#1E6B57':'#BE3A2B')+'" opacity=".85"><title>Week of '+fmtDate(new Date(w.k).toISOString().slice(0,10))+': '+w.a.n+' trades, '+aTxt(w.a)+'</title></rect>'; });
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+(H-PB)+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.3)"/>';
+  const lab=k=>{ const d=new Date(k); return d.getUTCDate()+' '+MONTHS[d.getUTCMonth()]; };
+  g+=T(PL,H-7,lab(show[0].k));
+  if(show.length>2) g+=T(PL+(show.length-1)*bw+bw/2,H-7,lab(show[show.length-1].k),'end');
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trades per week">'+g+'</svg>';
+}
+function stEntryDay(ts){
+  const by=[0,1,2,3,4,5,6].map(()=>[]); ts.forEach(t=>by[ckD(t.o!=null?t.o:t.x)].push(t));
+  const items=[0,1,2,3,4,5,6].filter(d=>d<5||by[d].length).map(d=>{ const a=agg(by[d]); return {lab:DOW[d],v:aVal(a),n:a.n,title:DOW[d]+': '+a.n+' trades, hits '+(a.n?Math.round(a.hit)+'%':'—')+', '+aTxt(a)}; });
+  colBars('st-dow',items,{label:'Result by weekday of entry'});
+  $('st-dow-cap').textContent='Summed result by the day the position opened, '+ckName()+'.';
+}
+function stExitHour(ts){
+  const by=Array.from({length:24},()=>[]); ts.forEach(t=>by[ckH(t.x)].push(t));
+  const box=$('st-exit'), every=(box.clientWidth||400)<420?4:3;
+  colBars('st-exit',by.map((c,h)=>{ const a=agg(c); return {lab:pad2(h),v:aVal(a),n:a.n,title:pad2(h)+':00: '+a.n+' trades closed, '+aTxt(a)}; }),{every,label:'Result by hour of exit'});
+  $('st-exit-cap').textContent='Summed result by the hour the position closed, '+ckName()+'.';
+}
+
+function stHold(ts){
+  const tb=$('st-hold');
+  if(!ts.length){ tb.innerHTML='<tbody><tr><td>No trades match the filter.</td></tr></tbody>'; $('st-hold-cap').textContent=''; return; }
+  const rows=HOLDS.map(([n,a,b])=>[n,agg(ts.filter(t=>t.h!=null&&t.h>=a&&t.h<b))]).filter(r=>r[1].n);
+  const unk=agg(ts.filter(t=>t.h==null)); if(unk.n) rows.push(['Open time unknown',unk]);
+  tb.innerHTML='<thead><tr><th>Held</th><th>Trades</th><th>Hits</th><th>PF</th><th>Average</th><th>Result</th></tr></thead><tbody>'+rows.map(([n,x])=>
+    '<tr><td>'+n+'</td><td>'+int(x.n)+'</td><td>'+upct(x.hit,0)+'</td><td>'+pfTxt(x)+'</td><td class="'+cls(aVal(x))+'">'+aAvg(x)+'</td><td class="'+cls(aVal(x))+'">'+aTxt(x)+'</td></tr>').join('')+'</tbody>';
+  const hw=ts.filter(t=>t.r>0&&t.h!=null).map(t=>t.h), hl=ts.filter(t=>t.r<=0&&t.h!=null).map(t=>t.h), av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+  const w=av(hw), l=av(hl);
+  $('st-hold-cap').textContent=nil(w)||nil(l)?'':'Winners were held '+holdTxt(w)+' on average, losers '+holdTxt(l)+'.'+(l>w*1.5?' Losers stay open noticeably longer than winners.':'');
+}
+
+function stScatter(ts){
+  const box=$('st-scatter'), pts=ts.filter(t=>t.h!=null&&t.h>=0);
+  if(pts.length<2){ emptyPlot('st-scatter','Needs at least two trades with a known open time.',240); $('st-scatter-key').innerHTML=''; return; }
+  const lx=h=>Math.log10(Math.max(h,1/60));
+  let x0=Math.min(...pts.map(t=>lx(t.h))), x1=Math.max(...pts.map(t=>lx(t.h))); if(x1-x0<.6){ x0-=.3; x1+=.3; }
+  const ys=pts.map(t=>t.r); let lo=Math.min(0,...ys), hi=Math.max(0,...ys); const pad=(hi-lo)*.1||.1; lo-=pad; hi+=pad;
+  const W=Math.max(280,box.clientWidth), H=270, PL=12, PR=58, PT=32, PB=26;
+  const X=h=>PL+(lx(h)-x0)/(x1-x0)*(W-PL-PR), Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+8,Y(v)+4,pct(v,Math.abs(hi-lo)<2?2:1))).join('');
+  [[1/60,'1 min'],[.25,'15 min'],[1,'1 h'],[4,'4 h'],[24,'1 day'],[72,'3 days'],[168,'1 week'],[720,'1 month']].forEach(([h,l])=>{
+    const v=lx(h); if(v<x0||v>x1) return; const x=X(h);
+    g+='<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.06)"/>'+T(Math.min(Math.max(x,PL+16),W-PR-16),H-8,l,'middle',' font-size="11"'); });
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.4)" stroke-dasharray="3 4"/>';
+  const rr=pts.length>400?2.2:3.2;
+  pts.forEach(t=>{ const hand=t.c==='m';
+    g+='<circle cx="'+X(t.h).toFixed(1)+'" cy="'+Y(t.r).toFixed(1)+'" r="'+(hand?rr+1:rr)+'" fill="'+(hand?'#E0A92C':(t.r>0?'#1E6B57':'#BE3A2B'))+'" fill-opacity="'+(hand?1:.72)+'" stroke="'+(hand?'#0F2C42':'none')+'" stroke-width="1"><title>'+(t.s?esc(t.s)+' · ':'')+(t.d?(t.d==='l'?'long':'short')+' · ':'')+'held '+holdTxt(t.h)+' · '+(ACC.publish_money&&!nil(t.p)?money(t.p,true)+' ('+pct(t.r,3)+')':pct(t.r,3))+'</title></circle>'; });
+  box.innerHTML='<span class="plot-label">Result (% of balance) against time held</span><svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Result against time held">'+g+'</svg>';
+  $('st-scatter-key').innerHTML='<span><i style="background:#1E6B57"></i>Winner</span><span><i style="background:#BE3A2B"></i>Loser</span>'+(pts.some(t=>t.c==='m')?'<span><i style="background:#E0A92C;box-shadow:0 0 0 1px #0F2C42"></i>Closed by hand</span>':'')+'<span>Time held on a log scale.</span>';
+}
+
+function stExpo(ts){
+  const iv=ts.filter(t=>t.o!=null&&t.x>=t.o);
+  if(!iv.length){ tiles('st-expo-tiles',[['Most open at once','—',''],['Time in the market','—',''],['Average open','—',''],['Longest stretch','—','']]); emptyPlot('st-expo','Needs trades with a known open time.',150); $('st-expo-cap').textContent=''; return; }
+  const ev=[]; iv.forEach(t=>{ ev.push([t.o,1]); ev.push([t.x,-1]); });
+  ev.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  let cur=0,max=0,maxAt=ev[0][0],inMkt=0,last=ev[0][0],run=null,longest=0; const steps=[];
+  ev.forEach(([t,d])=>{ if(cur>0) inMkt+=t-last; cur+=d; if(cur>max){ max=cur; maxAt=t; } if(cur>0&&run==null) run=t; if(cur===0&&run!=null){ longest=Math.max(longest,t-run); run=null; } steps.push([t,cur]); last=t; });
+  const t0=ev[0][0], t1=ev[ev.length-1][0], span=Math.max(1,t1-t0), sum=iv.reduce((a,t)=>a+(t.x-t.o),0);
+  tiles('st-expo-tiles',[
+    ['Most open at once',int(max),'on '+ckStamp(maxAt)],
+    ['Time in the market',upct(inMkt/span*100,1),'with at least one position open'],
+    ['Average open',inMkt?num(sum/inMkt,1):'—','positions, while in the market'],
+    ['Longest stretch',holdTxt(longest/36e5),'without ever being flat']
+  ]);
+  const box=$('st-expo'), W=Math.max(300,box.clientWidth), H=170, PL=12, PR=44, PT=30, PB=26, cols=Math.max(10,Math.floor(W-PL-PR)), bw=span/cols;
+  const peak=new Array(cols).fill(0);
+  for(let i=0;i<steps.length-1;i++){ const v=steps[i][1]; if(!v) continue;
+    const a=Math.floor((steps[i][0]-t0)/bw), b=Math.min(cols-1,Math.floor((steps[i+1][0]-t0)/bw));
+    for(let k=Math.max(0,a);k<=b;k++) if(v>peak[k]) peak[k]=v; }
+  const Y=v=>H-PB-v/Math.max(1,max)*(H-PT-PB);
+  let d='M'+PL+' '+Y(0).toFixed(1); peak.forEach((v,k)=>{ d+='V'+Y(v).toFixed(1)+'H'+(PL+(k+1)*(W-PL-PR)/cols).toFixed(1); }); d+='V'+Y(0).toFixed(1)+'Z';
+  let g=niceTicks(0,max,Math.min(4,max)).filter(v=>Number.isInteger(v)).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+8,Y(v)+4,String(v))).join('');
+  g+='<path d="'+d+'" fill="rgba(15,44,66,.55)"/>';
+  const dl=ms=>fmtDate(new Date(ms).toISOString().slice(0,10));
+  g+=T(PL,H-8,dl(t0))+T(W-PR,H-8,dl(t1),'end');
+  box.innerHTML='<span class="plot-label">Positions open at the same time</span><svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Positions open at the same time">'+g+'</svg>';
+  $('st-expo-cap').textContent='Each column shows the most positions open at any moment in that stretch of time'+(ST.sym||ST.side?', for the trades that match the filter.':'.');
+}
+
+function stOrders(sc){
+  const O=sc.orders, grid=$('st-orders-grid');
+  if(!O||!O.total){ grid.hidden=true; $('st-orders-cap').textContent='The order history (market and pending orders, cancellations, how often pending orders fill and how long they wait) appears with the next publication of the record.'; return; }
+  grid.hidden=false;
+  const S=O.states||{}, sd=O.sides||{}, K=O.kinds||{};
+  statRows('st-orders',[
+    ['Orders sent',int(O.total),'','Every order the bots (or I) sent to the broker, filled or not.'],
+    ['Entries filled',int(O.entries),'','Orders that opened a position, in full or in part.'],
+    ['Exits sent',int(O.exits)+(O.exits_by_hand?mu(int(O.exits_by_hand)+' by hand'):''),'','Orders that closed a position. Stops and targets hit at the broker are counted here too when MT5 records them as orders.'],
+    ['Buy / sell',int(sd.buy||0)+' / '+int(sd.sell||0)],
+    ['Pending orders placed',int(O.pending),'','Limit and stop orders meant to open a position.'],
+    ['Pending orders that filled',O.pending?int(O.pending_filled)+mu(upct(O.pending_fill_rate_pct,1)):'—'],
+    ['Median wait for a fill',minTxt(O.pending_wait_median_min),'','Time from placing a pending order to its fill, middle value.'],
+    ['Cancelled',int(S.canceled||0),S.canceled?'neg':''],
+    ['Expired',int(S.expired||0)],
+    S.rejected?['Rejected by the broker',int(S.rejected),'neg']:null,
+    ['Entries with a stop loss',upct(O.entry_with_sl_pct,0),'','Share of filled entry orders that carried a stop loss when sent. A bot that sets its stop right after the entry counts as without one.'],
+    ['Entries with a take profit',upct(O.entry_with_tp_pct,0)]
+  ]);
+  const ks=Object.keys(K).sort((a,b)=>K[b]-K[a]), km=Math.max(1,...ks.map(k=>K[k]));
+  $('st-okinds').innerHTML=ks.map(k=>'<div class="okrow"><span>'+esc(KIND_LAB[k]||k)+'</span><i style="width:'+Math.max(1,K[k]/km*100).toFixed(1)+'%"></i><span>'+int(K[k])+'</span></div>').join('');
+  if(O.hours&&O.hours.length===24){
+    const off=ST.clock==='utc'?0:Math.round(-new Date().getTimezoneOffset()/60);
+    const hs=Array.from({length:24},(_,h)=>O.hours[((h-off)%24+24)%24]);
+    colBars('st-ohours',hs.map((n,h)=>({lab:pad2(h),v:n,n,title:pad2(h)+':00: '+n+' orders'})),{every:(($('st-ohours').clientWidth||400)<420?4:3),color:'#0F2C42',h:150,label:'Orders placed by hour'});
+  } else $('st-ohours').innerHTML='';
+  $('st-orders-cap').textContent=(ST.sym||ST.side?'Orders cover the whole '+(sc.kind==='account'?'account':'bot')+'; the instrument and direction filters do not apply to them. ':'')+'Hours are '+ckName()+'. Order prices and stop or target levels are never published.';
+}
+
+function stSeq(sc,ts){
+  const s=ts.slice().sort((a,b)=>a.x-b.x), tb=$('st-seq');
+  if(s.length<3){ tb.innerHTML='<tbody><tr><td>Needs at least three trades.</td></tr></tbody>'; $('st-seq-cap').textContent=''; return; }
+  const lr=[0], wr=[0];
+  for(let i=1;i<s.length;i++){ lr[i]=s[i-1].r>0?0:lr[i-1]+1; wr[i]=s[i-1].r>0?wr[i-1]+1:0; }
+  const pick=f=>s.filter((t,i)=>i>0&&f(i));
+  const by={}; s.forEach(t=>{ if(t.s) (by[t.s]=by[t.s]||[]).push(t); });
+  const re=s.filter(t=>t.o!=null&&t.s&&by[t.s].some(u=>u!==t&&u.x<=t.o&&t.o-u.x<=36e5));
+  const rows=[['Every trade',s],['After a win',pick(i=>wr[i]>=1)],['After a loss',pick(i=>lr[i]>=1)],['After 2 losses in a row',pick(i=>lr[i]>=2)],
+    ['After 3 or more losses in a row',pick(i=>lr[i]>=3)],['After 3 or more wins in a row',pick(i=>wr[i]>=3)],['Opened within an hour of a close on the same instrument',re]];
+  tb.innerHTML='<thead><tr><th>The next trade</th><th>Trades</th><th>Hits</th><th>PF</th><th>Average</th><th>Result</th></tr></thead><tbody>'+rows.filter((r,i)=>i===0||r[1].length).map(([n,x],i)=>{ const a=agg(x);
+    return '<tr'+(i===0?' style="font-weight:700"':'')+'><td>'+n+'</td><td>'+int(a.n)+'</td><td>'+upct(a.hit,0)+'</td><td>'+pfTxt(a)+'</td><td class="'+cls(aVal(a))+'">'+aAvg(a)+'</td><td class="'+cls(aVal(a))+'">'+aTxt(a)+'</td></tr>'; }).join('')+'</tbody>';
+  $('st-seq-cap').textContent='Trades in the order they closed.'+(sc.kind==='account'?' For the whole account this mixes every bot together; pick a bot for its own sequence.':'')+' Rows built on a handful of trades say very little.';
+}
+
+function stLog(sc,ts){
+  let list=ts.slice();
+  if(ST.log==='best') list.sort((a,b)=>tVal(b)-tVal(a));
+  else if(ST.log==='worst') list.sort((a,b)=>tVal(a)-tVal(b));
+  else if(ST.log==='long') list=list.filter(t=>t.h!=null).sort((a,b)=>b.h-a.h);
+  else if(ST.log==='hand') list=list.filter(t=>t.c==='m').sort((a,b)=>b.x-a.x);
+  else list.sort((a,b)=>b.x-a.x);
+  document.querySelectorAll('[data-log]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.log===ST.log));
+  const lim=ST.more?100:20, shown=list.slice(0,lim);
+  const showBot=sc.kind==='account'&&ts.some(t=>t.m!=null), showSym=ts.some(t=>t.s), showSide=ts.some(t=>t.d), showLots=ts.some(t=>fnum(t.v));
+  if(!shown.length){ $('st-log').innerHTML='<tbody><tr><td style="text-align:left">'+(ST.log==='hand'?'No trades closed by hand in this view.':'No trades match the filter.')+'</td></tr></tbody>'; }
+  else $('st-log').innerHTML='<thead><tr><th>#</th><th>Closed</th>'+(showBot?'<th style="text-align:left">Bot</th>':'')+(showSym?'<th style="text-align:left">Instrument</th>':'')+(showSide?'<th>Side</th>':'')+'<th>Held</th><th>How</th>'+(showLots?'<th>Lots</th>':'')+'<th>Result</th></tr></thead><tbody>'+
+    shown.map(t=>{ const b=showBot?magicOwner(t.m):null;
+      return '<tr><td class="how">'+(t.i+1)+'</td><td>'+ckStamp(t.x)+'</td>'+
+        (showBot?'<td class="bt"><span>'+(t.m===0?'Opened by hand':(b?(b.flag?flagSVG(b.flag):'')+esc(botName(b)):'Magic '+esc(t.m)))+'</span></td>':'')+
+        (showSym?'<td class="sy">'+esc(t.s||'—')+'</td>':'')+(showSide?'<td>'+(t.d?'<span class="sd '+t.d+'">'+(t.d==='l'?'Long':'Short')+'</span>':'—')+'</td>':'')+
+        '<td>'+holdTxt(t.h)+'</td><td class="how">'+(t.c==='m'?'<i></i>':'')+(HOW[t.c]||'—')+'</td>'+(showLots?'<td>'+(fnum(t.v)?num(t.v,2):'—')+'</td>':'')+
+        '<td class="'+cls(t.r)+'">'+tTxt(t)+'</td></tr>'; }).join('')+'</tbody>';
+  $('st-log-count').textContent=list.length?int(Math.min(lim,list.length))+' of '+int(list.length)+' trades · '+ckName():'';
+  const more=$('st-more'); more.hidden=list.length<=20; more.textContent=ST.more?'Show fewer':'Show up to 100 trades';
+}
+
+$('st-sym').addEventListener('change',e=>{ ST.sym=e.target.value; if(CUR_SCOPE) drawStudy(CUR_SCOPE); });
+document.querySelectorAll('[data-side]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; ST.side=b.dataset.side; if(CUR_SCOPE) drawStudy(CUR_SCOPE); }));
+document.querySelectorAll('[data-clock]').forEach(b=>b.addEventListener('click',()=>{ ST.clock=b.dataset.clock; if(CUR_SCOPE) drawStudy(CUR_SCOPE); }));
+document.querySelectorAll('[data-heat]').forEach(b=>b.addEventListener('click',()=>{ ST.heat=b.dataset.heat; document.querySelectorAll('[data-heat]').forEach(x=>x.setAttribute('aria-pressed',x===b)); if(CUR_SCOPE) stHeat(stPick(stAll(CUR_SCOPE))); }));
+document.querySelectorAll('[data-log]').forEach(b=>b.addEventListener('click',()=>{ ST.log=b.dataset.log; ST.more=false; if(CUR_SCOPE) stLog(CUR_SCOPE,stPick(stAll(CUR_SCOPE))); }));
+$('st-more').addEventListener('click',()=>{ ST.more=!ST.more; if(CUR_SCOPE) stLog(CUR_SCOPE,stPick(stAll(CUR_SCOPE))); });
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -1856,7 +2503,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
