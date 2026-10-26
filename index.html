@@ -524,6 +524,72 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
   .fsel select{max-width:200px}
   .st-h{font-size:24px}
 }
+
+/* ---- v10: day by day ---- */
+#calendar{border-top:1px solid var(--rule)}
+.cal-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px;margin:0 0 22px}
+.cal-nav{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
+.cal-nav button{font:600 13px Archivo;background:transparent;border:1px solid var(--rule-strong);color:var(--sea);padding:7px 11px;cursor:pointer;line-height:1}
+.cal-nav button:hover:not(:disabled){border-color:var(--sea)}
+.cal-nav button:disabled{opacity:.35;cursor:default}
+.cal-nav .fsel select{max-width:190px}
+.cal-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.9fr);gap:40px 44px;margin-top:30px;align-items:start}
+.cal-grid>div{min-width:0}
+.cal-title{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 10px}
+.cal-title b{font:800 22px Archivo;font-stretch:108%}
+.cal-title span{font:500 12.5px Archivo;color:var(--muted)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr)) minmax(0,1.1fr);gap:3px}
+.cal .wd{font:600 12px Archivo;color:var(--muted);padding:0 2px 4px}
+.cal .cd{font-family:Archivo;border:0;margin:0;text-align:left;min-height:86px;padding:7px 8px 7px;background:var(--panel);color:var(--sea);cursor:pointer;display:flex;flex-direction:column;gap:1px;min-width:0;position:relative}
+.cal .cd:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+.cal .cd .dn{font:600 12px Archivo;opacity:.85}
+.cal .cd .dv{font:700 15px Archivo;margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal .cd .dm{font:500 11.5px Archivo;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal .cd.out{visibility:hidden}
+.cal .cd.idle{background:rgba(15,44,66,.035);color:var(--muted);cursor:default}
+.cal .cd.idle .dv{font-weight:500;font-size:12px}
+.cal .cd.fut{background:transparent;box-shadow:inset 0 0 0 1px var(--rule);color:rgba(15,44,66,.35);cursor:default}
+.cal .cd.sel{box-shadow:inset 0 0 0 2px var(--brass),inset 0 0 0 3px rgba(6,20,31,.55)}
+.cal .cd.now .dn::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--brass);margin-left:6px;vertical-align:1px}
+.cal .wk{font-family:Archivo;background:var(--paper);box-shadow:inset 0 0 0 1px var(--rule);padding:7px 9px;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.cal .wk small{font:500 11px Archivo;color:var(--muted)}
+.cal .wk b{font:700 14px Archivo;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal .wk span{font:500 11.5px Archivo;color:var(--muted);white-space:nowrap}
+.cal-key{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;font:500 12.5px Archivo;color:var(--muted);margin:10px 0 0}
+.cal-key .ramp{display:inline-flex;gap:2px;vertical-align:-2px;margin:0 6px}
+.cal-key .ramp i{display:block;width:14px;height:12px}
+#cal-year{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
+#cal-year svg rect[data-d]{cursor:pointer}
+.st-tiles.two{grid-template-columns:repeat(2,1fr)}
+.cal-day h3.col{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.cal-day h3.col small{font:500 12.5px Archivo;color:var(--muted)}
+.cal-day .daynav{display:flex;gap:6px;margin:12px 0 0}
+.cal-day .daynav button{flex:1;font:600 12.5px Archivo;background:transparent;border:1px solid var(--rule-strong);color:var(--sea);padding:7px 8px;cursor:pointer}
+.cal-day .daynav button:disabled{opacity:.35;cursor:default}
+.cal-day .daynav button:hover:not(:disabled){border-color:var(--sea)}
+.cal-day .sub2{font:600 12.5px Archivo;color:var(--muted);margin:22px 0 6px}
+#cal-dchart{border-top:0;background:linear-gradient(180deg,#fbfcfb,#f3f7f5)}
+.cal-day .dayrow{grid-template-columns:minmax(0,1.2fr) 70px 1fr 92px}
+.cal-day table.daytrades{font-size:13px}
+.cal-day table.daytrades td,.cal-day table.daytrades th{padding-right:8px}
+.cal-day .bt span{display:inline-flex;align-items:center;gap:6px}
+.cal-day .bt svg{width:19px;height:13px;flex:none}
+.cal-day .sd{padding:0 4px;margin-left:4px}
+#heat td[data-m]{cursor:pointer}
+#heat td[data-m]:hover{outline:2px solid var(--brass);outline-offset:-2px}
+@media (max-width:1040px){ .cal-grid{grid-template-columns:1fr} }
+@media (max-width:720px){
+  .cal{grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+  .cal .wk,.cal .wd.wkh{display:none}
+  .cal .cd{min-height:56px;padding:4px 4px}
+  .cal .cd .dm{display:none}
+  .cal .cd .dv{font-size:11px}
+  .cal .cd .dn{font-size:11px}
+  .cal-nav{margin-left:0}
+  .cal-day .dayrow{grid-template-columns:minmax(0,1fr) 62px 86px}
+  .cal .cd.idle .dv{display:none}
+  .cal-day .hh{display:none}
+}
 </style>
 </head>
 <body>
@@ -537,6 +603,7 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
+      <a href="#calendar">Calendar</a>
       <a href="#study">Study</a>
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
@@ -608,6 +675,7 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
         <h3 class="col">How today's trades closed</h3>
         <table class="split" id="today-closes"><tbody><tr><td>—</td></tr></tbody></table>
         <p class="chart-cap" id="today-note"></p>
+        <button type="button" class="st-btn" id="today-cal" hidden>Open this day in the calendar</button>
       </div>
     </div>
   </div>
@@ -697,6 +765,53 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
     <h2>Month by month</h2>
     <p class="sub">Time-weighted return for each calendar month, with the year's compounded total at the end of the row.</p>
     <div class="scroll"><table class="heat" id="heat"><tbody><tr><td class="nil" style="height:80px">No closed months yet.</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<section id="calendar" hidden>
+  <div class="wrap">
+    <h2 id="cal-h">Day by day</h2>
+    <p class="sub">Every day on record: what it added or took away, how many trades closed and how many of them won. Days follow the UTC clock, like the rest of the record. Select a day to see its trades.</p>
+    <div class="cal-bar">
+      <div class="seg" role="group" aria-label="Calendar view">
+        <button type="button" data-calview="month" aria-pressed="true">Month</button>
+        <button type="button" data-calview="year" aria-pressed="false">Whole record</button>
+      </div>
+      <div class="seg" role="group" aria-label="Calendar shows">
+        <button type="button" data-calmet="res" aria-pressed="true">Result</button>
+        <button type="button" data-calmet="n" aria-pressed="false">Trades</button>
+        <button type="button" data-calmet="hit" aria-pressed="false">Hits</button>
+      </div>
+      <div class="cal-nav" id="cal-nav">
+        <button type="button" id="cal-prev" aria-label="Previous month">&#8249;</button>
+        <label class="fsel"><span class="sr" style="position:absolute;left:-999px">Month</span><select id="cal-month"></select></label>
+        <button type="button" id="cal-next" aria-label="Next month">&#8250;</button>
+      </div>
+    </div>
+    <dl class="st-tiles" id="cal-tiles"></dl>
+    <div class="cal-grid">
+      <div>
+        <div id="cal-monthview">
+          <p class="cal-title"><b id="cal-mtitle"></b><span id="cal-msub"></span></p>
+          <div class="cal" id="cal" role="grid" aria-label="Calendar of daily results"></div>
+        </div>
+        <div class="plot" id="cal-year" hidden></div>
+        <p class="cal-key" id="cal-key"></p>
+      </div>
+      <div class="cal-day" id="cal-day" aria-live="polite"></div>
+    </div>
+    <div class="st-two" style="margin-top:56px">
+      <div>
+        <h3 class="col">How the days are distributed</h3>
+        <div id="cal-hist"></div>
+        <p class="chart-cap" id="cal-hist-cap"></p>
+      </div>
+      <div>
+        <h3 class="col">Green days and red days</h3>
+        <table class="split" id="cal-split"><tbody><tr><td>—</td></tr></tbody></table>
+        <p class="chart-cap" id="cal-split-cap"></p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -960,6 +1075,7 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
           <li><a href="#today">Today's session</a></li>
           <li><a href="#compare">Compare the bots</a></li>
           <li><a href="#stats">Statistics</a></li>
+          <li><a href="#calendar">Calendar</a></li>
           <li><a href="#study">The study</a></li>
           <li><a href="#fleet">The fleet</a></li>
           <li><a href="#plain">Reading the figures</a></li>
@@ -1151,7 +1267,7 @@ function selectScope(id, push){
 
 function renderScope(){
   const sc=CUR_SCOPE;
-  drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc);
+  drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc); drawCalendar(sc);
   setSeries(defaultSeries(sc));
   drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc);
   ST.more=false; drawStudy(sc);
@@ -1203,8 +1319,10 @@ const CMP_COLS=[
   {k:'spark', t:'Curve', v:()=>0, f:null, nosort:true},
   {k:'trades', t:'Trades', v:sc=>(sc.trades||{}).trades, f:int},
   {k:'hits', t:'Hits', v:sc=>(sc.trades||{}).win_rate_pct, f:x=>upct(x,1)},
+  {k:'gdays', t:'Green days', v:sc=>calStats(sc).greenPct, f:x=>upct(x,0)},
   {k:'pf', t:'Profit factor', v:sc=>(sc.trades||{}).profit_factor, f:num},
   {k:'ret', t:'Return', v:sc=>(sc.returns||{}).total_pct, f:pct, c:true},
+  {k:'d30', t:'Last 30 days', v:sc=>ret30(sc), f:pct, c:true},
   {k:'net', t:'Net', v:sc=>sc.kind==='account'?ACC.net_profit:sc.net, f:x=>money(x,true), c:true, money:true},
   {k:'mdd', t:'Max DD', v:sc=>(sc.risk||{}).max_drawdown_pct, f:ddpct, lowBest:true},
   {k:'rec', t:'Recovery', v:sc=>(sc.risk||{}).recovery_factor, f:num},
@@ -1346,6 +1464,7 @@ function drawStats(sc){
     ['Most losses in a row',int(T.max_consec_losses),'neg'],
     ['Best winning run',mp(T.max_consec_win_money,T.max_consec_win_pct),'pos','Largest total gained during one uninterrupted series of winning trades.'],
     ['Worst losing run',mp(T.max_consec_loss_money,T.max_consec_loss_pct),'neg','Largest total lost during one uninterrupted series of losing trades.'],
+  ].concat(dayRows(sc)).concat([
     ['Average hold',hours(T.avg_hold_hours)],
     ['Median hold',hours(T.median_hold_hours)],
     ['Hold, winners',hours(T.avg_hold_win_hours)],
@@ -1356,12 +1475,28 @@ function drawStats(sc){
     M ? ['Swap',money(T.swap),cls(T.swap)] : null,
     ['First trade',T.first_trade?fmtDate(T.first_trade):'—'],
     ['Last trade',T.last_trade?fmtDate(T.last_trade):'—'],
-  ].concat(closeRows(sc, mp)));
+  ].concat(closeRows(sc, mp))));
   $('symlist').textContent = sc.symbols&&sc.symbols.length ? 'Instruments traded: '+sc.symbols.map(x=>x.s+' ('+x.n+')').join(', ') : '';
   const cd=R.calendar_days;
   $('sample-note').textContent = sc.empty ? 'This bot has no closed trades yet.' :
     !cd ? '' : cd<90 ? 'The record covers '+cd+' days. Annualised figures and ratios are extrapolated from a short sample and will move a lot as more months come in.'
     : 'Based on '+cd+' calendar days, '+(R.trading_days||'—')+' trading days and '+(sc.monthly||[]).length+' months on record.';
+}
+
+/* day-level rows for the streaks column, from the calendar data */
+function dayRows(sc){
+  if(sc.empty || !(sc.equity||[]).length && !(sc.tl&&sc.tl.t&&sc.tl.t.length)) return [];
+  const S=calStats(sc); if(!S.act.length) return [];
+  const dd=n=>int(n)+(n===1?' day':' days'), wk=w=>w?S.fmt(w.v)+' <small style="font-weight:500;color:var(--muted)">'+fmtDate(w.k)+'</small>':'—';
+  return [
+    ['Most green days in a row',S.maxG?dd(S.maxG):'—','pos','Longest run of trading days that each ended positive. Days without trading do not break a run.'],
+    ['Most red days in a row',S.maxR?dd(S.maxR):'—','neg'],
+    ['Current run of days',S.cur?dd(S.cur.n)+(S.cur.s>0?' green':' red'):'—',S.cur?(S.cur.s>0?'pos':'neg'):''],
+    ['Average green day',S.green.length?S.fmt(S.avgG):'—','pos'],
+    ['Average red day',S.red.length?S.fmt(S.avgR):'—','neg','If red days are much larger than green ones, a few bad days can undo many good ones.'],
+    ['Best week',wk(S.bestWeek),cls(S.bestWeek&&S.bestWeek.v),'Week starting Monday, UTC.'],
+    ['Worst week',wk(S.worstWeek),cls(S.worstWeek&&S.worstWeek.v)],
+  ];
 }
 
 const CLOSE_LABELS=[['bot','Closed by the bot','The EA closed the position by its own rule.'],['tp','Hit take profit',''],['sl','Hit stop loss',''],
@@ -1407,19 +1542,20 @@ function drawHeat(sc){
   const years=[...new Set(mon.map(m=>+m.m.slice(0,4)))].sort();
   const yearly={}; (sc.yearly||[]).forEach(y=>yearly[y.y]=y);
   const maxAbs=Math.max(0.5,...mon.map(m=>Math.abs(m.r||0)));
-  const cell=(r,p,tot)=>{
+  const cell=(r,p,tot,mk)=>{
     if(nil(r)) return '<td class="nil'+(tot?' tot':'')+'">·</td>';
     const a=Math.min(1,Math.abs(r)/maxAbs)*.78+.1;
     const bg=r>=0?'rgba(30,107,87,'+a.toFixed(2)+')':'rgba(190,58,43,'+a.toFixed(2)+')';
-    return '<td class="'+(tot?'tot':'')+'" style="background:'+bg+';color:'+(a>.45?'#fff':'var(--sea)')+'"><span>'+pct(r,1)+'</span>'+(ACC.publish_money&&!nil(p)?'<small>'+money(p,true)+'</small>':'')+'</td>';
+    return '<td class="'+(tot?'tot':'')+'"'+(mk?' data-m="'+mk+'" title="Open '+mk+' in the calendar"':'')+' style="background:'+bg+';color:'+(a>.45?'#fff':'var(--sea)')+'"><span>'+pct(r,1)+'</span>'+(ACC.publish_money&&!nil(p)?'<small>'+money(p,true)+'</small>':'')+'</td>';
   };
   let h='<thead><tr><th></th>'+MONTHS.map(m=>'<th>'+m+'</th>').join('')+'<th>Year</th></tr></thead><tbody>';
   years.forEach(y=>{
     h+='<tr><td class="y">'+y+'</td>';
-    for(let i=1;i<=12;i++){ const m=mon.find(x=>x.m===y+'-'+String(i).padStart(2,'0')); h+=m?cell(m.r,m.pnl):'<td class="nil">·</td>'; }
+    for(let i=1;i<=12;i++){ const m=mon.find(x=>x.m===y+'-'+String(i).padStart(2,'0')); h+=m?cell(m.r,m.pnl,false,m.m):'<td class="nil">·</td>'; }
     const Y=yearly[y]; h+=Y?cell(Y.r,Y.pnl,true):'<td class="nil tot">·</td>'; h+='</tr>';
   });
   $('heat').innerHTML=h+'</tbody>';
+  $('heat').querySelectorAll('td[data-m]').forEach(td=>td.addEventListener('click',()=>{ if(!CUR_SCOPE||$('calendar').hidden) return; CAL.view='month'; calGoMonth(td.dataset.m); $('calendar').scrollIntoView(); }));
 }
 
 /* ---------- SVG helpers ---------- */
@@ -1981,6 +2117,7 @@ function drawToday(sc){
         return '<tr><td>'+HOW[k]+'</td><td>'+int(b.n)+'</td><td>'+int(b.w)+'</td><td class="'+cls(val)+'">'+(M&&b.hasP?money(b.p,true):pct(b.r))+'</td></tr>'; }).join('')+'</tbody>'
     : '<tbody><tr><td>No closed trades yet.</td></tr></tbody>';
   const hand=S.tr.filter(t=>t.c==='m').length;
+  $('today-cal').hidden=!(calDays(sc).by.get(day)||{}).active;
   $('today-note').textContent=(hand?hand+(hand===1?' trade was':' trades were')+' closed by hand. A bot’s trade closed by hand still counts for that bot. ':'')+
     'The record is updated a few times a day, not streamed, so trades after '+hm(asof)+' UTC appear with the next update.';
 }
@@ -2473,6 +2610,339 @@ document.querySelectorAll('[data-heat]').forEach(b=>b.addEventListener('click',(
 document.querySelectorAll('[data-log]').forEach(b=>b.addEventListener('click',()=>{ ST.log=b.dataset.log; ST.more=false; if(CUR_SCOPE) stLog(CUR_SCOPE,stPick(stAll(CUR_SCOPE))); }));
 $('st-more').addEventListener('click',()=>{ ST.more=!ST.more; if(CUR_SCOPE) stLog(CUR_SCOPE,stPick(stAll(CUR_SCOPE))); });
 
+/* ---------- v10: day by day ----------
+   One row per UTC day, built from the daily ledger (equity) and the trade list (tl).
+   The ledger gives the day's full result, costs and adjustments included; the trade
+   list gives how many trades closed and how many won. Nothing new is published. */
+const CAL={view:'month', metric:'res', ym:null, sel:null, sid:null};
+const MONTHL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOWL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const dKey=ms=>new Date(ms).toISOString().slice(0,10);
+const dMs=d=>Date.parse(d+'T00:00:00Z');
+const dLong=d=>DOWL[(new Date(dMs(d)).getUTCDay()+6)%7]+' '+fmtDate(d);
+const ymLabel=ym=>MONTHL[+ym.slice(5)-1]+' '+ym.slice(0,4);
+const ymAdd=(ym,k)=>{ const d=new Date(Date.UTC(+ym.slice(0,4),+ym.slice(5)-1+k,1)); return d.toISOString().slice(0,7); };
+const curSym=()=>money(0).replace(/[\d.,\s]/g,'')||CUR;
+
+function calDays(sc){
+  if(sc._cal) return sc._cal;
+  const by=new Map(), get=d=>{ if(!by.has(d)) by.set(d,{d,r:null,p:null,tr:[]}); return by.get(d); };
+  const eq=sc.equity||[];
+  eq.forEach((e,k)=>{ const pv=k>0?eq[k-1]:null, o=get(e.d);
+    o.r=(e.v/(pv?pv.v:100)-1)*100;
+    if(!nil(e.p)) o.p=e.p-(pv&&!nil(pv.p)?pv.p:0); });
+  stAll(sc).forEach(t=>get(dKey(t.x)).tr.push(t));
+  by.forEach(o=>{
+    o.tr.sort((a,b)=>a.x-b.x);
+    const a=agg(o.tr); o.a=a; o.n=a.n; o.w=a.w; o.hit=a.hit;
+    if(o.r==null) o.r=a.r;
+    if(o.p==null && !nil(a.net)) o.p=a.net;
+    o.active=o.n>0 || Math.abs(o.r)>1e-9 || (!nil(o.p)&&Math.abs(o.p)>=0.005);
+  });
+  const days=[...by.values()].sort((a,b)=>a.d<b.d?-1:1);
+  return sc._cal={days,by,act:days.filter(o=>o.active)};
+}
+/* totals for a list of days: money when every active day has it, otherwise % compounded */
+function calSummary(list){
+  const act=list.filter(o=>o.active);
+  const M=ACC.publish_money && act.length>0 && act.every(o=>!nil(o.p));
+  const v=o=>M?o.p:o.r, fmt=x=>nil(x)?'—':(M?money(x,true):pct(x,2));
+  const green=act.filter(o=>v(o)>0), red=act.filter(o=>v(o)<0), flat=act.length-green.length-red.length;
+  const sum=a=>a.reduce((s,o)=>s+v(o),0), avg=a=>a.length?sum(a)/a.length:null;
+  let comp=1; act.forEach(o=>comp*=1+o.r/100);
+  let g=0,r=0,maxG=0,maxR=0,gEnd=null,rEnd=null;
+  act.forEach(o=>{ const x=v(o);
+    if(x>0){ g++; r=0; if(g>maxG){ maxG=g; gEnd=o.d; } }
+    else if(x<0){ r++; g=0; if(r>maxR){ maxR=r; rEnd=o.d; } }
+    else { g=0; r=0; } });
+  const cur=g?{s:1,n:g}:(r?{s:-1,n:r}:null);
+  const wk={}; act.forEach(o=>{ const t=new Date(dMs(o.d)), k=dKey(dMs(o.d)-((t.getUTCDay()+6)%7)*864e5); (wk[k]=wk[k]||[]).push(o); });
+  const weeks=Object.keys(wk).map(k=>{ let c=1; wk[k].forEach(o=>c*=1+o.r/100); return {k, v:M?sum(wk[k]):(c-1)*100, n:wk[k].length}; });
+  const trades=act.reduce((s,o)=>s+o.n,0), wins=act.reduce((s,o)=>s+o.w,0);
+  const best=act.length?act.reduce((a,o)=>v(o)>v(a)?o:a):null, worst=act.length?act.reduce((a,o)=>v(o)<v(a)?o:a):null;
+  return {act,M,v,fmt,green,red,flat,greenPct:green.length+red.length?green.length/(green.length+red.length)*100:null,
+    total:M?sum(act):(comp-1)*100, comp:(comp-1)*100, avgG:avg(green), avgR:avg(red), sumG:sum(green), sumR:sum(red),
+    maxG,maxR,gEnd,rEnd,cur,trades,wins,hit:trades?wins/trades*100:null,best,worst,
+    bestWeek:weeks.length?weeks.reduce((a,w)=>w.v>a.v?w:a):null, worstWeek:weeks.length?weeks.reduce((a,w)=>w.v<a.v?w:a):null};
+}
+function calStats(sc){ if(!sc._calS) sc._calS=calSummary(calDays(sc).days); return sc._calS; }
+function ret30(sc){
+  const eq=sc.equity||[]; if(!eq.length) return null;
+  const last=eq[eq.length-1], cut=dMs(last.d)-30*864e5; let base=100;
+  eq.forEach(e=>{ if(dMs(e.d)<=cut) base=e.v; });
+  return (last.v/base-1)*100;
+}
+function calShort(o,M){
+  if(M&&!nil(o.p)){ const x=Math.abs(o.p), s=o.p<0?'−':(o.p>0?'+':'');
+    return s+curSym()+(x>=1000?(x/1000).toFixed(x>=1e4?0:1)+'k':x>=100?Math.round(x):x.toFixed(x>=10?0:2)); }
+  return pct(o.r,Math.abs(o.r)>=10?1:2);
+}
+function calFill(o,max,metric,M){
+  if(metric==='n'){ const a=.08+.72*o.n/(max||1); return {bg:'rgba(15,44,66,'+a.toFixed(2)+')',fg:a>.45?'#fff':'#0F2C42'}; }
+  if(metric==='hit'){ if(!o.n) return {bg:'rgba(15,44,66,.06)',fg:'#5C7185'}; return shade(o.hit-50,50); }
+  return shade(M?o.p:o.r,max)||{bg:'rgba(15,44,66,.06)',fg:'#0F2C42'};
+}
+const calMax=(list,metric,M)=>Math.max(1e-9,...list.filter(o=>o.active).map(o=>metric==='n'?o.n:Math.abs(M?(o.p||0):o.r)));
+
+function drawCalendar(sc){
+  const sec=$('calendar');
+  if(!sc || sc.empty){ sec.hidden=true; return; }
+  const C=calDays(sc);
+  if(!C.act.length){ sec.hidden=true; return; }
+  sec.hidden=false;
+  $('cal-h').textContent=sc.kind==='account'?'Day by day':'Day by day: '+botName(sc);
+  const first=C.act[0].d.slice(0,7), lastDay=sessionDay()>C.act[C.act.length-1].d?sessionDay():C.act[C.act.length-1].d, last=lastDay.slice(0,7);
+  if(CAL.sid!==sc.id){ CAL.sid=sc.id; if(!CAL.ym || CAL.ym<first || CAL.ym>last) CAL.ym=C.act[C.act.length-1].d.slice(0,7); if(CAL.sel && !(C.by.get(CAL.sel)||{}).active) CAL.sel=null; }
+  if(CAL.ym<first) CAL.ym=first; if(CAL.ym>last) CAL.ym=last;
+  if(!CAL.sel){ const inM=C.act.filter(o=>o.d.slice(0,7)===CAL.ym); CAL.sel=(inM.length?inM[inM.length-1]:C.act[C.act.length-1]).d; }
+  // month list for the selector, newest first
+  const months=[]; for(let m=last;m>=first;m=ymAdd(m,-1)) months.push(m);
+  const actM={}; C.act.forEach(o=>{ const m=o.d.slice(0,7); actM[m]=(actM[m]||0)+1; });
+  $('cal-month').innerHTML=months.map(m=>'<option value="'+m+'"'+(m===CAL.ym?' selected':'')+'>'+ymLabel(m)+(actM[m]?' · '+actM[m]+'d':'')+'</option>').join('');
+  $('cal-prev').disabled=CAL.ym<=first; $('cal-next').disabled=CAL.ym>=last;
+  $('cal-nav').hidden=CAL.view!=='month';
+  document.querySelectorAll('[data-calview]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.calview===CAL.view));
+  document.querySelectorAll('[data-calmet]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.calmet===CAL.metric));
+  const list=CAL.view==='month'?C.days.filter(o=>o.d.slice(0,7)===CAL.ym):C.days;
+  calTiles(calSummary(list), CAL.view==='month'?ymLabel(CAL.ym):'the whole record');
+  $('cal-monthview').hidden=CAL.view!=='month'; $('cal-year').hidden=CAL.view!=='year';
+  if(CAL.view==='month') calMonth(sc,C,lastDay); else calYear(sc,C,lastDay);
+  calKey();
+  calDay(sc);
+  calDist(sc);
+}
+
+function calTiles(S,label){
+  const f=S.fmt, sp=(x,t)=>'<span class="'+cls(x)+'">'+t+'</span>';
+  const items=[
+    ['Result',sp(S.total,S.act.length?f(S.total):'—'),S.M?'time-weighted '+pct(S.comp)+' · '+label:label],
+    ['Trading days',int(S.act.length),S.act.length?int(S.green.length)+' green, '+int(S.red.length)+' red'+(S.flat?', '+int(S.flat)+' flat':''):'no trading'],
+    ['Green days',nil(S.greenPct)?'—':upct(S.greenPct,0),'share of trading days in profit'],
+    ['Hits',nil(S.hit)?'—':upct(S.hit,1),int(S.trades)+(S.trades===1?' trade':' trades')+' closed'],
+    ['Best day',S.best?sp(S.v(S.best),f(S.v(S.best))):'—',S.best?fmtDate(S.best.d):''],
+    ['Worst day',S.worst?sp(S.v(S.worst),f(S.v(S.worst))):'—',S.worst?fmtDate(S.worst.d):''],
+    ['Average green day',S.green.length?sp(1,f(S.avgG)):'—',S.red.length?'average red day '+f(S.avgR):'no red days'],
+    ['Longest green run',S.maxG?int(S.maxG)+(S.maxG===1?' day':' days'):'—','longest red run '+(S.maxR?int(S.maxR)+(S.maxR===1?' day':' days'):'none')]
+  ];
+  $('cal-tiles').innerHTML=items.map(t=>'<div><dt>'+t[0]+'</dt><dd>'+t[1]+'<small>'+(t[2]||'&nbsp;')+'</small></dd></div>').join('');
+}
+
+function calMonth(sc,C,lastDay){
+  const Y=+CAL.ym.slice(0,4), Mo=+CAL.ym.slice(5), first=Date.UTC(Y,Mo-1,1), dim=new Date(Date.UTC(Y,Mo,0)).getUTCDate();
+  const lead=(new Date(first).getUTCDay()+6)%7, cells=Math.ceil((lead+dim)/7)*7;
+  const list=C.days.filter(o=>o.d.slice(0,7)===CAL.ym), S=calSummary(list), M=S.M;
+  const max=calMax(list,CAL.metric,M), inc=C.days.length?C.days[0].d:null, today=new Date().toISOString().slice(0,10);
+  $('cal-mtitle').textContent=ymLabel(CAL.ym);
+  $('cal-msub').textContent=S.act.length?S.fmt(S.total)+' · '+int(S.trades)+' trades · hits '+(nil(S.hit)?'—':upct(S.hit,0)):'no trading this month';
+  let h=DOW.map(d=>'<div class="wd" role="columnheader">'+d+'</div>').join('')+'<div class="wd wkh" role="columnheader">Week</div>';
+  let wk=[];
+  for(let i=0;i<cells;i++){
+    const dn=i-lead+1;
+    if(dn<1||dn>dim){ h+='<div class="cd out" aria-hidden="true"></div>'; }
+    else {
+      const d=CAL.ym+'-'+pad2(dn), o=C.by.get(d);
+      const fut=d>lastDay, before=inc&&d<inc, sel=d===CAL.sel?' sel':'', now=d===today?' now':'';
+      if(o&&o.active){
+        wk.push(o);
+        const s=calFill(o,max,CAL.metric,M);
+        const main=CAL.metric==='n'?int(o.n)+(o.n===1?' trade':' trades'):CAL.metric==='hit'?(o.n?Math.round(o.hit)+'%':'—'):calShort(o,M);
+        const subl=CAL.metric==='res'?(o.n?o.n+' tr · '+Math.round(o.hit)+'%':'costs only'):calShort(o,M);
+        h+='<button type="button" class="cd'+sel+now+'" data-d="'+d+'" role="gridcell" aria-selected="'+(sel?'true':'false')+'" style="background:'+s.bg+';color:'+s.fg+'" title="'+dLong(d)+': '+(M&&!nil(o.p)?money(o.p,true)+' ('+pct(o.r,2)+')':pct(o.r,2))+', '+o.n+(o.n===1?' trade':' trades')+(o.n?', hits '+Math.round(o.hit)+'%':'')+'"><span class="dn">'+dn+'</span><span class="dv">'+main+'</span><span class="dm">'+subl+'</span></button>';
+      } else if(fut){
+        h+='<div class="cd fut'+now+'" role="gridcell"><span class="dn">'+dn+'</span></div>';
+      } else {
+        h+='<button type="button" class="cd idle'+sel+now+'" data-d="'+d+'" role="gridcell" aria-selected="'+(sel?'true':'false')+'"'+(before?' disabled':'')+'><span class="dn">'+dn+'</span><span class="dv">'+(before?'':'no trades')+'</span></button>';
+      }
+    }
+    if(i%7===6){
+      if(wk.length){ const W=calSummary(wk);
+        h+='<div class="wk" role="gridcell"><small>'+int(W.act.length)+(W.act.length===1?' day':' days')+'</small><b class="'+cls(W.total)+'">'+W.fmt(W.total).replace(/\.00$/,'')+'</b><span>'+int(W.trades)+' tr · '+(nil(W.hit)?'—':Math.round(W.hit)+'%')+'</span></div>'; }
+      else h+='<div class="wk" role="gridcell"><span>—</span></div>';
+      wk=[];
+    }
+  }
+  $('cal').innerHTML=h;
+  $('cal').querySelectorAll('button.cd[data-d]').forEach(b=>{
+    b.addEventListener('click',()=>{ CAL.sel=b.dataset.d; calMark(); calDay(CUR_SCOPE); });
+    b.addEventListener('keydown',e=>{
+      const step={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7}[e.key]; if(!step) return;
+      e.preventDefault(); calMove(b.dataset.d,step);
+    });
+  });
+}
+function calMark(){
+  document.querySelectorAll('#cal button.cd').forEach(x=>{ const on=x.dataset.d===CAL.sel; x.classList.toggle('sel',on); x.setAttribute('aria-selected',on?'true':'false'); });
+  document.querySelectorAll('#cal-year rect[data-d]').forEach(x=>{ const on=x.dataset.d===CAL.sel; x.setAttribute('stroke',on?'#E0A92C':'none'); x.setAttribute('stroke-width',on?'2.4':'0'); });
+}
+function calMove(d,step){
+  const nd=dKey(dMs(d)+step*864e5);
+  if(nd.slice(0,7)!==CAL.ym){ const C=calDays(CUR_SCOPE); if(nd<C.days[0].d) return; CAL.ym=nd.slice(0,7); }
+  CAL.sel=nd; drawCalendar(CUR_SCOPE);
+  const b=document.querySelector('#cal button.cd[data-d="'+nd+'"]'); if(b) b.focus();
+}
+
+function calYear(sc,C,lastDay){
+  const box=$('cal-year'), list=C.days, S=calSummary(list), M=S.M, max=calMax(list,CAL.metric,M);
+  const y0=+C.act[0].d.slice(0,4), y1=+lastDay.slice(0,4), firstM=C.act[0].d.slice(0,7), lastM=lastDay.slice(0,7);
+  const blocks=[];
+  for(let y=y0;y<=y1;y++){
+    const s=y===y0?dMs(firstM+'-01'):Date.UTC(y,0,1), e=y===y1?Date.UTC(+lastM.slice(0,4),+lastM.slice(5),0):Date.UTC(y,11,31);
+    const s0=s-((new Date(s).getUTCDay()+6)%7)*864e5, weeks=Math.floor((e-s0)/(7*864e5))+1;
+    blocks.push({y,s,e,s0,weeks});
+  }
+  const W=Math.max(300,box.clientWidth), LW=34, PR=10, maxW=Math.max(...blocks.map(b=>b.weeks));
+  const cw=Math.max(8,Math.min(26,(W-LW-PR)/maxW)), gap=cw>12?3:2, bh=7*cw+38;
+  const H=blocks.length*bh+8;
+  let g='';
+  blocks.forEach((b,bi)=>{
+    const top=bi*bh+30;
+    g+=T(0,top-14,String(b.y),'start',' font-weight="700" fill="#0F2C42" font-size="13"');
+    [0,2,4].forEach(r=>{ g+=T(0,top+r*cw+cw*.72,DOW[r],'start',' font-size="10.5"'); });
+    let lastMon=-1;
+    for(let w=0;w<b.weeks;w++){
+      for(let r=0;r<7;r++){
+        const ms=b.s0+(w*7+r)*864e5; if(ms<b.s||ms>b.e) continue;
+        const d=dKey(ms), o=C.by.get(d), x=LW+w*cw, y=top+r*cw;
+        const mo=new Date(ms).getUTCMonth();
+        if(r===0||ms===b.s){ if(mo!==lastMon && new Date(ms).getUTCDate()<=7){ g+=T(x,top-4,MONTHS[mo],'start',' font-size="10.5"'); lastMon=mo; } }
+        let fill='rgba(15,44,66,.05)', tip=dLong(d)+': no trades';
+        if(d>lastDay){ fill='none'; tip=''; }
+        else if(o&&o.active){ fill=calFill(o,max,CAL.metric,M).bg; tip=dLong(d)+': '+(M&&!nil(o.p)?money(o.p,true)+' ('+pct(o.r,2)+')':pct(o.r,2))+' · '+o.n+(o.n===1?' trade':' trades')+(o.n?' · hits '+Math.round(o.hit)+'%':''); }
+        const on=d===CAL.sel;
+        g+='<rect'+(d<=lastDay?' data-d="'+d+'"':'')+' x="'+(x+gap/2).toFixed(1)+'" y="'+(y+gap/2).toFixed(1)+'" width="'+(cw-gap).toFixed(1)+'" height="'+(cw-gap).toFixed(1)+'" fill="'+fill+'"'+(d>lastDay?' stroke="rgba(15,44,66,.12)" stroke-width="1"':(on?' stroke="#E0A92C" stroke-width="2.4"':''))+'>'+(tip?'<title>'+tip+'</title>':'')+'</rect>';
+      }
+    }
+  });
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Every day on record">'+g+'</svg>';
+  box.querySelector('svg').addEventListener('click',e=>{ const d=e.target&&e.target.getAttribute&&e.target.getAttribute('data-d'); if(!d) return; CAL.sel=d; CAL.ym=d.slice(0,7); calMark(); calDay(CUR_SCOPE); });
+}
+
+function calKey(){
+  const ramp=cs=>'<span class="ramp">'+cs.map(c=>'<i style="background:'+c+'"></i>').join('')+'</span>';
+  const g=a=>'rgba(30,107,87,'+a+')', r=a=>'rgba(190,58,43,'+a+')', b=a=>'rgba(15,44,66,'+a+')';
+  $('cal-key').innerHTML = CAL.metric==='n' ? '<span>Fewer'+ramp([b(.1),b(.3),b(.5),b(.7)])+'more trades</span>'
+    : CAL.metric==='hit' ? '<span>Hits below 50%'+ramp([r(.8),r(.4),'#F7F9F8',g(.4),g(.8)])+'above 50%</span>'
+    : '<span>Loss'+ramp([r(.85),r(.45),r(.15),g(.15),g(.45),g(.85)])+'gain</span>';
+  $('cal-key').innerHTML+='<span>Darker means further from zero within this view. Days without a closed trade stay pale.</span>'+(CAL.view==='month'?'<span>Arrow keys move between days.</span>':'');
+}
+
+function calDay(sc){
+  const box=$('cal-day'), C=calDays(sc), d=CAL.sel; if(!d){ box.innerHTML=''; return; }
+  const o=C.by.get(d), M=ACC.publish_money, i=C.act.findIndex(x=>x.d===d);
+  const prev=C.act.filter(x=>x.d<d).pop(), next=C.act.find(x=>x.d>d);
+  const nav='<div class="daynav"><button type="button" data-go="'+(prev?prev.d:'')+'"'+(prev?'':' disabled')+'>&#8249; Previous trading day</button><button type="button" data-go="'+(next?next.d:'')+'"'+(next?'':' disabled')+'>Next trading day &#8250;</button></div>';
+  let h='<h3 class="col"><span>'+dLong(d)+'</span><small>UTC day</small></h3>';
+  if(!o||!o.active){
+    h+='<p class="day-none">Nothing closed on this day, and the balance did not move.</p>'+nav;
+    box.innerHTML=h; calDayNav(box); return;
+  }
+  const a=o.a, money1=M&&!nil(o.p);
+  const tTxt1=t=>!t?'—':(M&&!nil(t.p)?money(t.p,true):pct(t.r,3));
+  const best=o.tr.length?o.tr.reduce((x,t)=>tVal(t)>tVal(x)?t:x):null, worst=o.tr.length?o.tr.reduce((x,t)=>tVal(t)<tVal(x)?t:x):null;
+  const tl=[
+    ['Result','<span class="'+cls(money1?o.p:o.r)+'">'+(money1?money(o.p,true):pct(o.r,2))+'</span>',money1?pct(o.r,2)+' of the opening balance':'of the opening balance'],
+    ['Trades closed',int(o.n),o.n?int(o.w)+' won, '+int(o.n-o.w)+' lost':'costs or adjustments only'],
+    ['Hits',o.n?upct(o.hit,0):'—',o.n?'share of trades in profit':''],
+    ['Profit factor',o.n?pfTxt(a):'—',o.n?'gross profit ÷ gross loss':''],
+    ['Best trade','<span class="'+cls(best&&best.r)+'">'+tTxt1(best)+'</span>',best?'closed '+hm(best.x)+(best.s?' · '+esc(best.s):''):''],
+    ['Worst trade','<span class="'+cls(worst&&worst.r)+'">'+tTxt1(worst)+'</span>',worst?'closed '+hm(worst.x)+(worst.s?' · '+esc(worst.s):''):'']
+  ];
+  h+='<dl class="st-tiles two">'+tl.map(t=>'<div><dt>'+t[0]+'</dt><dd>'+t[1]+'<small>'+(t[2]||'&nbsp;')+'</small></dd></div>').join('')+'</dl>';
+  // what is not explained by the trades closed that day
+  const tsum=o.tr.reduce((s,t)=>s+(money1&&!nil(t.p)?t.p:t.r),0), diff=(money1?o.p:o.r)-tsum;
+  if(o.tr.length && Math.abs(diff)>=(money1?0.01:0.001) && (!money1||o.tr.every(t=>!nil(t.p))))
+    h+='<p class="chart-cap">'+(money1?money(diff,true):pct(diff,3))+' of the day’s result came from swaps, commissions or broker adjustments not tied to a trade closed that day.</p>';
+  if(o.tr.length){
+    h+='<p class="sub2">The day trade by trade</p><div class="plot" id="cal-dchart"></div>';
+  }
+  if(sc.kind==='account'){
+    const rows=SCOPES.filter(x=>isBot(x)&&!x.empty).map(x=>({x,S:daySummary(x,d)})).filter(r=>r.S.tr.length);
+    if(rows.length){
+      const v=r=>M&&!nil(r.S.net)?r.S.net:r.S.ret, mx=Math.max(1e-9,...rows.map(r=>Math.abs(v(r)))), neg=rows.some(r=>v(r)<0);
+      rows.sort((p,q)=>v(q)-v(p));
+      h+='<p class="sub2">Bots that traded</p>'+rows.map(r=>{ const val=v(r), w=Math.abs(val)/mx*(neg?50:100), left=neg?(val>=0?50:50-w):0;
+        return '<div class="dayrow" data-id="'+esc(r.x.id)+'" tabindex="0" title="'+esc(botName(r.x))+'"><span class="nm">'+(r.x.flag?flagSVG(r.x.flag):'')+esc(botName(r.x))+'</span><span class="ct">'+int(r.S.tr.length)+(r.S.tr.length===1?' trade':' trades')+'</span>'+
+          '<span class="track">'+(neg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.5,w)+'%;background:'+(val>=0?'#1E6B57':'#BE3A2B')+'"></i></span><span class="val '+cls(val)+'">'+(M&&!nil(r.S.net)?money(val,true):pct(val))+'</span></div>'; }).join('');
+    }
+  }
+  if(o.tr.length){
+    const showBot=sc.kind==='account'&&o.tr.some(t=>t.m!=null), showSym=o.tr.some(t=>t.s), showSide=o.tr.some(t=>t.d);
+    h+='<p class="sub2">Trades closed</p><div class="scroll"><table class="daytrades log"><thead><tr><th>UTC</th>'+(showBot?'<th style="text-align:left">Bot</th>':'')+(showSym||showSide?'<th style="text-align:left">Instrument</th>':'')+'<th class="hh">Held</th><th>How</th><th>Result</th></tr></thead><tbody>'+
+      o.tr.slice().reverse().map(t=>{ const b=showBot?magicOwner(t.m):null;
+        return '<tr><td>'+hm(t.x)+'</td>'+(showBot?'<td class="bt"><span>'+(t.m===0?'By hand':(b?(b.flag?flagSVG(b.flag):'')+esc(botName(b)):'Magic '+esc(t.m)))+'</span></td>':'')+
+          (showSym||showSide?'<td class="sy">'+esc(t.s||'—')+(t.d?' <span class="sd '+t.d+'">'+(t.d==='l'?'L':'S')+'</span>':'')+'</td>':'')+
+          '<td class="hh">'+holdTxt(t.h)+'</td><td class="how">'+(t.c==='m'?'<i></i>':'')+(HOW[t.c]||'—')+'</td><td class="'+cls(t.r)+'">'+tTxt1(t)+'</td></tr>'; }).join('')+'</tbody></table></div>';
+  }
+  h+=nav;
+  box.innerHTML=h;
+  if(o.tr.length) calDayChart(o);
+  box.querySelectorAll('.dayrow').forEach(r=>{ const go=()=>{ CAL.sid=r.dataset.id; selectScope(r.dataset.id,true); $('calendar').scrollIntoView(); };
+    r.addEventListener('click',go); r.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); }); });
+  calDayNav(box);
+}
+function calDayNav(box){
+  box.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{ const d=b.dataset.go; if(!d) return;
+    CAL.sel=d; if(d.slice(0,7)!==CAL.ym){ CAL.ym=d.slice(0,7); drawCalendar(CUR_SCOPE); } else { calMark(); calDay(CUR_SCOPE); } }));
+}
+function calDayChart(o){
+  const box=$('cal-dchart'); if(!box) return;
+  const d0=dMs(o.d), W=Math.max(260,box.clientWidth), H=150, PL=10, PR=56, PT=14, PB=24;
+  const cum=[{x:d0,v:0}]; let c=0; o.tr.forEach(t=>{ c+=t.r; cum.push({x:t.x,v:c,t}); });
+  const vals=cum.map(p=>p.v); let lo=Math.min(0,...vals), hi=Math.max(0,...vals); const pad=(hi-lo)*.18||.2; lo-=pad; hi+=pad;
+  const X=x=>PL+(x-d0)/864e5*(W-PL-PR), Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB);
+  const end=Math.max(cum[cum.length-1].x, Math.min(d0+864e5, DATA&&DATA.updated_utc&&dKey(Date.parse(DATA.updated_utc))===o.d?Date.parse(DATA.updated_utc):d0+864e5));
+  let step='M'+X(d0).toFixed(1)+' '+Y(0).toFixed(1); cum.slice(1).forEach(p=>{ step+='H'+X(p.x).toFixed(1)+'V'+Y(p.v).toFixed(1); }); step+='H'+X(end).toFixed(1);
+  const col=c>=0?'#1E6B57':'#BE3A2B';
+  let g=niceTicks(lo,hi,3).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+6,Y(v)+4,pct(v,Math.abs(hi-lo)<2?2:1),'start',' font-size="11"')).join('');
+  [0,6,12,18,24].forEach(h=>{ const x=X(d0+h*36e5); g+=T(Math.min(Math.max(x,PL+14),W-PR-14),H-7,pad2(h)+':00','middle',' font-size="10.5"'); });
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.4)" stroke-dasharray="3 4"/>';
+  g+='<path d="'+step+'V'+Y(0).toFixed(1)+'H'+X(d0).toFixed(1)+'Z" fill="'+(c>=0?'rgba(30,107,87,.13)':'rgba(190,58,43,.13)')+'"/><path d="'+step+'" fill="none" stroke="'+col+'" stroke-width="2.2" stroke-linejoin="round"/>';
+  cum.slice(1).forEach(p=>{ const t=p.t, hand=t.c==='m';
+    g+='<circle cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="'+(hand?4:3.3)+'" fill="'+(hand?'#E0A92C':(t.r>=0?'#1E6B57':'#BE3A2B'))+'" stroke="'+(hand?'#0F2C42':'#F7F9F8')+'" stroke-width="1.3"><title>'+hm(t.x)+' UTC'+(t.s?' · '+esc(t.s):'')+' · '+(HOW[t.c]||'closed')+' · '+(ACC.publish_money&&!nil(t.p)?money(t.p,true)+' ('+pct(t.r,3)+')':pct(t.r,3))+' · day so far '+pct(p.v)+'</title></circle>'; });
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Closed result through the day">'+g+'</svg>';
+}
+
+function calDist(sc){
+  const S=calStats(sc), act=S.act, box=$('cal-hist');
+  if(act.length<2){ box.innerHTML='<p class="chart-cap">Needs at least two trading days.</p>'; $('cal-hist-cap').textContent=''; }
+  else {
+    const vs=act.map(S.v), m=Math.max(1e-9,...vs.map(Math.abs)), half=Math.max(3,Math.min(9,Math.ceil(Math.sqrt(vs.length)/1.4))), w=m/half;
+    const bins=[]; for(let k=-half;k<half;k++) bins.push({lo:k*w,hi:(k+1)*w,n:0});
+    vs.forEach(v=>{ let k=Math.floor(v/w)+half; if(k>=bins.length) k=bins.length-1; if(k<0) k=0; if(v===0) k=half; bins[k].n++; });
+    let a=0,b=bins.length-1; while(a<half-1&&!bins[a].n) a++; while(b>half&&!bins[b].n) b--;
+    const B=bins.slice(a,b+1), W=Math.max(260,box.clientWidth), H=190, PT=16, PB=26, bw=W/B.length, mx=Math.max(...B.map(x=>x.n));
+    let g='';
+    B.forEach((x,i)=>{ const bh=x.n/mx*(H-PT-PB), y=H-PB-bh, neg=x.hi<=0;
+      g+='<rect x="'+(i*bw+2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(1,bw-4).toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+(neg?'#BE3A2B':'#1E6B57')+'" opacity="'+(neg?.8:1)+'"><title>'+S.fmt(x.lo)+' to '+S.fmt(x.hi)+': '+x.n+(x.n===1?' day':' days')+'</title></rect>';
+      if(x.n) g+=T(i*bw+bw/2,y-4,x.n,'middle',' font-size="10.5"'); });
+    const zx=(half-a)*bw;
+    g+='<line x1="0" x2="'+W+'" y1="'+(H-PB)+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.3)"/><line x1="'+zx.toFixed(1)+'" x2="'+zx.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB+4)+'" stroke="rgba(15,44,66,.45)" stroke-dasharray="3 3"/>'+
+      T(2,H-7,S.fmt(B[0].lo).replace(/\.00$/,''),'start',' font-size="11"')+T(zx,H-7,'0','middle',' font-size="11"')+T(W-2,H-7,S.fmt(B[B.length-1].hi).replace(/\.00$/,''),'end',' font-size="11"');
+    box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Distribution of daily results">'+g+'</svg>';
+    $('cal-hist-cap').textContent='Number of trading days by result'+(S.M?', in account currency':', % of the opening balance')+'. Whole record.';
+  }
+  const row=(n,list,avg,tot,c)=>'<tr><td>'+n+'</td><td>'+int(list.length)+'</td><td class="'+c+'">'+(list.length?S.fmt(avg):'—')+'</td><td class="'+c+'">'+(list.length?S.fmt(c==='neg'?Math.min(...list.map(S.v)):Math.max(...list.map(S.v))):'—')+'</td><td class="'+c+'">'+(list.length?S.fmt(tot):'—')+'</td></tr>';
+  const flat=act.filter(o=>S.v(o)===0);
+  $('cal-split').innerHTML='<thead><tr><th></th><th>Days</th><th>Average</th><th>Largest</th><th>Total</th></tr></thead><tbody>'+
+    row('Green days',S.green,S.avgG,S.sumG,'pos')+row('Red days',S.red,S.avgR,S.sumR,'neg')+
+    (flat.length?'<tr><td>Flat days</td><td>'+int(flat.length)+'</td><td>—</td><td>—</td><td>—</td></tr>':'')+
+    '<tr style="font-weight:800"><td>All trading days</td><td>'+int(act.length)+'</td><td class="'+cls(act.length?S.total:0)+'">'+(act.length&&S.M?S.fmt(S.total/act.length):'—')+'</td><td></td><td class="'+cls(S.total)+'">'+S.fmt(S.total)+'</td></tr></tbody>';
+  const ratio=S.avgG&&S.avgR?S.avgG/Math.abs(S.avgR):null;
+  $('cal-split-cap').textContent=(nil(ratio)?'':'An average green day is '+ratio.toFixed(2)+' times the size of an average red day. ')+
+    (S.bestWeek&&S.worstWeek?'Best week: '+S.fmt(S.bestWeek.v)+' (from '+fmtDate(S.bestWeek.k)+'); worst week: '+S.fmt(S.worstWeek.v)+' (from '+fmtDate(S.worstWeek.k)+'). ':'')+
+    (S.M?'':'Percentages compound in the total. ')+'Whole record.';
+}
+
+/* calendar controls */
+document.querySelectorAll('[data-calview]').forEach(b=>b.addEventListener('click',()=>{ CAL.view=b.dataset.calview; if(CUR_SCOPE) drawCalendar(CUR_SCOPE); }));
+document.querySelectorAll('[data-calmet]').forEach(b=>b.addEventListener('click',()=>{ CAL.metric=b.dataset.calmet; if(CUR_SCOPE) drawCalendar(CUR_SCOPE); }));
+function calGoMonth(ym){ const C=calDays(CUR_SCOPE); CAL.ym=ym; const inM=C.act.filter(o=>o.d.slice(0,7)===ym); CAL.sel=inM.length?inM[inM.length-1].d:null; drawCalendar(CUR_SCOPE); }
+$('cal-prev').addEventListener('click',()=>{ if(CUR_SCOPE) calGoMonth(ymAdd(CAL.ym,-1)); });
+$('cal-next').addEventListener('click',()=>{ if(CUR_SCOPE) calGoMonth(ymAdd(CAL.ym,1)); });
+$('cal-month').addEventListener('change',e=>{ if(CUR_SCOPE) calGoMonth(e.target.value); });
+function calOpen(d){ CAL.view='month'; CAL.ym=d.slice(0,7); CAL.sel=d; drawCalendar(CUR_SCOPE); $('calendar').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); }
+$('today-cal').addEventListener('click',()=>{ if(CUR_SCOPE) calOpen(sessionDay()); });
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -2503,7 +2973,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); drawCalendar(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
