@@ -611,6 +611,20 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
   .cal .cd .dr b.lg{display:none}.cal .cd .dr b.sm{display:inline}.cal-key .sm{display:inline}
   .cal .cd.arch::after{top:5px;right:4px;width:5px;height:5px}
 }
+
+/* ---- v12: week and month ---- */
+#periods{border-top:1px solid var(--rule)}
+#per-chart{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
+#per-chart svg rect[data-d]{cursor:pointer}
+#per-chart svg text{pointer-events:none}
+table.cmp.per{min-width:900px}
+table.cmp.per tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weight:800;cursor:default}
+table.cmp.per tfoot td small{font-weight:500;color:var(--muted)}
+table.cmp.per td .part{font:500 11px Archivo;color:var(--muted);margin-left:6px}
+#per-cmp th:not(:first-child),#per-cmp td:not(:first-child){padding-left:10px}
+#per-cmp tr.now td{font-weight:800}
+.per-more{margin-top:14px}
+@media (max-width:720px){ #per-cmp{font-size:13px} }
 </style>
 </head>
 <body>
@@ -625,6 +639,7 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
       <a href="#calendar">Calendar</a>
+      <a href="#periods" class="opt">Week &amp; month</a>
       <a href="#study">Study</a>
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
@@ -835,6 +850,50 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
         <table class="split" id="cal-split"><tbody><tr><td>—</td></tr></tbody></table>
         <p class="chart-cap" id="cal-split-cap"></p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="periods" hidden>
+  <div class="wrap">
+    <h2 id="per-h">Week and month</h2>
+    <p class="sub">Each week and each month taken as a whole: what it added, its ROI, and what an average trading day in it returned. Weeks start on Monday and days follow the UTC clock, like the calendar above.</p>
+    <div class="cal-bar">
+      <div class="seg" role="group" aria-label="Period">
+        <button type="button" data-perunit="week" aria-pressed="false">Week</button>
+        <button type="button" data-perunit="month" aria-pressed="true">Month</button>
+      </div>
+      <div class="seg" role="group" aria-label="Chart shows">
+        <button type="button" data-permet="r" aria-pressed="true">Return %</button>
+        <button type="button" data-permet="roi" aria-pressed="false">ROI %</button>
+      </div>
+      <div class="cal-nav">
+        <button type="button" id="per-prev" aria-label="Previous period">&#8249;</button>
+        <label class="fsel"><span style="position:absolute;left:-999px">Period</span><select id="per-pick"></select></label>
+        <button type="button" id="per-next" aria-label="Next period">&#8250;</button>
+        <button type="button" id="per-last" aria-label="Latest period">Latest</button>
+      </div>
+    </div>
+    <p class="note cal-arch" id="per-arch" hidden></p>
+    <dl class="st-tiles" id="per-tiles"></dl>
+    <div class="st-two">
+      <div>
+        <h3 class="col" id="per-chart-h">Day by day</h3>
+        <div class="plot" id="per-chart"></div>
+        <p class="st-keys" id="per-key"></p>
+      </div>
+      <div>
+        <h3 class="col">Against other periods</h3>
+        <table class="split" id="per-cmp"><tbody><tr><td>—</td></tr></tbody></table>
+        <p class="chart-cap" id="per-cmp-cap"></p>
+      </div>
+    </div>
+    <div class="st-block" style="margin-top:56px">
+      <h3 class="st-h" id="per-tab-h">Every month</h3>
+      <p class="st-p" id="per-tab-p">One row per period with trading. Return is time-weighted and compounds day by day; ROI adds up the daily ROI. The two columns per day divide them by the trading days in the period. Select a row to study it above.</p>
+      <div class="scroll"><table class="cmp per" id="per-tab"></table></div>
+      <button type="button" class="st-btn per-more" id="per-more" hidden></button>
+      <p class="chart-cap" id="per-tab-cap"></p>
     </div>
   </div>
 </section>
@@ -1100,6 +1159,7 @@ table.daytrades.log td.sy{text-align:left;font-weight:700}
           <li><a href="#compare">Compare the bots</a></li>
           <li><a href="#stats">Statistics</a></li>
           <li><a href="#calendar">Calendar</a></li>
+          <li><a href="#periods">Week and month</a></li>
           <li><a href="#study">The study</a></li>
           <li><a href="#fleet">The fleet</a></li>
           <li><a href="#plain">Reading the figures</a></li>
@@ -1293,7 +1353,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc); drawCalendar(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc); drawPeriods(sc);
   ST.more=false; drawStudy(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
@@ -2671,7 +2731,7 @@ function loadHistory(h){
       HMAP[id]=m;
     });
   }
-  SCOPES.forEach(sc=>{ delete sc._cal; delete sc._calS; delete sc._calA; });
+  SCOPES.forEach(sc=>{ delete sc._cal; delete sc._calS; delete sc._calA; delete sc._per; });
 }
 /* first day of the current record */
 function recStart(){ const a=SCOPES.find(x=>x.kind==='account'), eq=(a&&a.equity)||[]; return eq.length?eq[0].d:((DATA&&DATA.inception)||null); }
@@ -3126,6 +3186,206 @@ $('cal-month').addEventListener('change',e=>{ if(CUR_SCOPE) calGoMonth(e.target.
 function calOpen(d){ CAL.view='month'; CAL.ym=d.slice(0,7); CAL.sel=d; drawCalendar(CUR_SCOPE); $('calendar').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); }
 $('today-cal').addEventListener('click',()=>{ if(CUR_SCOPE) calOpen(sessionDay()); });
 
+/* ---------- v12: week and month ----------
+   Built on the same day rows as the calendar (calDays): the current record from
+   stats.json and the earlier stretches from history.json, never demo next to live.
+   For each week (Monday to Sunday, UTC) and each month:
+     return  = the daily returns compounded (time-weighted, % of each day's opening balance)
+     ROI     = the daily ROI added up (result ÷ money put in up to that day)
+     per day = the simple average over the period's trading days, so
+               average return a day = mean of the daily returns,
+               average ROI a day    = ROI of the period ÷ trading days.
+   A trading day is a day that closed a trade or moved the balance, as in the calendar. */
+const PER={unit:'month', key:null, met:'r', sid:null, all:false};
+const dShort=d=>(+d.slice(8))+' '+MONTHS[+d.slice(5,7)-1];
+const wkKey=d=>{ const t=new Date(dMs(d)); return dKey(dMs(d)-((t.getUTCDay()+6)%7)*864e5); };
+const perKey=(d,u)=>u==='month'?d.slice(0,7):wkKey(d);
+const perStart=(k,u)=>u==='month'?k+'-01':k;
+const perEnd=(k,u)=>u==='month'?dKey(Date.UTC(+k.slice(0,4),+k.slice(5),0)):dKey(dMs(k)+6*864e5);
+const perStep=(k,u,n)=>u==='month'?ymAdd(k,n):dKey(dMs(k)+n*7*864e5);
+const perName=(k,u)=>u==='month'?ymLabel(k):'Week of '+fmtDate(k);
+const perShort=(k,u)=>u==='month'?MONTHS[+k.slice(5)-1]+' '+k.slice(0,4):dShort(k)+' – '+dShort(perEnd(k,u))+' '+perEnd(k,u).slice(0,4);
+const unitW=u=>u==='month'?'month':'week';
+const pctD=x=>nil(x)?'—':pct(x,Math.abs(x)<1?3:2);
+
+function perStudy(list,k,u,lastDay,span){
+  const S=calSummary(list), n=S.act.length;
+  const s=span?span[0]:perStart(k,u), e0=span?span[1]:perEnd(k,u), e=e0<lastDay?e0:lastDay;
+  const cd=e>=s?Math.round((dMs(e)-dMs(s))/864e5)+1:0;
+  let geo=1; S.act.forEach(o=>geo*=1+o.r/100);
+  return Object.assign(S,{k,u,n,s,e:e0,cd,partial:e0>lastDay,arch:S.act.some(o=>o.arch),
+    avgR:n?S.act.reduce((a,o)=>a+o.r,0)/n:null,
+    geoR:n?(Math.pow(geo,1/n)-1)*100:null,
+    avgRoi:S.roiOK&&n?S.roi/n:null,
+    roiCal:S.roiOK&&cd?S.roi/cd:null,
+    avgP:S.M&&n?S.total/n:null});
+}
+function perIndex(sc,u){
+  sc._per=sc._per||{};
+  if(sc._per[u]) return sc._per[u];
+  const C=calDays(sc);
+  if(!C.act.length) return sc._per[u]={keys:[],items:[],by:new Map()};
+  const {lastDay}=calRange(C), groups=new Map();
+  C.days.forEach(o=>{ if(o.d>lastDay) return; const k=perKey(o.d,u); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(o); });
+  const keys=[]; for(let k=perKey(C.act[0].d,u), z=perKey(lastDay,u); k<=z; k=perStep(k,u,1)) keys.push(k);
+  const items=keys.map(k=>perStudy(groups.get(k)||[],k,u,lastDay)), by=new Map(items.map(x=>[x.k,x]));
+  // every day in the calendar, and the average of the periods that traded
+  const whole=perStudy(C.days.filter(o=>o.d<=lastDay),'all',u,lastDay,[C.act[0].d,lastDay]);
+  const act=items.filter(x=>x.n), mean=f=>{ const v=act.map(f).filter(x=>!nil(x)); return v.length?v.reduce((a,b)=>a+b,0)/v.length:null; };
+  const avg={n:act.length,days:mean(x=>x.n),total:mean(x=>x.total),comp:mean(x=>x.comp),roi:mean(x=>x.roi),
+    avgR:mean(x=>x.avgR),avgRoi:mean(x=>x.avgRoi),greenPct:mean(x=>x.greenPct),hit:mean(x=>x.hit),trades:mean(x=>x.trades)};
+  return sc._per[u]={keys,items,by,whole,avg,lastDay,C};
+}
+
+function drawPeriods(sc){
+  const sec=$('periods');
+  if(!sc){ sec.hidden=true; return; }
+  const u=PER.unit, I=perIndex(sc,u);
+  if(!I.items.some(x=>x.n)){ sec.hidden=true; return; }
+  sec.hidden=false;
+  $('per-h').textContent=sc.kind==='account'?'Week and month':'Week and month: '+botName(sc);
+  if(PER.sid!==sc.id){ PER.sid=sc.id; PER.all=false; }
+  const latest=I.items.filter(x=>x.n).pop().k;
+  if(!PER.key || !I.by.has(PER.key)) PER.key=latest;
+  const P=I.by.get(PER.key), M=P.M||I.whole.M;
+  const hasRoi=I.items.some(x=>x.roiOK);
+  if(PER.met==='roi'&&!hasRoi) PER.met='r';
+  document.querySelectorAll('[data-perunit]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.perunit===u));
+  document.querySelectorAll('[data-permet]').forEach(b=>{ b.setAttribute('aria-pressed',b.dataset.permet===PER.met); if(b.dataset.permet==='roi'){ b.disabled=!hasRoi; b.title=hasRoi?'':'ROI needs the amounts in account currency'; } });
+  $('per-pick').innerHTML=I.keys.slice().reverse().map(k=>{ const x=I.by.get(k); return '<option value="'+k+'"'+(k===PER.key?' selected':'')+'>'+esc(perShort(k,u))+(x.n?' · '+x.n+'d':'')+'</option>'; }).join('');
+  $('per-prev').disabled=PER.key<=I.keys[0]; $('per-next').disabled=PER.key>=I.keys[I.keys.length-1]; $('per-last').disabled=PER.key===latest;
+  // a period that mixes in an earlier stretch of the record
+  const st=recStart();
+  $('per-arch').hidden=!P.arch;
+  if(P.arch) $('per-arch').innerHTML='Part of this '+unitW(u)+' comes from an earlier stretch of the record, before the restart of <b>'+(st?fmtDate(st):'the record')+'</b>. Those days count here with their result and ROI, as in the calendar, but not in the statistics further up.';
+  perTiles(P);
+  perChart(P);
+  perCompare(I,P);
+  perTable(I,P);
+}
+
+function perTiles(P){
+  const u=P.u, f=P.fmt, sp=(x,t)=>'<span class="'+cls(x)+'">'+t+'</span>', so=P.partial?' so far':'';
+  const items=!P.n ? [
+    ['Result','—','no trading this '+unitW(u)],['ROI','—',''],['Average return a day','—',''],['Average ROI a day','—',''],
+    ['Trading days','0',P.cd+(P.cd===1?' day':' days')+(P.partial?' so far':'')],['Trades','0',''],['Best day','—',''],['Worst day','—','']
+  ] : [
+    ['Result',sp(P.total,f(P.total)),(P.M?'time-weighted '+pct(P.comp):'compounded')+so],
+    ['ROI',P.roiOK?sp(P.roi,roiTxt(P.roi)):'—',P.roiOK?'daily ROI added up'+so:'needs the amounts in account currency'],
+    ['Average return a day',sp(P.avgR,pctD(P.avgR)),'mean of '+int(P.n)+(P.n===1?' trading day':' trading days')+' · compounded '+pctD(P.geoR)+' a day'],
+    ['Average ROI a day',P.roiOK?sp(P.avgRoi,pctD(P.avgRoi)):'—',P.roiOK?'per trading day · '+pctD(P.roiCal)+' per calendar day':''],
+    ['Trading days',int(P.n),int(P.green.length)+' green, '+int(P.red.length)+' red'+(P.flat?', '+int(P.flat)+' flat':'')+' · of '+int(P.cd)+' days'+so],
+    ['Trades',int(P.trades),P.trades?'hits '+upct(P.hit,1)+(P.M&&!nil(P.avgP)?' · '+money(P.avgP,true)+' a day':''):'costs or adjustments only'],
+    ['Best day',P.best?sp(P.v(P.best),f(P.v(P.best))):'—',P.best?fmtDate(P.best.d)+(nil(P.best.roi)?'':' · ROI '+roiTxt(P.best.roi)):''],
+    ['Worst day',P.worst?sp(P.v(P.worst),f(P.v(P.worst))):'—',P.worst?fmtDate(P.worst.d)+(nil(P.worst.roi)?'':' · ROI '+roiTxt(P.worst.roi)):'']
+  ];
+  $('per-tiles').innerHTML=items.map(t=>'<div><dt>'+t[0]+'</dt><dd>'+t[1]+'<small>'+(t[2]||'&nbsp;')+'</small></dd></div>').join('');
+}
+
+function perChart(P){
+  const box=$('per-chart'), u=P.u, roi=PER.met==='roi';
+  $('per-chart-h').textContent='Day by day · '+perShort(P.k,u);
+  const C=perIndex(CUR_SCOPE,u).C, lastDay=perIndex(CUR_SCOPE,u).lastDay;
+  const slots=[]; for(let d=P.s; d<=P.e; d=dKey(dMs(d)+864e5)) slots.push(d);
+  const val=o=>roi?o.roi:o.r, avg=roi?P.avgRoi:P.avgR;
+  const act=slots.map(d=>C.by.get(d)).filter(o=>o&&o.active&&!nil(val(o)));
+  if(!act.length){ box.innerHTML='<div class="plot-empty" style="min-height:220px"><span>No trading this '+unitW(u)+'.</span></div>'; $('per-key').innerHTML=''; return; }
+  const W=Math.max(280,box.clientWidth), H=240, PL=10, PR=60, PT=22, PB=26, bw=(W-PL-PR)/slots.length;
+  const vs=act.map(val).concat([0,nil(avg)?0:avg]); let lo=Math.min(...vs), hi=Math.max(...vs); const pad=(hi-lo)*.12||.2; lo-=pad; hi+=pad;
+  const Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB), X=i=>PL+i*bw;
+  let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+6,Y(v)+4,pct(v,Math.abs(hi-lo)<2?2:1),'start',' font-size="11"')).join('');
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.35)"/>';
+  const every=u==='week'?1:(W<480?7:(W<760?3:2));
+  slots.forEach((d,i)=>{
+    const o=C.by.get(d), wd=(new Date(dMs(d)).getUTCDay()+6)%7, fut=d>lastDay;
+    if(wd>=5 && !(o&&o.active)) g+='<rect x="'+X(i).toFixed(1)+'" y="'+PT+'" width="'+bw.toFixed(1)+'" height="'+(H-PT-PB)+'" fill="rgba(15,44,66,.03)"/>';
+    if(fut) g+='<rect x="'+(X(i)+1).toFixed(1)+'" y="'+(Y(0)-1).toFixed(1)+'" width="'+Math.max(1,bw-2).toFixed(1)+'" height="2" fill="rgba(15,44,66,.12)"/>';
+    if(o&&o.active&&!nil(val(o))){
+      const v=val(o), y0=Y(0), y1=Y(v), w=Math.max(2,bw*.7);
+      g+='<rect data-d="'+d+'" x="'+(X(i)+(bw-w)/2).toFixed(1)+'" y="'+Math.min(y0,y1).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(1,Math.abs(y1-y0)).toFixed(1)+'" fill="'+(v>=0?'#1E6B57':'#BE3A2B')+'" opacity="'+(o.arch?.55:.88)+'"><title>'+esc(calTip(o,P.M))+' · select to open in the calendar</title></rect>';
+    }
+    if(i%every===0) g+=T(X(i)+bw/2,H-8,u==='week'?DOW[wd]:String(+d.slice(8)),'middle',' font-size="10.5"');
+  });
+  if(!nil(avg)){
+    const ya=Y(avg).toFixed(1);
+    g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+ya+'" y2="'+ya+'" stroke="#E0A92C" stroke-width="2" stroke-dasharray="6 4"/>';
+    g+=T(W-PR-4,+ya-6,'average '+pctD(avg),'end',' font-size="11" font-weight="700" fill="#0F2C42" stroke="#F7F9F8" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round"');
+  }
+  box.innerHTML='<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(roi?'Daily ROI':'Daily return')+' in '+esc(perName(P.k,u))+'">'+g+'</svg>';
+  box.querySelector('svg').addEventListener('click',e=>{ const d=e.target&&e.target.getAttribute&&e.target.getAttribute('data-d'); if(d) calOpen(d); });
+  $('per-key').innerHTML='<span><i style="background:#1E6B57;border-radius:0"></i>Green day</span><span><i style="background:#BE3A2B;border-radius:0"></i>Red day</span>'+
+    '<span><i style="width:16px;height:0;border-radius:0;border-top:2px dashed #E0A92C;vertical-align:3px"></i>Average per trading day</span>'+
+    (P.arch?'<span><i style="background:#1E6B57;opacity:.55;border-radius:0"></i>Paler: earlier stretch of the record</span>':'')+
+    '<span>'+(roi?'ROI: the day’s result ÷ money put in up to that day.':'Return: % of the day’s opening balance.')+' Select a bar to open the day.</span>';
+}
+
+function perCompare(I,P){
+  const u=P.u, W=unitW(u), prevK=perStep(P.k,u,-1), prev=I.by.get(prevK);
+  const row=(lab,x,cl)=>'<tr'+(cl?' class="'+cl+'"':'')+'><td>'+lab+'</td>'+
+    '<td class="'+cls(x.avgR)+'">'+pctD(x.avgR)+'</td>'+
+    '<td class="'+cls(x.avgRoi)+'">'+(nil(x.avgRoi)?'—':pctD(x.avgRoi))+'</td>'+
+    '<td>'+(nil(x.greenPct)?'—':upct(x.greenPct,0))+'</td>'+
+    '<td>'+(nil(x.hit)?'—':upct(x.hit,0))+'</td></tr>';
+  const rows=[row(perShort(P.k,u)+(P.partial?' <span class="tag">so far</span>':''),P,'now')];
+  if(prev) rows.push(row('Previous '+W+mu(perShort(prevK,u)),prev));
+  if(I.avg.n>1) rows.push(row('Average '+W+mu(int(I.avg.n)+' '+W+(I.avg.n===1?'':'s')),I.avg));
+  rows.push(row('Every day in the calendar'+mu(int(I.whole.n)+(I.whole.n===1?' trading day':' trading days')),I.whole));
+  $('per-cmp').innerHTML='<thead><tr><th></th><th>Return / day</th><th>ROI / day</th><th>Green days</th><th>Hits</th></tr></thead><tbody>'+rows.join('')+'</tbody>';
+  let note='';
+  if(P.n && prev && prev.n && !nil(P.avgR) && !nil(prev.avgR)){
+    const dlt=P.avgR-prev.avgR;
+    note='An average trading day '+(P.partial?'so far this ':'in this ')+W+' returned '+pctD(P.avgR)+', '+(Math.abs(dlt)<0.005?'about the same as':(dlt>0?pct(dlt,2).replace('+','')+' more than':pct(-dlt,2).replace('+','')+' less than'))+' the '+W+' before. ';
+  }
+  $('per-cmp-cap').textContent=note+'Every figure is an average per trading day. The average '+W+' takes each '+W+' with trading once, whatever its length. '+
+    (P.n<5?'A '+W+' with only '+P.n+(P.n===1?' trading day':' trading days')+' says very little. ':'')+'Past averages do not say what the next '+W+' will bring.';
+}
+
+function perTable(I,P){
+  const u=P.u, W=unitW(u), M=I.whole.M;
+  let rows=I.items.filter(x=>x.n).slice().reverse();
+  const cap=u==='week'&&!PER.all&&rows.length>26, total=rows.length;
+  if(cap) rows=rows.slice(0,26);
+  if(cap && !rows.some(x=>x.k===P.k) && P.n) rows.push(P);
+  $('per-tab-h').textContent=u==='month'?'Every month':'Every week';
+  const head='<thead><tr><th class="nos">'+(u==='month'?'Month':'Week')+'</th><th class="nos">Days</th>'+(M?'<th class="nos">Result</th>':'')+'<th class="nos">Return</th><th class="nos">ROI</th><th class="nos">Return / day</th><th class="nos">ROI / day</th><th class="nos">Green days</th><th class="nos">Trades</th><th class="nos">Hits</th></tr></thead>';
+  const cell=(x,t)=>'<td class="'+cls(x)+'">'+t+'</td>';
+  const body=rows.map(x=>'<tr data-k="'+x.k+'" tabindex="0"'+(x.k===P.k?' class="pick"':'')+'>'+
+    '<td><span class="sb">'+esc(perShort(x.k,u))+'</span>'+(x.partial?'<span class="part">so far</span>':'')+(x.arch?'<span class="part">incl. earlier stretch</span>':'')+'</td>'+
+    '<td>'+int(x.n)+'</td>'+(M?cell(x.total,x.fmt(x.total)):'')+cell(x.comp,pct(x.comp,2))+cell(x.roi,x.roiOK?roiTxt(x.roi):'—')+
+    cell(x.avgR,pctD(x.avgR))+cell(x.avgRoi,x.roiOK?pctD(x.avgRoi):'—')+
+    '<td>'+(nil(x.greenPct)?'—':upct(x.greenPct,0))+'</td><td>'+int(x.trades)+'</td><td>'+(nil(x.hit)?'—':upct(x.hit,0))+'</td></tr>').join('');
+  const A=I.avg, H=I.whole;
+  const foot='<tfoot><tr><td>Average '+W+mu(int(A.n)+' '+W+(A.n===1?'':'s'))+'</td><td>'+(nil(A.days)?'—':num(A.days,1))+'</td>'+
+    (M?cell(A.total,nil(A.total)?'—':money(A.total,true)):'')+cell(A.comp,pct(A.comp,2))+cell(A.roi,nil(A.roi)?'—':roiTxt(A.roi))+
+    cell(A.avgR,pctD(A.avgR))+cell(A.avgRoi,nil(A.avgRoi)?'—':pctD(A.avgRoi))+
+    '<td>'+(nil(A.greenPct)?'—':upct(A.greenPct,0))+'</td><td>'+(nil(A.trades)?'—':num(A.trades,1))+'</td><td>'+(nil(A.hit)?'—':upct(A.hit,0))+'</td></tr>'+
+    '<tr><td>Every day'+mu(int(H.n)+(H.n===1?' trading day':' trading days'))+'</td><td>'+int(H.n)+'</td>'+(M?cell(H.total,H.fmt(H.total)):'')+cell(H.comp,pct(H.comp,2))+cell(H.roi,H.roiOK?roiTxt(H.roi):'—')+
+    cell(H.avgR,pctD(H.avgR))+cell(H.avgRoi,H.roiOK?pctD(H.avgRoi):'—')+
+    '<td>'+(nil(H.greenPct)?'—':upct(H.greenPct,0))+'</td><td>'+int(H.trades)+'</td><td>'+(nil(H.hit)?'—':upct(H.hit,0))+'</td></tr></tfoot>';
+  $('per-tab').innerHTML=head+'<tbody>'+body+'</tbody>'+foot;
+  $('per-tab').querySelectorAll('tbody tr').forEach(tr=>{
+    const go=()=>{ PER.key=tr.dataset.k; drawPeriods(CUR_SCOPE); $('periods').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); };
+    tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  });
+  const more=$('per-more'); more.hidden=!(u==='week'&&total>26); more.textContent=PER.all?'Show the last 26 weeks':'Show all '+int(total)+' weeks';
+  $('per-tab-cap').textContent='The average '+W+' is the plain average of the rows, each '+W+' counted once. "Every day" divides the whole calendar by its trading days. '+
+    (rows.some(x=>x.arch)?'Rows marked "incl. earlier stretch" take in days from before a restart of the record. ':'')+
+    'Return compounds within a '+W+'; ROI adds up and does not compound.';
+}
+
+document.querySelectorAll('[data-perunit]').forEach(b=>b.addEventListener('click',()=>{ if(PER.unit===b.dataset.perunit) return;
+  const old=PER.unit, k=PER.key; PER.unit=b.dataset.perunit; PER.all=false;
+  // keep looking at the same stretch of time: the month's last week, or the week's month
+  if(k){ const lastD=CUR_SCOPE?perIndex(CUR_SCOPE,old).lastDay:null, e=perEnd(k,old), ref=lastD&&e>lastD?lastD:e; PER.key=perKey(old==='month'?ref:k,PER.unit); }
+  if(CUR_SCOPE) drawPeriods(CUR_SCOPE); }));
+document.querySelectorAll('[data-permet]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; PER.met=b.dataset.permet; if(CUR_SCOPE) drawPeriods(CUR_SCOPE); }));
+function perGo(n){ if(!CUR_SCOPE) return; const I=perIndex(CUR_SCOPE,PER.unit), i=I.keys.indexOf(PER.key)+n; if(i<0||i>=I.keys.length) return; PER.key=I.keys[i]; drawPeriods(CUR_SCOPE); }
+$('per-prev').addEventListener('click',()=>perGo(-1));
+$('per-next').addEventListener('click',()=>perGo(1));
+$('per-last').addEventListener('click',()=>{ if(!CUR_SCOPE) return; const I=perIndex(CUR_SCOPE,PER.unit), x=I.items.filter(y=>y.n).pop(); if(x){ PER.key=x.k; drawPeriods(CUR_SCOPE); } });
+$('per-pick').addEventListener('change',e=>{ PER.key=e.target.value; if(CUR_SCOPE) drawPeriods(CUR_SCOPE); });
+$('per-more').addEventListener('click',()=>{ PER.all=!PER.all; if(CUR_SCOPE) drawPeriods(CUR_SCOPE); });
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -3158,9 +3418,9 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
-  hreq.then(h=>{ if(!h) return; try{ loadHistory(h); if(CUR_SCOPE){ drawCalendar(CUR_SCOPE); drawToday(CUR_SCOPE); } }catch(e){ console.error('history.json',e); } });
+  hreq.then(h=>{ if(!h) return; try{ loadHistory(h); if(CUR_SCOPE){ drawCalendar(CUR_SCOPE); drawToday(CUR_SCOPE); drawPeriods(CUR_SCOPE); } }catch(e){ console.error('history.json',e); } });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); drawCalendar(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); drawCalendar(CUR_SCOPE); drawPeriods(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
