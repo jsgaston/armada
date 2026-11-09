@@ -625,6 +625,20 @@ table.cmp.per td .part{font:500 11px Archivo;color:var(--muted);margin-left:6px}
 #per-cmp tr.now td{font-weight:800}
 .per-more{margin-top:14px}
 @media (max-width:720px){ #per-cmp{font-size:13px} }
+
+/* ---- v13: hour by hour ---- */
+#hourly{border-top:1px solid var(--rule)}
+#hr-h{overflow-wrap:anywhere}
+#hr-chart{background:linear-gradient(180deg,#fbfcfb,#f3f7f5);border-color:rgba(15,44,66,.18)}
+#hr-chart svg rect[data-k]{cursor:default}
+#hr-chart svg text{pointer-events:none}
+.hr-new{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.hr-new svg{width:27px;height:18px;display:block;box-shadow:0 1px 0 rgba(15,44,66,.25)}
+.hr-new .st-btn{margin:0}
+table.cmp.hr{min-width:760px}
+table.cmp.hr tbody tr{cursor:default}
+table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weight:800}
+@media (max-width:720px){ #hr-tab{font-size:13px} }
 </style>
 </head>
 <body>
@@ -635,6 +649,7 @@ table.cmp.per td .part{font:500 11px Archivo;color:var(--muted);margin-left:6px}
     <a class="brand" href="https://wisfli.com/"><svg viewBox="0 0 60 40" aria-hidden="true"><path d="M0 0h60v40H0z" fill="#14528C"/><path d="M8 8h44v24H8z" fill="#fff"/><path d="M18 14h24v12H18z" fill="#C8322A"/></svg>WISFLI <span class="prod">/ Armada</span></a>
     <nav aria-label="Page">
       <a href="#today">Today</a>
+      <a href="#hourly">Hourly</a>
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
@@ -713,6 +728,50 @@ table.cmp.per td .part{font:500 11px Archivo;color:var(--muted);margin-left:6px}
         <p class="chart-cap" id="today-note"></p>
         <button type="button" class="st-btn" id="today-cal" hidden>Open this day in the calendar</button>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="hourly" hidden>
+  <div class="wrap">
+    <div class="day-head">
+      <div>
+        <h2 id="hr-h">Hour by hour</h2>
+        <p class="sub">Closed trades grouped by the hour, the day, the week and the month: what each one added, its ROI and how many of its trades won. It is the quickest way to follow a bot that has only just joined the fleet. Days, weeks and months follow the UTC clock, like the calendar.</p>
+      </div>
+      <p class="day-stamp" id="hr-stamp"></p>
+    </div>
+    <div class="note cal-arch hr-new" id="hr-new" hidden></div>
+    <dl class="st-tiles" id="hr-tiles"></dl>
+    <div class="cal-bar" style="margin-top:30px">
+      <div class="seg" role="group" aria-label="Group by">
+        <button type="button" data-hrunit="hour" aria-pressed="true">Hourly</button>
+        <button type="button" data-hrunit="day" aria-pressed="false">Daily</button>
+        <button type="button" data-hrunit="week" aria-pressed="false">Weekly</button>
+        <button type="button" data-hrunit="month" aria-pressed="false">Monthly</button>
+      </div>
+      <div class="seg" role="group" aria-label="Hours shown" id="hr-spanseg">
+        <button type="button" data-hrspan="12" aria-pressed="false">12 h</button>
+        <button type="button" data-hrspan="24" aria-pressed="true">24 h</button>
+        <button type="button" data-hrspan="48" aria-pressed="false">48 h</button>
+        <button type="button" data-hrspan="168" aria-pressed="false">7 days</button>
+      </div>
+      <div class="seg" role="group" aria-label="Chart shows">
+        <button type="button" data-hrmet="res" aria-pressed="true">Result</button>
+        <button type="button" data-hrmet="roi" aria-pressed="false">ROI</button>
+      </div>
+      <div class="seg" role="group" aria-label="Clock" id="hr-clockseg">
+        <button type="button" data-hrclock="utc" aria-pressed="true">UTC</button>
+        <button type="button" data-hrclock="local" aria-pressed="false">Your time</button>
+      </div>
+    </div>
+    <div class="plot" id="hr-chart"></div>
+    <p class="st-keys" id="hr-key"></p>
+    <div class="st-block" style="margin-top:44px">
+      <h3 class="col" id="hr-tab-h">Every hour with trades</h3>
+      <div class="scroll"><table class="cmp per hr" id="hr-tab"></table></div>
+      <button type="button" class="st-btn" id="hr-more" hidden></button>
+      <p class="chart-cap" id="hr-cap"></p>
     </div>
   </div>
 </section>
@@ -1156,6 +1215,7 @@ table.cmp.per td .part{font:500 11px Archivo;color:var(--muted);margin-left:6px}
         <h4>Armada</h4>
         <ul>
           <li><a href="#today">Today's session</a></li>
+          <li><a href="#hourly">Hour by hour</a></li>
           <li><a href="#compare">Compare the bots</a></li>
           <li><a href="#stats">Statistics</a></li>
           <li><a href="#calendar">Calendar</a></li>
@@ -1353,7 +1413,7 @@ function renderScope(){
   const sc=CUR_SCOPE;
   drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc); drawCalendar(sc);
   setSeries(defaultSeries(sc));
-  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc); drawPeriods(sc);
+  drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc); drawPeriods(sc); drawHourly(sc);
   ST.more=false; drawStudy(sc);
   $('lab-title').textContent = sc.kind==='account' ? 'Stress-testing the record' : 'Stress-testing '+sc.name;
   document.querySelectorAll('#corr tbody tr').forEach(tr=>tr.classList.toggle('hl',tr.dataset.id===sc.id));
@@ -3386,6 +3446,217 @@ $('per-last').addEventListener('click',()=>{ if(!CUR_SCOPE) return; const I=perI
 $('per-pick').addEventListener('change',e=>{ PER.key=e.target.value; if(CUR_SCOPE) drawPeriods(CUR_SCOPE); });
 $('per-more').addEventListener('click',()=>{ PER.all=!PER.all; if(CUR_SCOPE) drawPeriods(CUR_SCOPE); });
 
+/* ---------- v13: hour by hour ----------
+   For the selected scope, closed trades grouped by the hour, the day, the week
+   and the month. Hours come straight from the trade list (tl: close time,
+   result, money); a trade counts in the hour it closed. Days, weeks and months
+   use the same day rows as the calendar (calDays), so they also hold costs not
+   tied to a trade and the earlier stretches of the record, never demo next to
+   live. ROI = result ÷ money put in up to that day, added up, as everywhere else.
+   Open positions are not counted until they close. */
+const HR={unit:'hour', span:24, met:'res', clock:'utc', all:false};
+const HRH=36e5;
+const hrAsOf=()=>DATA&&DATA.updated_utc?Date.parse(DATA.updated_utc):Date.now();
+const hrLoc=()=>HR.clock==='local';
+const hrHour=ms=>{ const d=new Date(ms); return hrLoc()?d.getHours():d.getUTCHours(); };
+const hrClock=()=>hrLoc()?TZ:'UTC';
+function hrDate(ms){ const d=new Date(ms), L=hrLoc(); return (L?d.getDate():d.getUTCDate())+' '+MONTHS[L?d.getMonth():d.getUTCMonth()]; }
+const hrFmt=(x,M)=>nil(x)?'—':(M?money(x,true):pct(x,2));
+const hrUnitW={hour:'hour',day:'day',week:'week',month:'month'};
+
+/* totals for a list of closed trades */
+function hrAgg(ts){
+  const a=agg(ts), cap=capFn(), M=!!ACC.publish_money && (!ts.length || !nil(a.net));
+  let roi=null;
+  if(cap){ if(!ts.length) roi=0; else if(ts.every(t=>!nil(t.p))){ roi=0; ts.forEach(t=>{ const c=cap(dKey(t.x)); if(c>0) roi+=t.p/c*100; }); } }
+  return {n:a.n, w:a.w, hit:a.hit, v:M?(a.net||0):a.r, roi, M, a, days:null};
+}
+/* totals for a list of calendar days (costs and adjustments included) */
+function hrFromDays(list){
+  const S=calSummary(list), M=!!ACC.publish_money && (S.M || !S.act.length);
+  return {n:S.trades, w:S.wins, hit:S.hit, v:S.act.length?S.total:0, roi:S.roiOK?S.roi:(S.act.length||!capFn()?null:0), M, days:S.act.length, S};
+}
+function hrFirst(sc){ const t=(sc.tl&&sc.tl.t)||[]; return t.length?Math.min(...t)*1000:null; }
+
+function hrBuckets(sc){
+  const out=[], u=HR.unit;
+  if(u==='hour'){
+    const asof=hrAsOf(), end=Math.floor(asof/HRH)*HRH, start=end-(HR.span-1)*HRH, by=new Map();
+    stAll(sc).forEach(t=>{ if(t.x<start||t.x>=end+HRH) return; const k=Math.floor(t.x/HRH)*HRH; if(!by.has(k)) by.set(k,[]); by.get(k).push(t); });
+    for(let k=start;k<=end;k+=HRH){ const b=hrAgg(by.get(k)||[]); b.k=k; b.cur=k===end; out.push(b); }
+    return out;
+  }
+  const C=calDays(sc), last=sessionDay();
+  const kf=u==='day'?(d=>d):u==='week'?wkKey:(d=>d.slice(0,7));
+  const groups=new Map();
+  C.days.forEach(o=>{ if(o.d>last) return; const k=kf(o.d); if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(o); });
+  const keys=[];
+  if(u==='day') for(let i=29;i>=0;i--) keys.push(dKey(dMs(last)-i*864e5));
+  else if(u==='week'){ const w=wkKey(last); for(let i=25;i>=0;i--) keys.push(dKey(dMs(w)-i*7*864e5)); }
+  else { const lm=last.slice(0,7), fm0=C.act.length?C.act[0].d.slice(0,7):lm, fm=fm0>ymAdd(lm,-2)?ymAdd(lm,-2):fm0; for(let m=fm<ymAdd(lm,-23)?ymAdd(lm,-23):fm; m<=lm; m=ymAdd(m,1)) keys.push(m); }
+  keys.forEach(k=>{ const b=hrFromDays(groups.get(k)||[]); b.k=k; b.cur=k===kf(last); out.push(b); });
+  // a young bot: start where it starts, but keep a few periods for scale
+  const keep={day:7,week:4,month:3}[u]||1;
+  let i=0; while(i<out.length-keep && !out[i].n && !out[i].days) i++;
+  return out.slice(i);
+}
+const hrActive=b=>b.n>0||!!b.days;
+function hrLab(b){
+  const u=HR.unit, k=b.k;
+  if(u==='hour') return pad2(hrHour(k));
+  if(u==='day') return String(+k.slice(8));
+  if(u==='week') return dShort(k);
+  return MONTHS[+k.slice(5)-1]+(k.slice(5)==='01'?' '+k.slice(2,4):'');
+}
+function hrName(b){
+  const u=HR.unit, k=b.k;
+  if(u==='hour') return hrDate(k)+', '+pad2(hrHour(k))+':00–'+pad2(hrHour(k+HRH))+':00 '+hrClock();
+  if(u==='day') return dLong(k);
+  if(u==='week') return 'Week of '+fmtDate(k);
+  return ymLabel(k);
+}
+function hrTip(b){
+  return hrName(b)+(b.cur?' (so far)':'')+': '+(hrActive(b)?hrFmt(b.v,b.M)+(nil(b.roi)?'':', ROI '+roiTxt(b.roi))+', '+b.n+(b.n===1?' trade':' trades')+(b.n?', '+Math.round(b.hit)+'% won':''):'no trades closed');
+}
+
+function drawHourly(sc){
+  const sec=$('hourly');
+  if(!DATA||!sc||sc.empty||!(sc.tl&&sc.tl.t&&sc.tl.t.length)){ sec.hidden=true; return; }
+  sec.hidden=false;
+  const isAcc=sc.kind==='account', asof=hrAsOf();
+  $('hr-h').textContent=isAcc?'Hour by hour':'Hour by hour: '+botName(sc);
+  const stale=Date.now()-asof>2*HRH;
+  $('hr-stamp').className='day-stamp'+(stale?' stale':'');
+  $('hr-stamp').innerHTML='<i></i>As of '+hm(asof)+' UTC <small>'+esc(ago(new Date(asof).toISOString()))+'</small>';
+  const hasRoi=!!capFn();
+  if(HR.met==='roi'&&!hasRoi) HR.met='res';
+  document.querySelectorAll('[data-hrunit]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.hrunit===HR.unit));
+  document.querySelectorAll('[data-hrspan]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.hrspan===HR.span));
+  document.querySelectorAll('[data-hrclock]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.hrclock===HR.clock));
+  document.querySelectorAll('[data-hrmet]').forEach(b=>{ b.setAttribute('aria-pressed',b.dataset.hrmet===HR.met); if(b.dataset.hrmet==='roi'){ b.disabled=!hasRoi; b.title=hasRoi?'Result ÷ money put in up to that day':'ROI needs the amounts in account currency'; } });
+  $('hr-spanseg').hidden=HR.unit!=='hour';
+  $('hr-clockseg').hidden=HR.unit!=='hour';
+  hrNewest(sc, asof);
+  hrTiles(sc, asof);
+  const B=hrBuckets(sc);
+  let c=0; B.forEach(b=>{ c+=b.v||0; b.cum=c; });
+  hrChart(B);
+  hrTable(B);
+}
+
+/* the bot that joined most recently, so it is one click away */
+function hrNewest(sc, asof){
+  const el=$('hr-new'); let best=null;
+  SCOPES.filter(x=>isBot(x)&&!x.empty&&!(x.magics&&x.magics[0]===0)).forEach(x=>{ const f=hrFirst(x); if(f!=null&&(!best||f>best.f)) best={x,f}; });
+  if(!best || asof-best.f>14*864e5){ el.hidden=true; return; }
+  const x=best.x, n=(x.tl.t||[]).length, when=hm(best.f)+' UTC on '+fmtDate(dKey(best.f))+' ('+ago(new Date(best.f).toISOString())+')';
+  if(sc.id===x.id){
+    el.innerHTML=(x.flag?flagSVG(x.flag):'')+'<span><b>'+esc(botName(x))+'</b> is the newest bot in the fleet. Its first trade closed at '+esc(when)+', and it has closed '+int(n)+(n===1?' trade':' trades')+' since. A record this short says very little yet.</span>';
+  } else {
+    el.innerHTML=(x.flag?flagSVG(x.flag):'')+'<span>Newest bot: <b>'+esc(botName(x))+'</b>, first trade closed at '+esc(when)+', '+int(n)+(n===1?' trade':' trades')+' so far.</span><button type="button" class="st-btn" id="hr-go">Show its hours</button>';
+    $('hr-go').addEventListener('click',()=>{ selectScope(x.id,true); $('hourly').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); });
+  }
+  el.hidden=false;
+}
+
+function hrTiles(sc, asof){
+  const ts=stAll(sc), C=calDays(sc), day=sessionDay();
+  const lastH=hrAgg(ts.filter(t=>t.x>asof-HRH&&t.x<=asof));
+  const last24=hrAgg(ts.filter(t=>t.x>asof-24*HRH&&t.x<=asof));
+  const upTo=C.days.filter(o=>o.d<=day);
+  const today=hrFromDays(upTo.filter(o=>o.d===day));
+  const week=hrFromDays(upTo.filter(o=>wkKey(o.d)===wkKey(day)));
+  const month=hrFromDays(upTo.filter(o=>o.d.slice(0,7)===day.slice(0,7)));
+  const since=hrFromDays(C.days.filter(o=>!o.arch));
+  // best and worst single hour on record
+  const byH=new Map(); ts.forEach(t=>{ const k=Math.floor(t.x/HRH)*HRH; if(!byH.has(k)) byH.set(k,[]); byH.get(k).push(t); });
+  const hrs=[...byH].map(([k,l])=>Object.assign(hrAgg(l),{k}));
+  const best=hrs.length?hrs.reduce((a,b)=>b.v>a.v?b:a):null, worst=hrs.length?hrs.reduce((a,b)=>b.v<a.v?b:a):null;
+  const f=hrFirst(sc);
+  const val=b=>hrActive(b)?'<span class="'+cls(b.v)+'">'+hrFmt(b.v,b.M)+'</span>':'—';
+  const sub=(b,extra)=>(nil(b.roi)||!hrActive(b)?'':'ROI '+roiTxt(b.roi)+' · ')+(b.n?int(b.n)+(b.n===1?' trade':' trades')+', '+upct(b.hit,0)+' won':(hrActive(b)?'costs only':'no trades closed'))+(extra||'');
+  const hTxt=b=>hrDate(b.k)+', '+pad2(hrHour(b.k))+':00 '+hrClock();
+  tiles('hr-tiles',[
+    ['Last hour',val(lastH),sub(lastH,' · to '+hm(asof)+' UTC')],
+    ['Last 24 hours',val(last24),sub(last24)],
+    ['Today',val(today),sub(today,' · '+fmtDate(day))],
+    ['This week',val(week),sub(week,' · from '+fmtDate(wkKey(day)))],
+    ['This month',val(month),sub(month,' · '+ymLabel(day.slice(0,7)))],
+    [sc.kind==='account'?'Since the record began':'Since its first trade',val(since),sub(since,f?' · first '+fmtDate(dKey(f))+', '+hm(f)+' UTC':'')],
+    ['Best hour',best?val(best):'—',best?hTxt(best)+' · '+int(best.n)+(best.n===1?' trade':' trades'):''],
+    ['Worst hour',hrs.length>1?val(worst):'—',hrs.length>1?hTxt(worst)+' · '+int(worst.n)+(worst.n===1?' trade':' trades'):'needs two hours with trades']
+  ]);
+}
+
+function hrChart(B){
+  const box=$('hr-chart'), roi=HR.met==='roi', M=!!ACC.publish_money&&!roi, u=HR.unit, W0=hrUnitW[u];
+  const val=b=>roi?b.roi:b.v;
+  if(!B.some(hrActive)){
+    box.innerHTML='<div class="plot-empty" style="min-height:220px"><b>No trades closed in this window.</b><span style="font-size:15px">'+(u==='hour'?'Try a longer window, or the daily view.':'Bars appear as trades close.')+'</span></div>';
+    $('hr-key').innerHTML=''; return;
+  }
+  const W=Math.max(300,box.clientWidth), H=W<560?230:270, PL=10, PR=W<560?62:76, PT=44, PB=28, bw=(W-PL-PR)/B.length;
+  let run=0; const cum=B.map(b=>run+=(val(b)||0));
+  const vs=B.map(b=>val(b)||0).concat(cum,[0]);
+  let lo=Math.min(...vs), hi=Math.max(...vs); const pad=(hi-lo)*.14||(M?1:.1); lo-=pad; hi+=pad;
+  const Y=v=>PT+(1-(v-lo)/(hi-lo))*(H-PT-PB), X=i=>PL+i*bw+bw/2;
+  const fmtA=v=>roi?pct(v,Math.abs(hi-lo)<2?2:1):(M?money(v,true).replace(/\.00$/,''):pct(v,Math.abs(hi-lo)<2?2:1));
+  let g=niceTicks(lo,hi,4).map(v=>'<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="rgba(15,44,66,.08)"/>'+T(W-PR+8,Y(v)+4,fmtA(v),'start',' font-size="11"')).join('');
+  // midnight lines in the hourly view
+  if(u==='hour') B.forEach((b,i)=>{ if(i&&hrHour(b.k)===0){ const x=PL+i*bw; g+='<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+PT+'" y2="'+(H-PB)+'" stroke="rgba(15,44,66,.18)" stroke-dasharray="2 3"/>'+T(x+4,PT-6,hrDate(b.k),'start',' font-size="11" font-weight="600" fill="#0F2C42"'); } });
+  g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="rgba(15,44,66,.35)"/>';
+  const every=Math.max(1,Math.ceil(B.length/(W<560?6:(u==='hour'?12:10))));
+  B.forEach((b,i)=>{
+    const v=val(b);
+    if(hrActive(b)&&!nil(v)){
+      const y0=Y(0), y1=Y(v), w=Math.min(64,Math.max(2,bw*.66));
+      g+='<rect data-k="'+b.k+'" x="'+(X(i)-w/2).toFixed(1)+'" y="'+Math.min(y0,y1).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+Math.max(1.5,Math.abs(y1-y0)).toFixed(1)+'" fill="'+(v>=0?'#1E6B57':'#BE3A2B')+'" opacity="'+(b.cur?.6:.88)+'"><title>'+esc(hrTip(b))+'</title></rect>';
+    } else {
+      g+='<rect x="'+(X(i)-Math.min(32,Math.max(1,bw*.33))).toFixed(1)+'" y="'+(Y(0)-1).toFixed(1)+'" width="'+Math.min(64,Math.max(2,bw*.66)).toFixed(1)+'" height="2" fill="rgba(15,44,66,.14)"><title>'+esc(hrTip(b))+'</title></rect>';
+    }
+    if(i%every===0||i===B.length-1&&(B.length-1)%every>every/2) g+=T(X(i),H-9,esc(hrLab(b)),'middle',' font-size="10.5"');
+  });
+  let rp='M'+PL.toFixed(1)+' '+Y(0).toFixed(1); cum.forEach((v,i)=>{ rp+='L'+(PL+(i+1)*bw).toFixed(1)+' '+Y(v).toFixed(1); });
+  g+='<path d="'+rp+'" fill="none" stroke="#E0A92C" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+  const lx=W-PR, ly=Y(cum[cum.length-1]);
+  g+='<circle cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="3.6" fill="#E0A92C" stroke="#0F2C42" stroke-width="1"><title>Running total: '+esc(fmtA(cum[cum.length-1]))+'</title></circle>';
+  box.innerHTML='<span class="plot-label">'+(roi?'ROI':'Result')+' per '+W0+(u==='hour'?', '+hrClock():', UTC')+'</span><svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+(roi?'ROI':'Result')+' per '+W0+'">'+g+'</svg>';
+  $('hr-key').innerHTML='<span><i style="background:#1E6B57;border-radius:0"></i>Green '+W0+'</span><span><i style="background:#BE3A2B;border-radius:0"></i>Red '+W0+'</span>'+
+    '<span><i style="width:16px;height:0;border-radius:0;border-top:2px solid #E0A92C;vertical-align:3px"></i>Running total across the chart</span>'+
+    '<span>The gold line adds up each '+W0+' as it goes. The last '+W0+' is still in progress and drawn paler. Hover a bar for details.</span>';
+}
+
+function hrTable(B){
+  const u=HR.unit, W0=hrUnitW[u], hasRoi=!!capFn();
+  let rows=B.filter(hrActive).reverse();
+  const total=rows.length, lim=24;
+  if(!HR.all) rows=rows.slice(0,lim);
+  $('hr-tab-h').textContent='Every '+W0+' with trading'+(u==='hour'?' in the last '+(HR.span===168?'7 days':HR.span+' hours'):'');
+  if(!rows.length){ $('hr-tab').innerHTML='<tbody><tr><td style="text-align:left">No trades closed in this window.</td></tr></tbody>'; $('hr-more').hidden=true; $('hr-cap').textContent=''; return; }
+  const cell=(x,t)=>'<td class="'+cls(x)+'">'+t+'</td>';
+  const head='<thead><tr><th class="nos">'+W0.charAt(0).toUpperCase()+W0.slice(1)+'</th>'+(u!=='hour'?'<th class="nos">Days</th>':'')+'<th class="nos">Trades</th><th class="nos">Won</th><th class="nos">Hits</th><th class="nos">Result</th>'+(hasRoi?'<th class="nos">ROI</th>':'')+'<th class="nos">Running total</th></tr></thead>';
+  const body=rows.map(b=>'<tr><td><span class="sb">'+esc(hrName(b))+'</span>'+(b.cur?'<span class="part">so far</span>':'')+'</td>'+
+    (u!=='hour'?'<td>'+int(b.days)+'</td>':'')+'<td>'+int(b.n)+'</td><td>'+int(b.w)+'</td><td>'+(b.n?upct(b.hit,0):'—')+'</td>'+
+    cell(b.v,hrFmt(b.v,b.M))+(hasRoi?cell(b.roi,roiTxt(b.roi)):'')+cell(b.cum,hrFmt(b.cum,!!ACC.publish_money))+'</tr>').join('');
+  const act=B.filter(hrActive), n=act.reduce((s,b)=>s+b.n,0), w=act.reduce((s,b)=>s+b.w,0), v=act.reduce((s,b)=>s+(b.v||0),0);
+  const roiOK=act.every(b=>!nil(b.roi)), roi=act.reduce((s,b)=>s+(b.roi||0),0), d=act.reduce((s,b)=>s+(b.days||0),0);
+  const foot='<tfoot><tr><td>Whole window'+mu(int(act.length)+' '+W0+(act.length===1?'':'s')+' with trading')+'</td>'+(u!=='hour'?'<td>'+int(d)+'</td>':'')+'<td>'+int(n)+'</td><td>'+int(w)+'</td><td>'+(n?upct(w/n*100,0):'—')+'</td>'+
+    cell(v,hrFmt(v,!!ACC.publish_money))+(hasRoi?cell(roiOK?roi:null,roiOK?roiTxt(roi):'—'):'')+'<td></td></tr></tfoot>';
+  $('hr-tab').innerHTML=head+'<tbody>'+body+'</tbody>'+foot;
+  const more=$('hr-more'); more.hidden=total<=lim; more.textContent=HR.all?'Show the latest '+lim:'Show all '+int(total)+' '+W0+'s';
+  $('hr-cap').textContent=(u==='hour'
+      ? 'A trade counts in the hour it closed, '+hrClock()+'. Hours without a closed trade are left out of the table. Positions still open are not counted until they close.'
+      : 'Days follow the UTC clock, weeks start on Monday. As in the calendar, a '+W0+' also carries swaps, commissions and broker adjustments not tied to a trade closed in it.')+
+    (hasRoi?' ROI: the result ÷ the money put in up to that day; it adds up, it does not compound.':'')+
+    ' A few hours or days of trading say very little about how a bot will do over months.';
+}
+
+document.querySelectorAll('[data-hrunit]').forEach(b=>b.addEventListener('click',()=>{ HR.unit=b.dataset.hrunit; HR.all=false; if(CUR_SCOPE) drawHourly(CUR_SCOPE); }));
+document.querySelectorAll('[data-hrspan]').forEach(b=>b.addEventListener('click',()=>{ HR.span=+b.dataset.hrspan; HR.all=false; if(CUR_SCOPE) drawHourly(CUR_SCOPE); }));
+document.querySelectorAll('[data-hrmet]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; HR.met=b.dataset.hrmet; if(CUR_SCOPE) drawHourly(CUR_SCOPE); }));
+document.querySelectorAll('[data-hrclock]').forEach(b=>b.addEventListener('click',()=>{ HR.clock=b.dataset.hrclock; if(CUR_SCOPE) drawHourly(CUR_SCOPE); }));
+$('hr-more').addEventListener('click',()=>{ HR.all=!HR.all; if(CUR_SCOPE) drawHourly(CUR_SCOPE); });
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -3418,9 +3689,9 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
-  hreq.then(h=>{ if(!h) return; try{ loadHistory(h); if(CUR_SCOPE){ drawCalendar(CUR_SCOPE); drawToday(CUR_SCOPE); drawPeriods(CUR_SCOPE); } }catch(e){ console.error('history.json',e); } });
+  hreq.then(h=>{ if(!h) return; try{ loadHistory(h); if(CUR_SCOPE){ drawCalendar(CUR_SCOPE); drawToday(CUR_SCOPE); drawPeriods(CUR_SCOPE); drawHourly(CUR_SCOPE); } }catch(e){ console.error('history.json',e); } });
 
-  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); drawCalendar(CUR_SCOPE); drawPeriods(CUR_SCOPE); },150); }).observe(document.body);
+  let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); drawCalendar(CUR_SCOPE); drawPeriods(CUR_SCOPE); drawHourly(CUR_SCOPE); },150); }).observe(document.body);
 })();
 </script>
 </body>
