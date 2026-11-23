@@ -277,7 +277,7 @@ body{font-size:17.5px;-webkit-font-smoothing:antialiased}
 .top .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff;font:700 16px Archivo;font-stretch:122%;letter-spacing:.09em;white-space:nowrap}
 .brand svg{width:27px;height:18px;display:block}
 .brand .prod{font-stretch:100%;letter-spacing:0;font-weight:500;color:var(--dmuted)}
-.top nav{display:flex;align-items:center;gap:24px;font:500 14.5px Archivo}
+.top nav{display:flex;align-items:center;gap:20px;font:500 14.5px Archivo}
 .top nav a{text-decoration:none;color:var(--dmuted);white-space:nowrap}
 .top nav a:hover{color:#fff}
 .top nav a.pill{color:#1A1206;background:var(--brass);padding:8px 18px;font-weight:700}
@@ -335,7 +335,8 @@ footer .brand{margin-bottom:16px}
 footer .legal{padding-top:28px;font-size:12.5px;color:#6F8797}
 footer .legal p{margin:0 0 10px;max-width:74em}
 
-@media (max-width:1040px){ .top nav a.opt{display:none} }
+@media (max-width:1290px){ .top nav a.opt{display:none} }
+@media (max-width:900px){ .top nav a.opt2{display:none} .top nav{gap:14px} }
 @media (max-width:720px){
   .wrap{padding:0 20px}
   .top nav a:not(.pill){display:none}
@@ -659,6 +660,7 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
       <a href="#plain" class="opt">Reading the figures</a>
+      <a href="review.html" class="opt2">Review</a>
       <a class="pill" href="https://wisfli.com/">The plan</a>
     </nav>
   </div>
@@ -1223,6 +1225,7 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
           <li><a href="#study">The study</a></li>
           <li><a href="#fleet">The fleet</a></li>
           <li><a href="#plain">Reading the figures</a></li>
+          <li><a href="review.html">Trading review</a></li>
         </ul>
       </div>
       <div>
