@@ -145,6 +145,46 @@ table.cmp tbody tr:hover td{background:rgba(247,249,248,.75)}
 .mini svg{display:block;width:100%;height:auto}
 .mini text{font-family:Archivo}
 
+/* última sesión */
+#session{background:var(--panel)}
+.sess-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 28px;margin:0 0 26px}
+.sess-top .sub{margin:0}
+.daynav{display:flex;align-items:center;gap:8px}
+.daynav button,.daynav select{font:700 14.5px Archivo,sans-serif;color:var(--sea);background:#fff;border:1px solid var(--rule-strong);padding:8px 12px;cursor:pointer}
+.daynav select{min-width:210px}
+.daynav button:disabled{opacity:.35;cursor:default}
+.verdict{font:600 17px/1.5 Archivo;margin:0 0 22px;padding:14px 18px;background:#fff;border-left:5px solid var(--muted)}
+.verdict.good{border-left-color:var(--up)} .verdict.bad{border-left-color:var(--down)} .verdict.meh{border-left-color:var(--brass)}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);border-top:2px solid var(--sea);border-bottom:1px solid var(--rule);margin:0 0 24px}
+.tile{padding:14px 16px 16px;border-right:1px solid var(--rule)}
+.tile:last-child{border-right:0}
+.tile .t{font:600 12px Archivo;color:var(--muted);margin:0 0 4px}
+.tile .v{font:800 27px Archivo;font-stretch:108%;line-height:1.1;margin:0;white-space:nowrap}
+.tile .s{font:12.5px Archivo;color:var(--muted);margin:4px 0 0}
+.sess-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;margin:0 0 30px;align-items:start}
+.sess-grid>div{min-width:0}
+.sess-grid h3{font-size:17px;font-weight:700;margin:0 0 10px}
+.chartbox{background:#fff;border:1px solid var(--rule)}
+.chartbox svg{display:block;width:100%;height:auto}
+.chartbox text{font-family:Archivo}
+.legend{font:12.5px Archivo;color:var(--muted);margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px 16px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+table.mini-t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.mini-t th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:right;padding:0 8px 8px;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+table.mini-t td{padding:8px;border-bottom:1px solid var(--rule);text-align:right;font-weight:600;white-space:nowrap}
+table.mini-t th:first-child,table.mini-t td:first-child{text-align:left;padding-left:0}
+table.mini-t td small{font-weight:500;color:var(--muted)}
+.sess-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 30px}
+.sess-cards .card{padding:16px 18px 14px}
+.sess-cards .card h3{font-size:17px}
+.sess-cards .card .why{font-size:15px}
+.sess-cards .card .act{font-size:15px}
+details.trades{border-top:1px solid var(--rule-strong);padding-top:14px}
+details.trades summary{font:700 15px Archivo;cursor:pointer;margin:0 0 12px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+@media (max-width:980px){ .tiles{grid-template-columns:repeat(3,1fr)} .tile:nth-child(3n){border-right:0} .tile:nth-child(-n+3){border-bottom:1px solid var(--rule)} .sess-grid,.sess-cards{grid-template-columns:1fr} }
+@media (max-width:720px){ .tiles{grid-template-columns:repeat(2,1fr)} .tile{border-right:1px solid var(--rule)!important;border-bottom:1px solid var(--rule)} .tile:nth-child(2n){border-right:0!important} .daynav select{min-width:0;flex:1} .daynav{width:100%} }
+
 /* method */
 .talk{display:grid;grid-template-columns:1fr 1fr;gap:44px}
 .talk h3{font-size:18px;margin:0 0 10px}
@@ -181,6 +221,7 @@ footer .legal p{margin:0 0 10px;max-width:74em}
   ol.plan .who{grid-column:2;text-align:left}
   .talk,footer .cols{grid-template-columns:1fr;gap:26px}
   .bar{position:static}.bar select{min-width:0;width:100%}.bar .sp{margin-left:0}
+  .bar .seg{flex-wrap:wrap}.bar .seg button{padding:7px 9px}
   .top nav{gap:14px}
   .top nav a:not(.pill){display:none}
   .brand .prod{display:none}
@@ -190,11 +231,12 @@ footer .legal p{margin:0 0 10px;max-width:74em}
 </style>
 </head>
 <body>
-<a class="skip" href="#plan">Ir al contenido</a>
+<a class="skip" href="#session">Ir al contenido</a>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="./"><svg viewBox="0 0 60 40" aria-hidden="true"><path d="M0 0h60v40H0z" fill="#14528C"/><path d="M8 8h44v24H8z" fill="#fff"/><path d="M18 14h24v12H18z" fill="#C8322A"/></svg>WISFLI <span class="prod">/ Armada · Revisión</span></a>
     <nav aria-label="Página">
+      <a href="#session">Última sesión</a>
       <a href="#plan">Plan</a>
       <a href="#bots">Bots</a>
       <a href="#findings">Hallazgos</a>
@@ -225,6 +267,38 @@ footer .legal p{margin:0 0 10px;max-width:74em}
     </div>
   </div>
 </div>
+
+<section id="session">
+  <div class="wrap">
+    <div class="sess-top">
+      <div>
+        <h2>La última sesión</h2>
+        <p class="sub">Un día de trading (UTC, como el calendario de Armada) comparado con tus días normales y con el historial de cada bot.</p>
+      </div>
+      <div class="daynav">
+        <button type="button" id="d-prev" aria-label="Día anterior">‹</button>
+        <select id="d-sel" aria-label="Elegir día"></select>
+        <button type="button" id="d-next" aria-label="Día siguiente">›</button>
+        <button type="button" id="d-copy" class="btn brass">Copiar</button>
+      </div>
+    </div>
+    <p class="verdict" id="s-verdict">Cargando…</p>
+    <div class="tiles" id="s-tiles"></div>
+    <div class="sess-grid">
+      <div>
+        <h3>Cómo fue el día, trade a trade</h3>
+        <div class="chartbox" id="s-chart"></div>
+        <p class="legend"><span><i style="background:#1E6B57"></i>ganador</span><span><i style="background:#BE3A2B"></i>perdedor</span><span><i style="background:#fff;border:2px solid #E0A92C;width:8px;height:8px"></i>cerrado a mano</span><span>punto: resultado de cada trade, con una raya desde su apertura</span><span>línea oscura: resultado acumulado del día</span></p>
+      </div>
+      <div>
+        <h3>Los bots ese día</h3>
+        <div class="scroll"><table class="mini-t" id="s-bots"></table></div>
+      </div>
+    </div>
+    <div class="sess-cards" id="s-cards"></div>
+    <details class="trades" id="s-trades"><summary>Todos los trades del día</summary><div class="scroll"><table class="mini-t"></table></div></details>
+  </div>
+</section>
 
 <section id="plan">
   <div class="wrap">
@@ -965,12 +1039,210 @@ function report(){
 }
 function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',2200);}
 
-function renderAll(){ runAll(); drawScore(FINDINGS); drawRail(FINDINGS); drawPlan(FINDINGS); drawBots(); drawCards();
+function renderAll(){ runAll(); drawScore(FINDINGS); drawRail(FINDINGS); drawSession(); drawPlan(FINDINGS); drawBots(); drawCards();
   if(!HAS_X){ $('data-note').hidden=false; $('data-note').innerHTML='El stats.json publicado aún no trae riesgo inicial ni MAE/MFE por trade. Ejecuta <code>review_extras.py</code> en el portátil en lugar de <code>stats_publisher.py</code> y esta página añadirá las comprobaciones de stops y salidas.'; } else $('data-note').hidden=true; }
 
 document.querySelectorAll('[data-sev]').forEach(b=>b.addEventListener('click',()=>{VIEW.sev=b.dataset.sev;document.querySelectorAll('[data-sev]').forEach(x=>x.setAttribute('aria-pressed',x===b));drawCards();}));
 document.querySelectorAll('[data-clock]').forEach(b=>b.addEventListener('click',()=>{VIEW.clock=b.dataset.clock;document.querySelectorAll('[data-clock]').forEach(x=>x.setAttribute('aria-pressed',x===b));if(DATA) renderAll();}));
 $('copy').addEventListener('click',()=>{const t=report(); (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Informe copiado')).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Informe copiado');}catch(e){toast('No se pudo copiar');}a.remove();});});
+/* ---------- la última sesión ---------- */
+let BOTTRADES=null, DAYS=[], SDAY=null, SFIND=[];
+function botTrades(){
+  if(BOTTRADES) return BOTTRADES;
+  BOTTRADES=[];
+  BOTS.forEach(b=>tradesOf(b).forEach(t=>{t.bot=b;BOTTRADES.push(t);}));
+  BOTTRADES.sort((a,b)=>a.c-b.c);
+  return BOTTRADES;
+}
+const hm=sec=>{const h=hourOf(sec),m=new Date(sec*1000).getUTCMinutes();return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');};
+function dayStats(T){
+  const R=T.map(t=>t.r),w=T.filter(t=>t.r>0);
+  return {n:T.length,net:sum(R),wins:w.length,pf:pf(T),worst:T.length?Math.min(...R):null,best:T.length?Math.max(...R):null,
+    money:T.some(t=>!nil(t.p))?sum(T.map(t=>t.p||0)):null,cost:T.some(t=>!nil(t.k))?sum(T.map(t=>t.k||0)):null};
+}
+function sessionFindings(day,T,before,allDays){
+  const L=[], A=(f)=>{f.scope='_day';f.impact=Math.max(0,f.impact||0);L.push(f);};
+  const S=dayStats(T), nets=allDays.map(d=>d.net), sortedNets=nets.slice().sort((a,b)=>a-b);
+  const rank=sortedNets.filter(v=>v<S.net).length/Math.max(1,nets.length);
+  const medN=median(allDays.map(d=>d.n))||0;
+  /* curva intradía y límite */
+  const chron=T.slice().sort((a,b)=>a.c-b.c); let cum=0,low=0,lowAt=null;
+  chron.forEach(t=>{cum+=t.r; if(cum<low){low=cum;lowAt=t.c;}});
+  if(S.net<0 && nets.length>=10 && S.net<=sortedNets[0]+1e-9) A({sev:'crit',cat:'riesgo',flag:null,scopeName:'Cuenta',
+    title:'Es el peor día del registro',ev:'Resultado <b class="neg">'+pc(S.net)+'</b> con <b>'+S.n+'</b> trades; el anterior peor día fue <b>'+pc(sortedNets[1])+'</b>.',
+    why:'Los peores días marcan el riesgo real de la cuenta mejor que cualquier media.',act:'Mira abajo qué bots y qué horas lo explican antes de la siguiente sesión.'});
+  else if(S.net<0 && nets.length>=10 && rank<=.1) A({sev:'imp',cat:'riesgo',scopeName:'Cuenta',
+    title:'Día entre el 10 % peor de tu registro',ev:'<b class="neg">'+pc(S.net)+'</b>; solo el '+up(rank*100,0)+' de tus días fue peor.',
+    why:'Un día así es normal de vez en cuando; lo que importa es si viene de la estrategia o de un error.',act:'Revisa los hallazgos de abajo: si alguno es de disciplina o de riesgo, ese es el origen.'});
+  /* lo que se abrió después de ir mal */
+  const lim=Math.max(1,Math.min(3,Math.abs(quant(nets.filter(v=>v<0),.25)||2)));
+  let cum2=0,hitAt=null; chron.forEach(t=>{cum2+=t.r; if(hitAt===null&&cum2<=-lim) hitAt=t.c;});
+  if(hitAt!==null){
+    const after=T.filter(t=>t.o>=hitAt), v=sum(after.map(t=>t.r));
+    if(after.length>=2) A({sev:v<0?'imp':'mej',cat:'disc',scopeName:'Cuenta',impact:v<0?-v:0,
+      title:'A las '+hm(hitAt)+' el día ya iba '+pc(-lim,1)+' y se siguió abriendo',
+      ev:'Después de eso se abrieron <b>'+after.length+'</b> trades más, que sumaron <b class="'+cl(v)+'">'+pc(v)+'</b>. El punto más bajo del día fue <b class="neg">'+pc(low)+'</b> a las '+hm(lowAt)+'.',
+      why:'El límite de '+up(lim,1)+' es la pérdida de un día malo típico tuyo (el 25 % peor). Pasado ese punto, lo que se abre suele ser mercado en contra de los bots.',
+      act:'Un límite diario de cuenta que cierre todo y bloquee hasta las 00:00 UTC habría parado aquí.'});
+  }
+  /* sobreoperar */
+  if(medN && S.n>=Math.max(6,2*medN)) A({sev:'mej',cat:'disc',scopeName:'Cuenta',
+    title:S.n+' trades: '+nf(S.n/medN,1)+' veces lo normal',ev:'Un día normal tuyo tiene <b>'+nf(medN,0)+'</b> trades.',
+    why:'Muchos trades suelen ser mercado lateral con señales falsas o un bot repitiendo entradas.',act:'Mira en la tabla qué bot multiplicó su actividad.'});
+  /* por bot */
+  const flagged=[];
+  const byBot=new Map(); T.forEach(t=>{if(!byBot.has(t.bot.id)) byBot.set(t.bot.id,[]); byBot.get(t.bot.id).push(t);});
+  byBot.forEach((arr,id)=>{
+    const b=arr[0].bot, hist=before.filter(t=>t.bot.id===id), who=label(b);
+    const scn={flag:b.flag,scopeName:who};
+    const hd=new Map(); hist.forEach(t=>{const k=dayKey(t.c);hd.set(k,(hd.get(k)||0)+1);});
+    const usualN=hd.size?median([...hd.values()]):null;
+    if(usualN && arr.length>=4 && arr.length>=2.5*usualN) A(Object.assign({sev:'mej',cat:'disc',
+      title:who+' operó '+nf(arr.length/usualN,1)+' veces más de lo habitual',ev:'<b>'+arr.length+'</b> trades hoy frente a <b>'+nf(usualN,0)+'</b> en un día normal suyo; resultado <b class="'+cl(sum(arr.map(t=>t.r)))+'">'+pc(sum(arr.map(t=>t.r)))+'</b>.',
+      why:'Un cambio brusco de actividad suele ser un mercado distinto al de su backtest o un fallo (reentradas en bucle, filtro desactivado).',act:'Mira en MT5 si las entradas eran las de siempre o repeticiones de la misma señal.'},scn));
+    // revancha
+    const s=arr.slice().sort((a,b2)=>a.o-b2.o), rev=[];
+    s.forEach((x,i)=>{const prev=before.concat(s.slice(0,i)).filter(y=>y.bot.id===id&&y.c<=x.o).sort((a,b2)=>a.c-b2.c).pop(); if(prev&&prev.r<0&&x.o-prev.c<=3600) rev.push(x);});
+    if(rev.length>=2 && sum(rev.map(t=>t.r))<0) A(Object.assign({sev:'imp',cat:'disc',impact:-sum(rev.map(t=>t.r)),
+      title:who+': '+rev.length+' entradas justo después de perder',ev:'Abiertas menos de 1 h después de una pérdida del mismo bot: '+rev.map(t=>hm(t.o)+' <b class="'+cl(t.r)+'">'+pc(t.r)+'</b>').join(', ')+'.',
+      why:'Reentrar enseguida suele repetir la misma señal falsa.',act:'Enfriamiento de 30–60 min tras una pérdida.'},scn));
+    // escalado de lote
+    const esc2=[]; s.forEach((x,i)=>{const prev=before.concat(s.slice(0,i)).filter(y=>y.bot.id===id&&y.c<=x.o).sort((a,b2)=>a.c-b2.c).pop(); if(prev&&prev.r<0&&prev.v&&x.v&&x.v>=1.5*prev.v) esc2.push([prev,x]);});
+    if(esc2.length) A(Object.assign({sev:'crit',cat:'riesgo',
+      title:who+' subió el lote después de perder',ev:esc2.slice(0,4).map(([p,x])=>hm(x.o)+': de '+nm(p.v)+' a <b>'+nm(x.v)+'</b> lotes → <b class="'+cl(x.r)+'">'+pc(x.r)+'</b>').join(' · ')+'.',
+      why:'Es martingala: funciona hasta la racha que vacía la cuenta.',act:'Quita la progresión o ponle un tope de 2× el lote base.'},scn));
+    // pérdidas fuera de escala
+    const ml=median(hist.filter(t=>t.r<0).map(t=>-t.r));
+    if(ml) { const big=arr.filter(t=>-t.r>3.5*ml); if(big.length) A(Object.assign({sev:'imp',cat:'riesgo',impact:sum(big.map(t=>-t.r-ml)),
+      title:who+': pérdida'+(big.length>1?'s':'')+' de '+nf(Math.max(...big.map(t=>-t.r))/ml,1)+' veces su pérdida normal',
+      ev:big.map(t=>hm(t.o)+'–'+hm(t.c)+' '+esc(t.sym||'')+' <b class="neg">'+pc(t.r)+'</b>'+(t.how==='m'?' (a mano)':t.how==='s'?' (SL)':'')).join(' · ')+'. Su pérdida mediana es <b>'+pc(-ml,3)+'</b>.',
+      why:'Con riesgo fijo por trade esto no debería pasar: SL movido o ausente, lote mayor, hueco o deslizamiento.',act:'Abre esos trades en MT5 y mira el SL de entrada y el precio de cierre.'},scn)); }
+    // sin SL
+    const nos=arr.filter(t=>t.sl===0); if(nos.length && !(b.magics&&b.magics[0]===0)) A(Object.assign({sev:'crit',cat:'riesgo',
+      title:who+': '+nos.length+' trade'+(nos.length>1?'s':'')+' sin stop loss',ev:'Resultado de esos trades <b class="'+cl(sum(nos.map(t=>t.r)))+'">'+pc(sum(nos.map(t=>t.r)))+'</b>.',
+      why:'Sin stop la pérdida no tiene límite.',act:'Envía el SL en la orden de entrada.'},scn));
+    // cierres a mano
+    const man=arr.filter(t=>t.how==='m'&&!(b.magics&&b.magics[0]===0));
+    if(man.length){
+      const hw=hist.filter(t=>t.r>0&&t.how!=='m'), mw=man.filter(t=>t.r>0), mlo=man.filter(t=>t.r<=0);
+      const avgW=mean(hw.map(t=>t.r)), cut=mw.length&&hw.length>=5&&mean(mw.map(t=>t.r))<.6*avgW;
+      A(Object.assign({sev:cut||sum(mlo.map(t=>t.r))<0?'imp':'mej',cat:'disc',
+        title:'Cerraste a mano '+man.length+' trade'+(man.length>1?'s':'')+' de '+who,
+        ev:man.map(t=>hm(t.c)+' <b class="'+cl(t.r)+'">'+pc(t.r)+'</b>').join(', ')+'.'+(cut?' Sus ganancias normales (cerrando el bot) son de <b>'+pc(avgW,3)+'</b>.':''),
+        why:cut?'Cerraste ganancias antes de que llegaran a su objetivo habitual.':'Cada cierre a mano cambia la estrategia que validaste.',
+        act:'Antes de cerrar a mano, anota por qué. Si la razón se repite, conviértela en regla del EA.'},scn));
+    }
+    // horas inusuales
+    if(hist.length>=40){
+      const hc=new Map(); hist.forEach(t=>{const h=hourOf(t.o);hc.set(h,(hc.get(h)||0)+1);});
+      const odd=arr.filter(t=>(hc.get(hourOf(t.o))||0)<hist.length*.015);
+      if(odd.length) A(Object.assign({sev:sum(odd.map(t=>t.r))<0?'mej':'info',cat:'horario',
+        title:who+' operó a horas en las que casi nunca opera',ev:odd.map(t=>hm(t.o)+' <b class="'+cl(t.r)+'">'+pc(t.r)+'</b>').join(', ')+'.',
+        why:'Puede ser una noticia, un cambio de hora del servidor o un filtro horario que no funciona.',act:'Comprueba el filtro horario del EA y la hora del servidor (Vantage cambia entre UTC+2 y UTC+3).'},scn));
+    }
+    // marcado para pausar
+    const g=FINDINGS.filter(f=>f.scope===id&&(f.sev==='crit'||(f.cat==='edge'&&f.sev==='imp')));
+    if(g.length) flagged.push({who,v:sum(arr.map(t=>t.r)),n:arr.length,why:g[0].title});
+    // bien
+    const v=sum(arr.map(t=>t.r));
+    if(v>0 && !man.length && !rev.length && !esc2.length && arr.length>=2) A(Object.assign({sev:'ok',cat:'edge',
+      title:who+' hizo un día limpio',ev:'<b class="pos">'+pc(v)+'</b> en '+arr.length+' trades, sin intervenciones ni reentradas tras pérdida.',why:'Así es como el registro mide al bot.',act:'Nada que tocar.'},scn));
+  });
+  if(flagged.length){ const v=sum(flagged.map(x=>x.v)); A({sev:v<0?'imp':'mej',cat:'cartera',scopeName:'Cuenta',impact:v<0?-v:0,
+    title:flagged.length+' bot'+(flagged.length>1?'s':'')+' con avisos graves siguieron operando',
+    ev:flagged.map(x=>'<b>'+esc(x.who)+'</b> <span class="'+cl(x.v)+'">'+pc(x.v)+'</span> en '+x.n+' trade'+(x.n>1?'s':'')+' (aviso: «'+esc(x.why)+'»)').join(' · ')+'. Juntos: <b class="'+cl(v)+'">'+pc(v)+'</b>.',
+    why:'Mientras esos avisos sigan abiertos, cada trade de esos bots añade riesgo sin ventaja demostrada.',act:'Corrígelos o páusalos; los detalles están en «Todos los hallazgos».'}); }
+  /* rachas en el día */
+  let mx=0,c=0; chron.forEach(t=>{if(t.r<=0){c++;mx=Math.max(mx,c);}else c=0;});
+  if(mx>=5) A({sev:'mej',cat:'edge',scopeName:'Cuenta',title:mx+' pérdidas seguidas en la cuenta',ev:'Contando todos los bots por orden de cierre.',why:'Si son de bots distintos, el mercado del día iba contra todos a la vez.',act:'Comprueba si los bots implicados operan lo mismo (mismo símbolo y dirección).'});
+  /* exposición apilada */
+  const ev=[]; T.forEach(x=>{ev.push([x.o,1,x]);ev.push([x.c,-1,x]);}); ev.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  const open=new Set(); let best=null;
+  ev.forEach(([t,d,x])=>{ if(d<0){open.delete(x);return;} open.add(x);
+    const same=[...open].filter(y=>y.sym===x.sym&&y.dir===x.dir), bots=new Set(same.map(y=>y.bot.id));
+    if(bots.size>=2&&same.length>=3&&(!best||same.length>best.n)) best={n:same.length,bots:bots.size,sym:x.sym,dir:x.dir,t,res:sum(same.map(y=>y.r))}; });
+  if(best) A({sev:best.res<0?'imp':'mej',cat:'cartera',scopeName:'Cuenta',impact:best.res<0?-best.res:0,
+    title:best.n+' posiciones a la vez en '+best.sym+' '+(best.dir==='l'?'largo':'corto')+' de '+best.bots+' bots',
+    ev:'A las '+hm(best.t)+'. Esas posiciones acabaron sumando <b class="'+cl(best.res)+'">'+pc(best.res)+'</b>.',
+    why:'Es una sola apuesta con el lote multiplicado.',act:'Tope de exposición por símbolo y dirección para toda la cuenta.'});
+  /* pérdidas que estuvieron en verde */
+  const gl=T.filter(t=>t.r<0&&!nil(t.fe)&&t.fe>=.5*(t.rk||Math.abs(t.r)));
+  if(gl.length>=2) A({sev:'mej',cat:'ejec',scopeName:'Cuenta',
+    title:gl.length+' pérdidas estuvieron antes en ganancia',ev:gl.slice(0,5).map(t=>esc(label(t.bot))+' '+hm(t.o)+': llegó a <b class="pos">'+pc(t.fe)+'</b> y cerró <b class="neg">'+pc(t.r)+'</b>').join(' · ')+'.',
+    why:'El precio dio la razón y el trade la devolvió.',act:'Prueba breakeven o parcial en esos bots.'});
+  /* costes */
+  if(!nil(S.cost)&&!nil(S.money)){ const gross=sum(T.map(t=>Math.max(0,(t.p||0)-(t.k||0)))); if(gross>0&&-S.cost/gross>.3) A({sev:'mej',cat:'coste',scopeName:'Cuenta',
+    title:'Los costes se llevaron el '+up(-S.cost/gross*100,0)+' de lo ganado hoy',ev:'Costes <b class="neg">'+money(S.cost)+'</b> frente a <b>'+money(gross)+'</b> brutos de las ganadoras.',why:'Muchos trades pequeños pagan mucha comisión.',act:'Revisa qué bot hizo más trades pequeños.'}); }
+  return L;
+}
+function drawSessionChart(T){
+  const W=640,H=230,pl=46,pr=12,pt=14,pb=28, chron=T.slice().sort((a,b)=>a.c-b.c);
+  const off=clockOff()*3600, d0=Math.floor((chron[0].c)/86400)*86400;
+  let x0=Math.min(...T.map(t=>t.o)),x1=Math.max(...T.map(t=>t.c)); if(x1-x0<3600){x0-=1800;x1+=1800;}
+  const pad=(x1-x0)*.03; x0-=pad; x1+=pad;
+  let cum=0; const pts=[[x0,0]]; chron.forEach(t=>{pts.push([t.c,cum]);cum+=t.r;pts.push([t.c,cum]);}); pts.push([x1,cum]);
+  const ys=pts.map(p=>p[1]).concat(T.map(t=>t.r)); let y0=Math.min(0,...ys),y1=Math.max(0,...ys); const yp=(y1-y0)*.1||.1; y0-=yp; y1+=yp;
+  const X=x=>pl+(x-x0)/(x1-x0)*(W-pl-pr), Y=y=>pt+(y1-y)/(y1-y0)*(H-pt-pb);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Resultado acumulado del día">';
+  [y1-yp,0,y0+yp].forEach(v=>{s+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="'+(v===0?'rgba(15,44,66,.45)':'rgba(15,44,66,.1)')+'"/><text x="'+(pl-6)+'" y="'+(Y(v)+3.5).toFixed(1)+'" text-anchor="end" font-size="10" fill="#5C7185">'+pc(v,2)+'</text>';});
+  const span=(x1-x0)/3600, step=span>12?3:span>6?2:1;
+  for(let h=Math.ceil((x0+off)/3600/step)*step;h*3600-off<=x1;h+=step){const x=h*3600-off;s+='<line x1="'+X(x).toFixed(1)+'" x2="'+X(x).toFixed(1)+'" y1="'+pt+'" y2="'+(H-pb)+'" stroke="rgba(15,44,66,.06)"/><text x="'+X(x).toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="10.5" fill="#5C7185">'+String(((h%24)+24)%24).padStart(2,'0')+':00</text>';}
+  const path=pts.map((p,i)=>(i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)).join('');
+  s+='<path d="'+path+'L'+X(x1).toFixed(1)+' '+Y(0).toFixed(1)+'L'+X(x0).toFixed(1)+' '+Y(0).toFixed(1)+'Z" fill="'+(cum>=0?'rgba(30,107,87,.08)':'rgba(190,58,43,.08)')+'"/>';
+  s+='<path d="'+path+'" fill="none" stroke="#0F2C42" stroke-width="2"/>';
+  const mx=Math.max(...T.map(t=>Math.abs(t.r)))||1;
+  chron.forEach(t=>{const r=3+5*Math.sqrt(Math.abs(t.r)/mx), col=t.r>0?'#1E6B57':'#BE3A2B';
+    s+='<line x1="'+X(t.o).toFixed(1)+'" x2="'+X(t.c).toFixed(1)+'" y1="'+Y(t.r).toFixed(1)+'" y2="'+Y(t.r).toFixed(1)+'" stroke="'+col+'" stroke-opacity=".35" stroke-width="2"/>';
+    s+='<circle cx="'+X(t.c).toFixed(1)+'" cy="'+Y(t.r).toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+(t.how==='m'?'#fff':col)+'" stroke="'+(t.how==='m'?'#E0A92C':'#fff')+'" stroke-width="'+(t.how==='m'?2.5:1)+'"><title>'+esc(label(t.bot)+' · '+(t.sym||'')+' '+(t.dir==='l'?'largo':'corto')+' · '+hm(t.o)+'–'+hm(t.c)+' · '+pc(t.r))+'</title></circle>';});
+  return s+'</svg>';
+}
+function drawSession(){
+  const BT=botTrades(); if(!BT.length){$('s-verdict').textContent='Aún no hay trades.';return;}
+  const byDay=new Map(); BT.forEach(t=>{const k=dayKey(t.c); if(!byDay.has(k)) byDay.set(k,[]); byDay.get(k).push(t);});
+  DAYS=[...byDay.keys()].sort(); if(!SDAY||!byDay.has(SDAY)) SDAY=DAYS[DAYS.length-1];
+  const sel=$('d-sel'); sel.innerHTML=DAYS.slice().reverse().map(d=>{const v=sum(byDay.get(d).map(t=>t.r));return '<option value="'+d+'"'+(d===SDAY?' selected':'')+'>'+DOW[new Date(d+'T00:00:00Z').getUTCDay()].slice(0,3)+' '+fiso(d)+' · '+pc(v)+'</option>';}).join('');
+  const i=DAYS.indexOf(SDAY); $('d-prev').disabled=i<=0; $('d-next').disabled=i>=DAYS.length-1;
+  const T=byDay.get(SDAY), before=BT.filter(t=>dayKey(t.c)<SDAY), S=dayStats(T);
+  const allDays=DAYS.map(d=>({d,...dayStats(byDay.get(d))})), nets=allDays.map(d=>d.net);
+  const rank=nets.filter(v=>v<S.net).length/nets.length, medN=median(allDays.map(d=>d.n)), medNet=median(nets);
+  SFIND=sorted(sessionFindings(SDAY,T,before,allDays));
+  const bad=SFIND.filter(f=>f.sev==='crit'||f.sev==='imp').length;
+  const v=$('s-verdict'); v.className='verdict '+(S.net>0&&!bad?'good':S.net<0&&bad?'bad':'meh');
+  v.innerHTML=(SDAY===DAYS[DAYS.length-1]?'Última sesión, ':'')+DOW[new Date(SDAY+'T00:00:00Z').getUTCDay()].toLowerCase()+' '+fiso(SDAY)+': '+
+    '<span class="'+cl(S.net)+'">'+pc(S.net)+'</span>'+(nil(S.money)?'':' ('+money(S.money)+')')+' en '+S.n+' trades. '+
+    (nets.length>=5?'Mejor que el '+up(rank*100,0)+' de tus '+nets.length+' días. ':'')+
+    (bad?bad+' problema'+(bad>1?'s':'')+' de riesgo o disciplina que revisar.':S.net>=0?'Sin errores de riesgo ni de disciplina.':'Día perdedor, pero sin errores de riesgo ni de disciplina: parece mercado, no fallo.');
+  const tile=(t,val,sub,c)=>'<div class="tile"><p class="t">'+t+'</p><p class="v '+(c||'')+'">'+val+'</p><p class="s">'+sub+'</p></div>';
+  $('s-tiles').innerHTML=tile('Resultado',pc(S.net),nil(S.money)?'día normal '+pc(medNet):money(S.money)+' · normal '+pc(medNet),cl(S.net))+
+    tile('Trades',it(S.n),'normal: '+nf(medN||0,0))+tile('Aciertos',up(S.n?S.wins/S.n*100:null,0),S.wins+' de '+S.n)+
+    tile('Profit factor',nil(S.pf)?(S.wins===S.n?'∞':'—'):nm(S.pf),'ganado ÷ perdido')+
+    tile('Peor trade',pc(S.worst),'mejor '+pc(S.best),cl(S.worst))+
+    tile('Costes',nil(S.cost)?'—':money(S.cost),'comisión + swap');
+  $('s-chart').innerHTML=drawSessionChart(T);
+  const bots=[...new Set(T.map(t=>t.bot))].map(b=>{const a=T.filter(t=>t.bot===b), h=before.filter(t=>t.bot===b);
+    const hd=new Map(); h.forEach(t=>{const k=dayKey(t.c);hd.set(k,(hd.get(k)||0)+t.r);});
+    return {b,a,v:sum(a.map(t=>t.r)),norm:hd.size?median([...hd.values()]):null,man:a.filter(t=>t.how==='m').length};}).sort((x,y)=>x.v-y.v);
+  $('s-bots').innerHTML='<thead><tr><th>Bot</th><th>Trades</th><th>Resultado</th><th>Su día normal</th><th>A mano</th></tr></thead><tbody>'+
+    bots.map(x=>'<tr><td><div class="bn">'+flagSVG(x.b.flag)+'<span>'+esc(label(x.b))+'</span></div></td><td>'+x.a.length+' <small>('+x.a.filter(t=>t.r>0).length+' ✓)</small></td><td class="'+cl(x.v)+'">'+pc(x.v)+'</td><td>'+(x.norm===null?'—':pc(x.norm))+'</td><td>'+(x.man||'—')+'</td></tr>').join('')+'</tbody>';
+  $('s-cards').innerHTML=SFIND.length?SFIND.map(f=>'<article class="card '+f.sev+'"><div class="hd"><span class="sev">'+SEV_LABEL[f.sev]+'</span><span class="cat">'+esc(CAT[f.cat]||'')+'</span><span class="scp">'+flagSVG(f.flag)+esc(f.scopeName||'Cuenta')+'</span></div><h3>'+esc(f.title)+'</h3><p class="ev">'+f.ev+'</p><p class="why">'+f.why+'</p><p class="act"><b>QUÉ HACER</b> · '+f.act+'</p></article>').join(''):
+    '<p class="empty">Nada que señalar este día.</p>';
+  const tb=T.slice().sort((a,b)=>a.o-b.o);
+  $('s-trades').querySelector('summary').textContent='Todos los trades del día ('+tb.length+')';
+  $('s-trades').querySelector('table').innerHTML='<thead><tr><th>Abre</th><th>Cierra</th><th style="text-align:left">Bot</th><th style="text-align:left">Símbolo</th><th>Dir.</th><th>Lotes</th><th>Duración</th><th>Cierre</th><th>Resultado</th>'+(tb.some(t=>!nil(t.p))?'<th>Dinero</th>':'')+'</tr></thead><tbody>'+
+    tb.map(t=>'<tr><td>'+hm(t.o)+'</td><td>'+hm(t.c)+'</td><td style="text-align:left">'+esc(label(t.bot))+'</td><td style="text-align:left">'+esc(t.sym||'—')+'</td><td>'+(t.dir==='l'?'Largo':t.dir==='s'?'Corto':'—')+'</td><td>'+(nil(t.v)?'—':nm(t.v))+'</td><td>'+hrs(t.h)+'</td><td>'+({e:'bot',s:'SL',t:'TP',m:'a mano',o:'stop out',x:'otro'}[t.how]||'—')+'</td><td class="'+cl(t.r)+'">'+pc(t.r,3)+'</td>'+(tb.some(x=>!nil(x.p))?'<td class="'+cl(t.p)+'">'+money(t.p)+'</td>':'')+'</tr>').join('')+'</tbody>';
+}
+function sessionReport(){
+  const strip=h=>String(h).replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');
+  let s='ARMADA — SESIÓN DEL '+fiso(SDAY).toUpperCase()+'\n'+strip($('s-verdict').innerHTML)+'\n\nBots:\n';
+  [...$('s-bots').querySelectorAll('tbody tr')].forEach(tr=>{s+='  '+[...tr.cells].map(c=>c.innerText.trim()).join(' | ')+'\n';});
+  s+='\nHallazgos:\n'; SFIND.forEach((f,i)=>{s+=(i+1)+'. ['+SEV_LABEL[f.sev]+' · '+(f.scopeName||'Cuenta')+'] '+f.title+'\n   '+strip(f.ev)+'\n   Qué hacer: '+strip(f.act)+'\n';});
+  return s;
+}
+$('d-sel').addEventListener('change',e=>{SDAY=e.target.value;drawSession();});
+$('d-prev').addEventListener('click',()=>{const i=DAYS.indexOf(SDAY);if(i>0){SDAY=DAYS[i-1];drawSession();}});
+$('d-next').addEventListener('click',()=>{const i=DAYS.indexOf(SDAY);if(i<DAYS.length-1){SDAY=DAYS[i+1];drawSession();}});
+$('d-copy').addEventListener('click',()=>{const t=sessionReport();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Sesión copiada')).catch(()=>toast('No se pudo copiar'));});
+
 $('yr').textContent=new Date().getFullYear();
 
 (async function(){
@@ -984,6 +1256,7 @@ $('yr').textContent=new Date().getFullYear();
   ALL={sc:acc,T:tradesOf(acc)};
   BOTS=SCOPES.filter(isBot).sort((a,b)=>flagKey(a.flag)-flagKey(b.flag)||((a.magics||[0])[0]-(b.magics||[0])[0]));
   buildScopeSelect(); renderAll();
+  const dm=location.hash.match(/day=(\d{4}-\d\d-\d\d)/); if(dm){SDAY=dm[1];drawSession();}
   const m=location.hash.match(/bot=([\w-]+)/); if(m&&SCOPES.find(x=>x.id===m[1])){VIEW.scope=m[1];$('f-scope').value=m[1];drawCards();}
 })();
 </script>
