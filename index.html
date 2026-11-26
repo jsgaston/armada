@@ -653,6 +653,18 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
 .hero .hero-grid.tabbed{padding-top:46px}
 .hero h1.long{font-size:clamp(56px,9.5vw,128px)}
 .demo-band{background:var(--brass);color:#1A1206;font:600 13.5px Archivo;text-align:center;padding:8px 20px}
+/* research data (test bench only) */
+#research h3.col{margin-top:28px}
+.rs-ctl{display:flex;align-items:center;gap:10px;margin:14px 0 4px;font:600 14px Archivo;color:#324B60}
+.rs-ctl select{font:500 14px Archivo;padding:6px 10px;border:1px solid var(--rule-strong);background:var(--panel);color:inherit;max-width:100%}
+#research .rs-two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.top nav a[hidden]{display:none}
+.rs-two table.mt5{min-width:0}
+@media (max-width:900px){ #research .rs-two{grid-template-columns:1fr} }
+#research table.mt5.deals td.tl{white-space:normal;min-width:220px}
+#research .pos{color:#1F7A4D} #research .neg{color:#B0362B}
+details.rs-lines{margin-top:14px}
+details.rs-lines summary{cursor:pointer;font:600 14px Archivo;color:var(--sea);padding:6px 0}
 /* MetaTrader 5 style report */
 .mt5rep{background:var(--panel);border:1px solid var(--rule);overflow-x:auto}
 table.mt5{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
@@ -683,6 +695,7 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
       <a href="#mt5" class="opt">MT5 report</a>
+      <a href="#research" class="opt" id="nav-research" hidden>Research</a>
       <a href="#calendar">Calendar</a>
       <a href="#periods" class="opt">Week &amp; month</a>
       <a href="#study">Study</a>
@@ -899,6 +912,32 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
     <div class="mt5-head"><h3>Positions</h3><button type="button" class="btn line" id="mt5-more" style="color:var(--sea);border-color:var(--rule-strong);padding:7px 14px" hidden></button></div>
     <div class="mt5rep"><table class="mt5 deals" id="mt5-deals"></table></div>
     <p class="note" id="mt5-note"></p>
+  </div>
+</section>
+
+<section id="research" hidden>
+  <div class="wrap">
+    <h2>Research data: what happens around every trade</h2>
+    <p class="sub">Only for the test bench. For every closed demo trade: where the price came from before the entry, how far it went for and against the trade while it was open, and what it did in the hour after the entry, whether or not the trade was still open. All distances are in ATR(14) of M1 at the entry, measured in the trade's favour. Below that, what the bots wrote in their own journal: why they skipped signals and why they closed. This is the raw material for the next versions of the bots; the full file is <a id="rs-file" href="demo/research.json">research.json</a>.</p>
+    <div class="rs-ctl"><label for="rs-bot">Bot</label> <select id="rs-bot"></select></div>
+    <h3 class="col">Bot by bot</h3>
+    <div class="mt5rep"><table class="mt5 deals" id="rs-bots"></table></div>
+    <p class="note" id="rs-bots-note"></p>
+    <div class="cols rs-two">
+      <div><h3 class="col">Before the entry</h3><div class="mt5rep"><table class="mt5 deals" id="rs-before"></table></div></div>
+      <div><h3 class="col">After the entry</h3><div class="mt5rep"><table class="mt5 deals" id="rs-after"></table></div></div>
+    </div>
+    <p class="note" id="rs-ba-note"></p>
+    <h3 class="col">From the bots' journal</h3>
+    <div class="rs-ctl"><label for="rs-ea">EA</label> <select id="rs-ea"></select></div>
+    <div class="cols rs-two">
+      <div><div class="mt5rep"><table class="mt5 deals" id="rs-cats"></table></div></div>
+      <div><div class="mt5rep"><table class="mt5 deals" id="rs-why"></table></div></div>
+    </div>
+    <details class="rs-lines"><summary>Last journal lines</summary><div class="mt5rep"><table class="mt5 deals" id="rs-lines"></table></div></details>
+    <h3 class="col">The trades</h3>
+    <div class="mt5rep"><table class="mt5 deals" id="rs-trades"></table></div>
+    <p class="note" id="rs-note"></p>
   </div>
 </section>
 
@@ -3817,6 +3856,84 @@ const DATA_BASE=ACCT==='demo'?'demo/':'';
   if(dt) dt.innerHTML='This tab is a <b>demo account</b> used as a test bench. Demo fills are usually kinder than real ones — no requotes, no partial fills, no slippage on news. Read these figures as a record of how the bots trade while they are on trial, not as proof of real-money execution. A bot that does well here still has to prove itself with real money.';
 })();
 
+/* ---------- research data (test bench only): demo/research.json ----------
+   Published by research_extras.py for the demo account. Distances in ATR(14)
+   of M1 at the entry, signed so that + is in the trade's favour. */
+const RS={doc:null,rows:[]};
+function rsMedian(xs){ xs=xs.filter(x=>!nil(x)).sort((a,b)=>a-b); if(!xs.length) return null; const n=xs.length; return n%2?xs[(n-1)/2]:(xs[n/2-1]+xs[n/2])/2; }
+function rsMean(xs){ xs=xs.filter(x=>!nil(x)); return xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:null; }
+function rsShare(xs,f){ xs=xs.filter(x=>!nil(x)); return xs.length?xs.filter(f).length/xs.length*100:null; }
+const rsSig=(x,d=2)=>nil(x)?'—':'<span class="'+(x>0?'pos':(x<0?'neg':''))+'">'+(x>0?'+':(x<0?'−':''))+Math.abs(x).toFixed(d)+'</span>';
+const rsPc=x=>nil(x)?'—':Math.round(x)+'%';
+function rsName(m){ const n=(RS.doc.names||{})[String(m)]; return n?n:('Magic '+m); }
+function rsHold(s){ if(nil(s)) return '—'; if(s<90) return Math.round(s)+' s'; if(s<5400) return Math.round(s/60)+' min'; return (s/3600).toFixed(1)+' h'; }
+function rsLoad(doc){
+  if(!doc||!doc.cols||!doc.trades) return;
+  RS.doc=doc;
+  RS.rows=doc.trades.map(t=>{ const o={}; doc.cols.forEach((c,i)=>o[c]=t[i]); 
+    o.xr=(!nil(o.atr1)&&o.atr1>0&&!nil(o.exit)&&!nil(o.entry))?o.dir*(o.exit-o.entry)/o.atr1:null; return o; });
+  const magics=[...new Set(RS.rows.map(r=>r.magic))].sort((a,b)=>a-b);
+  $('rs-bot').innerHTML='<option value="">All bots</option>'+magics.map(m=>'<option value="'+m+'">'+esc(rsName(m))+'</option>').join('');
+  const eas=Object.keys(((doc.logs||{}).eas)||{}).sort();
+  $('rs-ea').innerHTML=eas.length?eas.map(e=>'<option>'+esc(e)+'</option>').join(''):'<option value="">No journal yet</option>';
+  $('rs-bot').onchange=drawResearch; $('rs-ea').onchange=drawResearchLogs;
+  $('research').hidden=false; const nv=$('nav-research'); if(nv) nv.hidden=false;
+  drawResearch(); drawResearchLogs();
+}
+function rsStats(rs){
+  const win=rs.filter(r=>(r.net||0)>0), los=rs.filter(r=>(r.net||0)<=0);
+  return {n:rs.length, R:rsMean(rs.map(r=>r.R)), wr:rs.length?win.length/rs.length*100:null,
+    mfe:rsMedian(rs.map(r=>r.mfe)), mae:rsMedian(rs.map(r=>r.mae)),
+    cap:rsMedian(win.filter(r=>r.mfe>0&&!nil(r.xr)).map(r=>r.xr/r.mfe*100)),
+    dead:los.length?los.filter(r=>!nil(r.mfe)&&r.mfe<0.2).length/los.length*100:null,
+    hit:rsShare(rs.map(r=>r.hit1).filter(h=>h==='+'||h==='-'),h=>h==='+'),
+    hold:rsMedian(rs.map(r=>r.hold_s)), lim:rsShare(rs.map(r=>r.kind),k=>k!=='market')};
+}
+function drawResearch(){
+  if(!RS.doc) return;
+  const sel=$('rs-bot').value, rows=sel?RS.rows.filter(r=>String(r.magic)===sel):RS.rows;
+  // bot by bot
+  const magics=[...new Set(RS.rows.map(r=>r.magic))].sort((a,b)=>a-b);
+  let h='<thead><tr><th>Bot</th><th>Trades</th><th>Avg R</th><th>Won</th><th>Best (MFE)</th><th>Worst (MAE)</th><th>Kept of best</th><th>Losers that never went +0.2</th><th>+1 ATR before −1</th><th>Hold</th><th>Limit entries</th></tr></thead><tbody>';
+  const line=(label,rs,cls)=>{ const s=rsStats(rs); return '<tr'+(cls?' class="'+cls+'"':'')+'><td>'+label+'</td><td>'+int(s.n)+'</td><td>'+rsSig(s.R)+'</td><td>'+rsPc(s.wr)+'</td><td>'+rsSig(s.mfe)+'</td><td>'+rsSig(s.mae)+'</td><td>'+rsPc(s.cap)+'</td><td>'+rsPc(s.dead)+'</td><td>'+rsPc(s.hit)+'</td><td>'+rsHold(s.hold)+'</td><td>'+rsPc(s.lim)+'</td></tr>'; };
+  magics.forEach(m=>{ h+=line(esc(rsName(m)), RS.rows.filter(r=>r.magic===m), String(m)===sel?'sel':''); });
+  h+=line('<b>All bots</b>', RS.rows); $('rs-bots').innerHTML=h+'</tbody>';
+  $('rs-bots-note').textContent='Avg R = result ÷ the risk to the first stop loss. Best and worst = median of how far each trade went for and against it while open, in ATR. Kept of best = median share of that best move a winner actually kept. "+1 ATR before −1" = how often the price reached +1 ATR before −1 ATR within two hours of the entry, whatever the bot did. '+int(RS.rows.length)+' trades, published '+ago(RS.doc.updated_utc)+'.';
+  // before / after, winners vs losers
+  const W=rows.filter(r=>(r.net||0)>0), L=rows.filter(r=>(r.net||0)<=0);
+  const b=(k)=>'<td>'+rsSig(rsMean(W.map(r=>r[k])))+'</td><td>'+rsSig(rsMean(L.map(r=>r[k])))+'</td>';
+  $('rs-before').innerHTML='<thead><tr><th>Average</th><th>Winners</th><th>Losers</th></tr></thead><tbody>'+
+    '<tr><td>Move in the last 5 min</td>'+b('m5')+'</tr><tr><td>Move in the last 15 min</td>'+b('m15')+'</tr><tr><td>Move in the last 60 min</td>'+b('m60')+'</tr>'+
+    '<tr><td>Distance from EMA20 of M5 <small>(ATR M5)</small></td>'+b('ema5')+'</tr>'+
+    '<tr><td>Spread <small>(ATR M1)</small></td><td>'+num(rsMean(W.filter(r=>r.atr1).map(r=>r.spread/r.atr1)),3)+'</td><td>'+num(rsMean(L.filter(r=>r.atr1).map(r=>r.spread/r.atr1)),3)+'</td></tr></tbody>';
+  let a='<thead><tr><th>After</th><th>Best</th><th>Worst</th><th>Close</th><th>Closes above entry</th></tr></thead><tbody>';
+  [5,15,30,60].forEach(k=>{ a+='<tr><td>'+k+' min</td><td>'+rsSig(rsMean(rows.map(r=>r['f'+k])))+'</td><td>'+rsSig(rsMean(rows.map(r=>r['a'+k])))+'</td><td>'+rsSig(rsMean(rows.map(r=>r['c'+k])))+'</td><td>'+rsPc(rsShare(rows.map(r=>r['c'+k]),x=>x>0))+'</td></tr>'; });
+  $('rs-after').innerHTML=a+'</tbody>';
+  $('rs-ba-note').textContent=(sel?rsName(+sel):'All bots')+': '+int(rows.length)+' trades ('+int(W.length)+' winners, '+int(L.length)+' losers). Before: how far the price had already moved in the trade\'s direction, in ATR of M1 (a large positive number means the bot entered after the move). After: the average best, worst and closing move 5 to 60 minutes after the entry, in ATR of M1, measured even if the trade had already closed.';
+  // trades
+  const last=rows.slice(-60).reverse(), HOW={e:'expert',s:'sl',t:'tp',m:'client',o:'stop out',x:'other'};
+  let t='<thead><tr><th>Closed (UTC)</th><th>Bot</th><th>Symbol</th><th>Type</th><th>Entry</th><th>Price in</th><th>Price out</th><th>R</th><th>Closed by</th><th>Best</th><th>Worst</th><th>15 min after</th><th>Hold</th></tr></thead><tbody>';
+  last.forEach(r=>{ const d=new Date(r.t_out*1000).toISOString().slice(5,16).replace('T',' ');
+    t+='<tr><td>'+d+'</td><td class="tl">'+esc(rsName(r.magic))+'</td><td>'+esc(r.sym)+'</td><td>'+(r.dir>0?'buy':'sell')+'</td><td>'+esc(r.kind||'')+'</td><td>'+(nil(r.entry)?'—':r.entry)+'</td><td>'+(nil(r.exit)?'—':r.exit)+'</td><td>'+rsSig(r.R)+'</td><td>'+(HOW[r.how]||esc(r.how))+(r.outs>1?' <small>('+r.outs+' parts)</small>':'')+'</td><td>'+rsSig(r.mfe)+'</td><td>'+rsSig(r.mae)+'</td><td>'+rsSig(r.f15)+' / '+rsSig(r.a15)+'</td><td>'+rsHold(r.hold_s)+'</td></tr>'; });
+  $('rs-trades').innerHTML=t+'</tbody>';
+  $('rs-note').textContent='The latest '+int(last.length)+' of '+int(rows.length)+' trades. Demo account: prices are shown here because this tab is a test bench, not a signal. "15 min after" = best / worst in ATR of M1 in the 15 minutes after the entry.';
+}
+const RS_CAT={entrada:'Entries',sin_orden:'Signal skipped',limite_cancelada:'Limit order cancelled',parcial:'Partial close',break_even:'Break-even',trailing:'Trailing stop moved',cierre:'Closed by the bot',ia_cierre:'AI closed',ia_veto:'AI vetoed an entry',ia_bloqueada:'AI close not allowed',ia_stops_invalidos:'AI stops rejected',ia_error:'AI errors',perdida_diaria:'Daily loss limit',error:'Errors',inicio:'Starts',otro:'Other lines'};
+function drawResearchLogs(){
+  const L=(RS.doc&&RS.doc.logs&&RS.doc.logs.eas)||{}, ea=L[$('rs-ea').value];
+  if(!ea){ $('rs-cats').innerHTML='<tbody><tr><td>The journal has not been published yet.</td></tr></tbody>'; $('rs-why').innerHTML=''; $('rs-lines').innerHTML=''; return; }
+  const cats=Object.entries(ea.cats||{}).sort((a,b)=>b[1].n-a[1].n);
+  $('rs-cats').innerHTML='<thead><tr><th>What the EA wrote</th><th>Times</th></tr></thead><tbody>'+cats.map(([k,v])=>'<tr><td>'+esc(RS_CAT[k]||k)+'</td><td>'+int(v.n)+'</td></tr>').join('')+'</tbody>';
+  let w='<thead><tr><th>Reason</th><th>Times</th></tr></thead><tbody>';
+  [['sin_orden','Why a signal was skipped'],['cierre','Why the bot closed'],['ia_cierre','Why the AI closed'],['ia_veto','Why the AI vetoed']].forEach(([k,title])=>{
+    const c=(ea.cats||{})[k]; if(!c||!c.top||!c.top.length) return;
+    w+='<tr><td colspan="2"><b>'+title+'</b></td></tr>'+c.top.slice(0,10).map(([r,n])=>'<tr><td class="tl">'+esc(r||'—')+'</td><td>'+int(n)+'</td></tr>').join('');
+  });
+  $('rs-why').innerHTML=w+'</tbody>';
+  $('rs-lines').innerHTML='<thead><tr><th>Day</th><th>Time</th><th>Symbol</th><th>Line</th></tr></thead><tbody>'+
+    (ea.recent||[]).slice(-40).reverse().map(l=>'<tr><td>'+esc(l[0])+'</td><td>'+esc(l[1])+'</td><td>'+esc(l[2])+'</td><td class="tl">'+esc(l[3])+'</td></tr>').join('')+'</tbody>';
+}
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -3849,6 +3966,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
+  if(ACCT==='demo') fetch(DATA_BASE+'research.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{ if(d) rsLoad(d); }).catch(e=>console.error('research.json',e));
   hreq.then(h=>{ if(!h) return; try{ loadHistory(h); if(CUR_SCOPE){ drawCalendar(CUR_SCOPE); drawToday(CUR_SCOPE); drawPeriods(CUR_SCOPE); drawHourly(CUR_SCOPE); } }catch(e){ console.error('history.json',e); } });
 
   let t; new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{ if(!CUR_SCOPE) return; drawEquity(); drawHist(CUR_SCOPE); drawWeekday(CUR_SCOPE); drawHours(CUR_SCOPE); drawRolling(CUR_SCOPE); drawMC(CUR_SCOPE); renderExtraCharts(CUR_SCOPE); drawDayChart(); drawStudy(CUR_SCOPE); drawCalendar(CUR_SCOPE); drawPeriods(CUR_SCOPE); drawHourly(CUR_SCOPE); },150); }).observe(document.body);
