@@ -640,6 +640,33 @@ table.cmp.hr{min-width:760px}
 table.cmp.hr tbody tr{cursor:default}
 table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weight:800}
 @media (max-width:720px){ #hr-tab{font-size:13px} }
+
+/* account tabs: Armada (real money) / Test bench (demo) */
+.accttabs{display:flex;gap:0;padding-top:28px;flex-wrap:wrap}
+.accttabs a{font:600 14px Archivo;text-decoration:none;color:var(--dmuted);padding:10px 18px 11px;border:1px solid var(--drule-2);border-right:0;background:rgba(10,33,48,.55);display:flex;align-items:center;gap:9px}
+.accttabs a:last-child{border-right:1px solid var(--drule-2)}
+.accttabs a:hover{color:#fff}
+.accttabs a[aria-current="page"]{color:#fff;background:var(--sea);box-shadow:inset 0 -3px 0 var(--brass)}
+.accttabs small{font-weight:500;font-size:12px;color:var(--dmuted)}
+.accttabs i{font-style:normal;background:var(--brass);color:#1A1206;padding:0 6px;font-size:11px;font-weight:700}
+.hero .hero-grid.tabbed{padding-top:46px}
+.hero h1.long{font-size:clamp(56px,9.5vw,128px)}
+.demo-band{background:var(--brass);color:#1A1206;font:600 13.5px Archivo;text-align:center;padding:8px 20px}
+/* MetaTrader 5 style report */
+.mt5rep{background:var(--panel);border:1px solid var(--rule);overflow-x:auto}
+table.mt5{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+table.mt5 th.grp{text-align:left;font:700 13px Archivo;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:var(--sea);padding:8px 14px}
+table.mt5 td{padding:7px 14px;border-bottom:1px solid var(--rule);white-space:nowrap;font-variant-numeric:tabular-nums}
+table.mt5 td.l{text-align:right;color:#324B60;font-weight:500}
+table.mt5 td.v{text-align:left;font-weight:700;padding-right:22px}
+table.mt5 td.v small{font-weight:500;color:var(--muted)}
+table.mt5 tr:nth-child(even) td{background:rgba(15,44,66,.025)}
+table.mt5.deals td{text-align:right}
+table.mt5.deals td:first-child,table.mt5.deals th:first-child,table.mt5.deals .tl{text-align:left!important}
+table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:right;padding:8px 14px;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+.mt5-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin:34px 0 12px}
+.mt5-head h3{margin:0}
+@media (max-width:720px){ .accttabs a{padding:9px 12px;font-size:13px} .accttabs small{display:none} }
 </style>
 </head>
 <body>
@@ -654,6 +681,7 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
       <a href="#compare">Bots</a>
       <a href="#record">Record</a>
       <a href="#stats">Statistics</a>
+      <a href="#mt5" class="opt">MT5 report</a>
       <a href="#calendar">Calendar</a>
       <a href="#periods" class="opt">Week &amp; month</a>
       <a href="#study">Study</a>
@@ -666,13 +694,18 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
   </div>
 </header>
 
+<div class="demo-band" id="demo-band" hidden>DEMO ACCOUNT — test bench. Demo fills are kinder than real ones; none of these figures is a real-money result.</div>
 <div class="hero">
-  <div class="wrap hero-grid">
+  <nav class="wrap accttabs" aria-label="Account">
+    <a href="./" data-acct="live" aria-current="page">Armada <small>real-money account</small></a>
+    <a href="?acct=demo" data-acct="demo">Test bench <i>DEMO</i> <small>bots on trial</small></a>
+  </nav>
+  <div class="wrap hero-grid tabbed">
     <div>
-      <h1>Armada</h1>
-      <p class="kicker">Live results from one MetaTrader&nbsp;5 account</p>
+      <h1 id="hero-h1">Armada</h1>
+      <p class="kicker" id="hero-kicker">Live results from one MetaTrader&nbsp;5 account</p>
       <p class="ticket" id="ticket" hidden></p>
-      <p class="lead">Every bot I build trades here, in one account, each under its own flag and magic number, and each added only after it finishes validation. Nothing here is for sale: it is a public record of how the fleet trades, losses included. The goal is a fleet of 50 to 100 bots.</p>
+      <p class="lead" id="hero-lead">Every bot I build trades here, in one account, each under its own flag and magic number, and each added only after it finishes validation. Nothing here is for sale: it is a public record of how the fleet trades, losses included. The goal is a fleet of 50 to 100 bots.</p>
       <div class="actions">
         <a class="btn brass" href="#compare">Compare the bots</a>
         <a class="btn line" href="https://wisfli.com/">Read the plan</a>
@@ -854,6 +887,17 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
     </div>
     <p class="symlist" id="symlist"></p>
     <p class="note" id="sample-note"></p>
+  </div>
+</section>
+
+<section id="mt5" hidden>
+  <div class="wrap">
+    <h2 id="mt5-title">The report, as MetaTrader&nbsp;5 lays it out</h2>
+    <p class="sub">The same blocks and the same names as the report MT5 produces for an account or a Strategy Tester run, filled from this record for the account or the bot selected above. Prices, stops and targets are left out, as everywhere on this page.</p>
+    <div class="mt5rep"><table class="mt5" id="mt5-tab"></table></div>
+    <div class="mt5-head"><h3>Positions</h3><button type="button" class="btn line" id="mt5-more" style="color:var(--sea);border-color:var(--rule-strong);padding:7px 14px" hidden></button></div>
+    <div class="mt5rep"><table class="mt5 deals" id="mt5-deals"></table></div>
+    <p class="note" id="mt5-note"></p>
   </div>
 </section>
 
@@ -1414,7 +1458,7 @@ function selectScope(id, push){
 
 function renderScope(){
   const sc=CUR_SCOPE;
-  drawRail(sc); drawLedger(sc); drawStats(sc); drawHeat(sc); drawCalendar(sc);
+  drawRail(sc); drawLedger(sc); drawStats(sc); MT5.all=false; drawMT5(sc); drawHeat(sc); drawCalendar(sc);
   setSeries(defaultSeries(sc));
   drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc); drawPeriods(sc); drawHourly(sc);
   ST.more=false; drawStudy(sc);
@@ -3660,6 +3704,118 @@ document.querySelectorAll('[data-hrmet]').forEach(b=>b.addEventListener('click',
 document.querySelectorAll('[data-hrclock]').forEach(b=>b.addEventListener('click',()=>{ HR.clock=b.dataset.hrclock; if(CUR_SCOPE) drawHourly(CUR_SCOPE); }));
 $('hr-more').addEventListener('click',()=>{ HR.all=!HR.all; if(CUR_SCOPE) drawHourly(CUR_SCOPE); });
 
+/* ---------- MetaTrader 5 style report ----------
+   The blocks and labels of MT5's account / Strategy Tester report, computed from
+   the scope's figures and its trade list (tl). Money when the page publishes it,
+   otherwise % of the account. No prices, stops or targets. */
+const MT5={all:false};
+function mt5Runs(xs){
+  // streaks of winning / losing trades: [{win, n, sum}]
+  const out=[]; let cur=null;
+  xs.forEach(x=>{ const w=x>0; if(!cur||cur.win!==w){ cur={win:w,n:0,sum:0}; out.push(cur); } cur.n++; cur.sum+=x; });
+  return out;
+}
+function drawMT5(sc){
+  const sec=$('mt5'); if(!sec) return;
+  const T=sc.trades||{}, K=sc.risk||{}, S=sc.sides||{}, tl=sc.tl||{}, M=!!ACC.publish_money, isAcc=sc.kind==='account';
+  if(!T.trades){ sec.hidden=true; return; }
+  sec.hidden=false;
+  $('mt5-title').innerHTML = isAcc ? 'The report, as MetaTrader&nbsp;5 lays it out' : esc(sc.name)+': the MetaTrader&nbsp;5 report';
+  const useP = M && tl.p && tl.p.length===(tl.t||[]).length;
+  const res = useP ? tl.p : (tl.r||[]);
+  const amt = (m,p,sign=false) => M&&!nil(m) ? money(m,sign) : (nil(p)?'—':pct(p,2));
+  const sm = t => ' <small>'+t+'</small>';
+  const runs = mt5Runs(res), wr=runs.filter(r=>r.win), lr=runs.filter(r=>!r.win);
+  const longest = rs => rs.reduce((b,r)=>!b||r.n>b.n||(r.n===b.n&&Math.abs(r.sum)>Math.abs(b.sum))?r:b,null);
+  const biggest = rs => rs.reduce((b,r)=>!b||Math.abs(r.sum)>Math.abs(b.sum)?r:b,null);
+  const lw=longest(wr), ll=longest(lr), bw=biggest(wr), bl=biggest(lr);
+  const avgRun = rs => rs.length ? (rs.reduce((s,r)=>s+r.n,0)/rs.length) : null;
+  const fmtRes = v => nil(v) ? '—' : (useP ? money(v) : pct(v,2));
+  // balance drawdown absolute: how far the balance went below where it started
+  let ddAbs=null;
+  if(M){
+    const eq=sc.equity||[];
+    if(isAcc && eq.length && !nil(ACC.starting_balance) && eq.some(e=>!nil(e.b))){
+      const lo=Math.min(...eq.filter(e=>!nil(e.b)).map(e=>e.b)); ddAbs=Math.max(0,ACC.starting_balance-lo);
+    } else if(useP){
+      let c=0, lo=0; res.forEach(x=>{ c+=x; lo=Math.min(lo,c); }); ddAbs=-lo;
+    }
+  }
+  const ls=S.long||{}, ss=S.short||{}, n=T.trades;
+  const won=(b)=> nil(b.trades)?'—': int(b.trades)+sm('('+upct(b.win_rate_pct,2)+' won)');
+  const share=(k)=> nil(k)?'—': int(k)+sm('('+upct(k/n*100,2)+' of total)');
+  const runTxt=(r,byCount)=> !r ? '—' : (byCount ? int(r.n)+sm('('+fmtRes(r.sum)+')') : fmtRes(r.sum)+sm('('+int(r.n)+')'));
+  const row=(cells)=>'<tr>'+[0,1,2].map(i=>{ const c=cells[i]; return c ? '<td class="l">'+c[0]+':</td><td class="v '+(c[2]||'')+'">'+c[1]+'</td>' : '<td class="l"></td><td class="v"></td>'; }).join('')+'</tr>';
+  const grp=t=>'<tr><th class="grp" colspan="6">'+t+'</th></tr>';
+  const R=sc.returns||{};
+  let h='';
+  if(isAcc && M){
+    h+=grp('Summary');
+    h+=row([['Initial deposit',money(ACC.starting_balance)],['Deposits',money(ACC.deposits)],['Withdrawals',money(ACC.withdrawals)]]);
+    h+=row([['Balance',money(ACC.balance)],['Equity',money(ACC.equity)],['Floating P/L',nil(ACC.floating_pct)?'—':pct(ACC.floating_pct),cls(ACC.floating_pct)]]);
+  }
+  h+=grp('Results');
+  h+=row([['Total Net Profit',amt(T.net,T.net_pct,true),cls(nil(T.net)?T.net_pct:T.net)],['Gross Profit',M?money(T.gross_profit):'—'],['Gross Loss',M&&!nil(T.gross_loss)?money(-T.gross_loss):'—']]);
+  h+=row([['Profit Factor',num(T.profit_factor)],['Expected Payoff',amt(T.expectancy,T.expectancy_pct,true),cls(nil(T.expectancy)?T.expectancy_pct:T.expectancy)],['ROI',pct(R.roi_pct),cls(R.roi_pct)]]);
+  h+=row([['Recovery Factor',num(K.recovery_factor)],['Sharpe Ratio',num(K.sharpe)],['Total return',pct(R.total_pct),cls(R.total_pct)]]);
+  h+=row([['Balance Drawdown Absolute',M?money(ddAbs):'—'],
+          ['Balance Drawdown Maximal',M&&!nil(K.max_drawdown_money)?money(K.max_drawdown_money)+sm('('+upct(K.max_drawdown_pct)+')'):upct(K.max_drawdown_pct)],
+          ['Balance Drawdown Relative',upct(K.max_drawdown_pct)+(M&&!nil(K.max_drawdown_money)?sm('('+money(K.max_drawdown_money)+')'):'')]]);
+  h+=row([['Equity Drawdown Maximal',upct(K.max_floating_drawdown_pct)],['Current drawdown',upct(K.current_drawdown_pct)],['Days since peak',int(K.days_since_peak)]]);
+  h+=grp('Trades');
+  h+=row([['Total Trades',int(n)],['Short Trades (won %)',won(ss)],['Long Trades (won %)',won(ls)]]);
+  h+=row([null,['Profit Trades (% of total)',share(T.wins)],['Loss Trades (% of total)',share(T.losses)]]);
+  h+=row([null,['Largest profit trade',amt(T.largest_win,T.largest_win_pct),'pos'],['Largest loss trade',amt(T.largest_loss,T.largest_loss_pct),'neg']]);
+  h+=row([null,['Average profit trade',amt(T.avg_win,T.avg_win_pct),'pos'],['Average loss trade',M&&!nil(T.avg_loss)?money(-T.avg_loss):(nil(T.avg_loss_pct)?'—':pct(-T.avg_loss_pct,2)),'neg']]);
+  h+=row([null,['Maximum consecutive wins ($)',runTxt(lw,true)],['Maximum consecutive losses ($)',runTxt(ll,true)]]);
+  h+=row([null,['Maximal consecutive profit (count)',runTxt(bw,false)],['Maximal consecutive loss (count)',runTxt(bl,false)]]);
+  h+=row([null,['Average consecutive wins',nil(avgRun(wr))?'—':Math.round(avgRun(wr))],['Average consecutive losses',nil(avgRun(lr))?'—':Math.round(avgRun(lr))]]);
+  h+=row([['Trades per week',num(T.trades_per_week,1)],['Average hold',hours(T.avg_hold_hours)],['Commission + swap',M&&!nil(T.commission)?money((T.commission||0)+(T.swap||0)):'—']]);
+  $('mt5-tab').innerHTML=h;
+
+  // positions: newest first, like the History tab of the terminal (no prices)
+  const t=tl.t||[], N=t.length, lim=20;
+  const how={e:'expert',s:'sl',t:'tp',m:'client',o:'stop out',x:'other'};
+  const idx=[...Array(N).keys()].reverse().slice(0, MT5.all?N:lim);
+  const name=m=>{ const x=SCOPES.find(z=>z.kind==='magic'&&z.magics&&z.magics[0]===m); return x?x.name:(m===0?'Manual':'Magic '+m); };
+  const dt=s=>{ const d=new Date(s*1000); return d.getUTCFullYear()+'.'+String(d.getUTCMonth()+1).padStart(2,'0')+'.'+String(d.getUTCDate()).padStart(2,'0')+' '+String(d.getUTCHours()).padStart(2,'0')+':'+String(d.getUTCMinutes()).padStart(2,'0'); };
+  const hold=x=>nil(x)?'—':(x<1?Math.max(0,Math.round(x*60))+' min':hours(x));
+  const hasM=isAcc&&tl.m, hasV=!!tl.v, hasK=!!tl.k;
+  $('mt5-deals').innerHTML='<thead><tr><th>Close time (UTC)</th>'+(hasM?'<th class="tl">Bot</th>':'')+'<th>Symbol</th><th>Type</th>'+(hasV?'<th>Volume</th>':'')+'<th>Hold</th><th>Closed by</th>'+(hasK?'<th>Commission + swap</th>':'')+'<th>Profit</th></tr></thead><tbody>'+
+    idx.map(i=>{ const v=useP?tl.p[i]:tl.r[i];
+      return '<tr><td>'+dt(t[i])+'</td>'+(hasM?'<td class="tl">'+esc(name(tl.m[i]))+'</td>':'')+'<td>'+esc((tl.sy||[])[(tl.s||[])[i]]||'—')+'</td><td>'+((tl.d||[])[i]==='s'?'sell':'buy')+'</td>'+
+        (hasV?'<td>'+num(tl.v[i],2)+'</td>':'')+'<td>'+hold((tl.h||[])[i])+'</td><td>'+(how[(tl.c||[])[i]]||'—')+'</td>'+
+        (hasK?'<td>'+money(tl.k[i])+'</td>':'')+'<td class="'+cls(v)+'">'+fmtRes(v)+'</td></tr>'; }).join('')+'</tbody>';
+  const more=$('mt5-more'); more.hidden=N<=lim; more.textContent=MT5.all?'Show the latest '+lim:'Show all '+int(N);
+  $('mt5-note').textContent='Type is the direction of the position (buy = long). "Closed by" follows MT5: expert = the bot, sl / tp = stop loss / take profit, client = by hand. '+
+    (useP?'':'Results in % of the account, since money is not published. ')+'Balance Drawdown Absolute is how far the balance fell below where it started; Maximal and Relative are the deepest fall from a peak, in money and in %.';
+}
+$('mt5-more').addEventListener('click',()=>{ MT5.all=!MT5.all; if(CUR_SCOPE) drawMT5(CUR_SCOPE); });
+
+/* ---------- which account: Armada (real money) or the test bench (demo) ----------
+   ?acct=demo reads demo/stats.json and demo/history.json, published by
+   stats_publisher.py from the second (demo) account. Same page, same sections. */
+const QS=new URLSearchParams(location.search);
+const ACCT=(QS.get('acct')||'').toLowerCase()==='demo'?'demo':'live';
+const DATA_BASE=ACCT==='demo'?'demo/':'';
+(function(){
+  const keep=QS.has('preview')?'preview':'';
+  document.querySelectorAll('.accttabs a').forEach(a=>{
+    const on=a.dataset.acct===ACCT;
+    if(on) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    const q=[a.dataset.acct==='demo'?'acct=demo':'',keep].filter(Boolean).join('&');
+    a.href=(q?'?'+q:location.pathname);
+  });
+  if(ACCT!=='demo') return;
+  document.title='Test bench — Wisfli bots on trial in a demo account';
+  $('hero-h1').textContent='Test bench'; $('hero-h1').classList.add('long');
+  $('hero-kicker').textContent='Bots on trial in a separate MetaTrader 5 demo account';
+  $('hero-lead').textContent='Bots I am still deciding about trade here first, in a demo account of their own, under the same flags and the same statistics as Armada. This tab is how I compare them and decide which ones stay and which are dropped. It is a demo account: fills are kinder than in real money, and none of these figures is a real-money result.';
+  $('demo-band').hidden=false;
+  const dt=$('demo-talk');
+  if(dt) dt.innerHTML='This tab is a <b>demo account</b> used as a test bench. Demo fills are usually kinder than real ones — no requotes, no partial fills, no slippage on news. Read these figures as a record of how the bots trade while they are on trial, not as proof of real-money execution. A bot that does well here still has to prove itself with real money.';
+})();
+
 /* ---------- controls & boot ---------- */
 if(document.getElementById('yr')) document.getElementById('yr').textContent=new Date().getFullYear();
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; setMode(b.dataset.mode); drawEquity(); }));
@@ -3669,14 +3825,14 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
 
 (async function(){
   const pv=new URLSearchParams(location.search).has('preview');
-  const src=pv?'stats.preview.json':'stats.json';
+  const src=DATA_BASE+(pv?'stats.preview.json':'stats.json');
   // the day-by-day archive kept across restarts; the page works without it
-  const hreq=fetch((pv?'history.preview.json':'history.json')+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  const hreq=fetch(DATA_BASE+(pv?'history.preview.json':'history.json')+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
   let s=null;
   try{ const res=await fetch(src+'?t='+Date.now(),{cache:'no-store'}); if(res.ok) s=await res.json(); }catch(e){}
   const strats=(s&&s.strategies&&s.strategies.length)?s.strategies.slice().sort((a,b)=>flagKey(a.flag)-flagKey(b.flag)):FALLBACK;
   drawHoist(strats);
-  if(!s){ drawRoster(strats); return; }
+  if(!s){ drawRoster(strats); if(ACCT==='demo') $('hoist-note').textContent='The demo account has not published its first record yet.'; return; }
 
   DATA=s; ACC=s.account||{}; if(ACC.currency) CUR=ACC.currency;
   SCOPES=normalise(s);
