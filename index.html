@@ -653,6 +653,18 @@ table.cmp.hr tfoot td{border-top:2px solid var(--sea);border-bottom:0;font-weigh
 .hero .hero-grid.tabbed{padding-top:46px}
 .hero h1.long{font-size:clamp(56px,9.5vw,128px)}
 .demo-band{background:var(--brass);color:#1A1206;font:600 13.5px Archivo;text-align:center;padding:8px 20px}
+/* v14: one bot or every bot, and the day panel's own bot filter */
+.scope-note{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;background:#FBF3DF;border:1px solid rgba(224,169,44,.55);border-left:4px solid var(--brass);padding:10px 14px;margin:0 0 22px;font:500 14px Archivo;color:var(--sea)}
+.scope-note[hidden]{display:none}
+.scope-note b{display:inline-flex;align-items:center;gap:7px}
+.scope-note svg{width:21px;height:14px}
+.scope-note button,.cal-day .bf-bar button{font:700 13px Archivo;background:var(--sea);color:#fff;border:0;padding:7px 13px;cursor:pointer}
+.scope-note button:hover,.cal-day .bf-bar button:hover{background:#163d5a}
+.cal-day .bf-bar button.ln{background:transparent;color:var(--sea);border:1px solid var(--rule-strong)}
+.cal-day .bf-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 4px;font:500 13.5px Archivo}
+.cal-day .dayrow.on{background:rgba(224,169,44,.16);box-shadow:inset 3px 0 0 var(--brass)}
+.cal-day .dayrow.off{opacity:.45}
+.cal-day .tr-more{margin-top:10px}
 /* research data (test bench only) */
 #research h3.col{margin-top:28px}
 .rs-ctl{display:flex;align-items:center;gap:10px;margin:14px 0 4px;font:600 14px Archivo;color:#324B60}
@@ -702,6 +714,7 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
       <a href="#lab" class="opt">Monte Carlo</a>
       <a href="#fleet" class="opt">The fleet</a>
       <a href="#plain" class="opt">Reading the figures</a>
+      <a href="journal.html" id="nav-journal">Journal</a>
       <a href="review.html" class="opt2">Review</a>
       <a class="pill" href="https://wisfli.com/">The plan</a>
     </nav>
@@ -763,6 +776,7 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
       </div>
       <p class="day-stamp" id="today-stamp"></p>
     </div>
+    <div class="scope-note" id="today-scope" hidden></div>
     <dl class="daytiles" id="today-tiles"></dl>
     <div class="plot" id="day-plot"></div>
     <p class="day-key" id="day-key"></p>
@@ -971,6 +985,7 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
         <button type="button" id="cal-last" aria-label="Latest month with trading">Latest</button>
       </div>
     </div>
+    <div class="scope-note" id="cal-scope" hidden></div>
     <p class="note cal-arch" id="cal-arch" hidden></p>
     <dl class="st-tiles" id="cal-tiles"></dl>
     <div class="cal-grid">
@@ -1309,6 +1324,7 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
           <li><a href="#study">The study</a></li>
           <li><a href="#fleet">The fleet</a></li>
           <li><a href="#plain">Reading the figures</a></li>
+          <li><a href="journal.html" id="foot-journal">Journal, day by day</a></li>
           <li><a href="review.html">Trading review</a></li>
         </ul>
       </div>
@@ -1496,8 +1512,15 @@ function selectScope(id, push){
   renderScope();
 }
 
+function scopeNotes(sc){
+  const one=sc&&sc.kind!=='account';
+  ['cal-scope','today-scope'].forEach(id=>{ const el=$(id); if(!el) return; el.hidden=!one; if(!one){ el.innerHTML=''; return; }
+    el.innerHTML='<span>Showing one bot only:</span><b>'+(sc.flag?flagSVG(sc.flag):'')+esc(botName(sc))+'</b><span>Days and trades of the other bots are hidden.</span><button type="button" data-allbots>Show every bot</button>';
+    el.querySelector('[data-allbots]').addEventListener('click',()=>{ const keep=CAL.sel; CAL.bf=sc.id; selectScope('all',true); if(keep){ CAL.sel=keep; CAL.ym=keep.slice(0,7); drawCalendar(CUR_SCOPE); } });
+  });
+}
 function renderScope(){
-  const sc=CUR_SCOPE;
+  const sc=CUR_SCOPE; scopeNotes(sc);
   drawRail(sc); drawLedger(sc); drawStats(sc); MT5.all=false; drawMT5(sc); drawHeat(sc); drawCalendar(sc);
   setSeries(defaultSeries(sc));
   drawHist(sc); drawWeekday(sc); drawHours(sc); drawSides(sc); drawEquity(true); drawFlows(sc); drawRecon(sc); renderExtraCharts(sc); drawRolling(sc); drawMC(sc); drawToday(sc); drawPeriods(sc); drawHourly(sc);
@@ -2851,7 +2874,7 @@ $('st-more').addEventListener('click',()=>{ ST.more=!ST.more; if(CUR_SCOPE) stLo
    Each day also carries its ROI: the day's result divided by the money put in up to
    that day (starting balance + deposits − withdrawals), the same base as the ROI above.
    ROI adds up day by day; it does not compound. */
-const CAL={view:'month', metric:'res', ym:null, sel:null, sid:null};
+const CAL={view:'month', metric:'res', ym:null, sel:null, sid:null, bf:null, all:false};
 const MONTHL=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOWL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 const dKey=ms=>new Date(ms).toISOString().slice(0,10);
@@ -2996,7 +3019,7 @@ function drawCalendar(sc){
   sec.hidden=false;
   $('cal-h').textContent=sc.kind==='account'?'Day by day':'Day by day: '+botName(sc);
   const {first,last,lastDay}=calRange(C);
-  if(CAL.sid!==sc.id){ CAL.sid=sc.id; if(!CAL.ym || CAL.ym<first || CAL.ym>last) CAL.ym=C.act[C.act.length-1].d.slice(0,7); if(CAL.sel && !(C.by.get(CAL.sel)||{}).active) CAL.sel=null; }
+  if(CAL.sid!==sc.id){ CAL.sid=sc.id; if(!CAL.ym || CAL.ym<first || CAL.ym>last){ CAL.ym=C.act[C.act.length-1].d.slice(0,7); CAL.sel=null; } }   // v14: the day on screen stays when the bot changes
   if(CAL.ym<first) CAL.ym=first; if(CAL.ym>last) CAL.ym=last;
   // the day shown on the right belongs to the month on screen; a month without trading shows none
   if(CAL.view==='month'){ if(!CAL.sel || CAL.sel.slice(0,7)!==CAL.ym){ const inM=C.act.filter(o=>o.d.slice(0,7)===CAL.ym); CAL.sel=inM.length?inM[inM.length-1].d:null; } }
@@ -3052,7 +3075,7 @@ function calMonth(sc,C,lastDay){
   const Y=+CAL.ym.slice(0,4), Mo=+CAL.ym.slice(5), first=Date.UTC(Y,Mo-1,1), dim=new Date(Date.UTC(Y,Mo,0)).getUTCDate();
   const lead=(new Date(first).getUTCDay()+6)%7, cells=Math.ceil((lead+dim)/7)*7;
   const list=C.days.filter(o=>o.d.slice(0,7)===CAL.ym), S=calSummary(list), M=S.M;
-  const max=calMax(list,CAL.metric,M), inc=C.act.length?C.act[0].d:null, today=new Date().toISOString().slice(0,10), rs=restartDays(C);
+  const accS=SCOPES.find(x=>x.kind==='account'), accC=accS&&accS!==sc?calDays(accS):C, max=calMax(list,CAL.metric,M), inc=accC.act.length?accC.act[0].d:(C.act.length?C.act[0].d:null), today=new Date().toISOString().slice(0,10), rs=restartDays(C);
   $('cal-mtitle').textContent=ymLabel(CAL.ym);
   $('cal-msub').textContent=S.act.length?S.fmt(S.total)+(S.roiOK?' · ROI '+roiTxt(S.roi):'')+' · '+int(S.trades)+' trades · hits '+(nil(S.hit)?'—':upct(S.hit,0)):'no trading this month';
   let h=DOW.map(d=>'<div class="wd" role="columnheader">'+d+'</div>').join('')+'<div class="wd wkh" role="columnheader">Week</div>';
@@ -3086,7 +3109,7 @@ function calMonth(sc,C,lastDay){
   }
   $('cal').innerHTML=h;
   $('cal').querySelectorAll('button.cd[data-d]').forEach(b=>{
-    b.addEventListener('click',()=>{ CAL.sel=b.dataset.d; calMark(); calDay(CUR_SCOPE); });
+    b.addEventListener('click',()=>{ CAL.sel=b.dataset.d; CAL.all=false; calMark(); calDay(CUR_SCOPE); });
     b.addEventListener('keydown',e=>{
       if(e.key==='PageUp'||e.key==='PageDown'){ e.preventDefault(); calStepMonth(e.key==='PageUp'?-1:1,true); return; }
       const step={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7}[e.key]; if(!step) return;
@@ -3180,8 +3203,13 @@ function calDay(sc){
   const nav='<div class="daynav"><button type="button" data-go="'+(prev?prev.d:'')+'"'+(prev?'':' disabled')+'>&#8249; Previous trading day</button><button type="button" data-go="'+(next?next.d:'')+'"'+(next?'':' disabled')+'>Next trading day &#8250;</button></div>';
   let h='<h3 class="col"><span>'+dLong(d)+'</span><small>UTC day</small></h3>';
   if(!o||!o.active){
-    h+='<p class="day-none">Nothing closed on this day, and the balance did not move.</p>'+nav;
-    box.innerHTML=h; calDayNav(box); return;
+    const accS=sc.kind!=='account'?SCOPES.find(x=>x.kind==='account'):null, o2=accS?calDays(accS).by.get(d):null;
+    if(o2&&o2.active){
+      const others=SCOPES.filter(x=>isBot(x)&&!x.empty&&x!==sc&&daySummary(x,d).tr.length).length;
+      h+='<p class="day-none">'+esc(botName(sc))+' did not trade on this day.'+(others?' '+others+(others===1?' other bot did':' other bots did')+'.':'')+'</p>'+
+        '<div class="bf-bar"><button type="button" data-allday>See this day with every bot</button></div>'+nav;
+    } else h+='<p class="day-none">Nothing closed on this day, and the balance did not move.</p>'+nav;
+    box.innerHTML=h; calDayNav(box); calAllDay(box,sc); return;
   }
   const a=o.a, money1=M&&!nil(o.p), cap=capFn(), c=cap&&!o.arch?cap(o.d):null, st=recStart();
   const roiTiles=[
@@ -3206,7 +3234,7 @@ function calDay(sc){
         rows.sort((p,q)=>v(q)-v(p));
         h+='<p class="sub2">Bots that traded</p>'+rows.map(x=>{ const val=v(x), w=Math.abs(val)/mx*(neg?50:100), left=neg?(val>=0?50:50-w):0, live=scopeById(x.id);
           const nm=x.m.kind==='magic'&&String(x.id)==='m-0'?'Trades I opened by hand':(x.m.name||x.id);
-          return '<div class="dayrow"'+(live?' data-id="'+esc(x.id)+'" tabindex="0"':' style="cursor:default"')+' title="'+esc(nm)+'"><span class="nm">'+(x.m.flag?flagSVG(x.m.flag):'')+esc(nm)+'</span><span class="ct">'+int(x.h.n)+(x.h.n===1?' trade':' trades')+'</span>'+
+          return '<div class="dayrow" style="cursor:default" title="'+esc(nm)+'"><span class="nm">'+(x.m.flag?flagSVG(x.m.flag):'')+esc(nm)+'</span><span class="ct">'+int(x.h.n)+(x.h.n===1?' trade':' trades')+'</span>'+
             '<span class="track">'+(neg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.5,w)+'%;background:'+(val>=0?'#1E6B57':'#BE3A2B')+'"></i></span><span class="val '+cls(val)+'">'+(M&&!nil(x.h.p)?money(val,true):pct(val))+'</span></div>'; }).join('');
       }
     }
@@ -3239,32 +3267,50 @@ function calDay(sc){
     if(rows.length){
       const v=r=>M&&!nil(r.S.net)?r.S.net:r.S.ret, mx=Math.max(1e-9,...rows.map(r=>Math.abs(v(r)))), neg=rows.some(r=>v(r)<0);
       rows.sort((p,q)=>v(q)-v(p));
-      h+='<p class="sub2">Bots that traded</p>'+rows.map(r=>{ const val=v(r), w=Math.abs(val)/mx*(neg?50:100), left=neg?(val>=0?50:50-w):0;
-        return '<div class="dayrow" data-id="'+esc(r.x.id)+'" tabindex="0" title="'+esc(botName(r.x))+'"><span class="nm">'+(r.x.flag?flagSVG(r.x.flag):'')+esc(botName(r.x))+'</span><span class="ct">'+int(r.S.tr.length)+(r.S.tr.length===1?' trade':' trades')+'</span>'+
+      h+='<p class="sub2">Bots that traded <small style="font-weight:500">· select one to see only its trades</small></p>'+rows.map(r=>{ const val=v(r), w=Math.abs(val)/mx*(neg?50:100), left=neg?(val>=0?50:50-w):0;
+        return '<div class="dayrow'+(CAL.bf?(CAL.bf===r.x.id?' on':' off'):'')+'" data-id="'+esc(r.x.id)+'" tabindex="0" role="button" aria-pressed="'+(CAL.bf===r.x.id)+'" title="Show only the trades of '+esc(botName(r.x))+'"><span class="nm">'+(r.x.flag?flagSVG(r.x.flag):'')+esc(botName(r.x))+'</span><span class="ct">'+int(r.S.tr.length)+(r.S.tr.length===1?' trade':' trades')+'</span>'+
           '<span class="track">'+(neg?'<b style="left:50%"></b>':'')+'<i style="left:'+left+'%;width:'+Math.max(.5,w)+'%;background:'+(val>=0?'#1E6B57':'#BE3A2B')+'"></i></span><span class="val '+cls(val)+'">'+(M&&!nil(r.S.net)?money(val,true):pct(val))+'</span></div>'; }).join('');
     }
   }
-  if(o.tr.length){
-    const showBot=sc.kind==='account'&&o.tr.some(t=>t.m!=null), showSym=o.tr.some(t=>t.s), showSide=o.tr.some(t=>t.d);
-    h+='<p class="sub2">Trades closed</p><div class="scroll"><table class="daytrades log"><thead><tr><th>UTC</th>'+(showBot?'<th style="text-align:left">Bot</th>':'')+(showSym||showSide?'<th style="text-align:left">Instrument</th>':'')+'<th class="hh">Held</th><th>How</th><th>Result</th></tr></thead><tbody>'+
-      o.tr.slice().reverse().map(t=>{ const b=showBot?magicOwner(t.m):null;
+  const bfS=sc.kind==='account'&&CAL.bf?scopeById(CAL.bf):null;
+  if(sc.kind!=='account') h+='<div class="bf-bar"><button type="button" class="ln" data-allday>See this day with every bot</button></div>';
+  const list=bfS?o.tr.filter(t=>{ const b=magicOwner(t.m); return b&&b.id===bfS.id; }):o.tr;
+  if(bfS){
+    h+='<div class="bf-bar"><span>Trades of <b>'+esc(botName(bfS))+'</b> only'+(list.length?'':': it did not trade on this day')+'.</span><button type="button" data-bf="">Every bot</button><button type="button" class="ln" data-open="'+esc(bfS.id)+'">Open its full record</button></div>';
+  }
+  if(list.length){
+    const showBot=sc.kind==='account'&&!bfS&&list.some(t=>t.m!=null), showSym=list.some(t=>t.s), showSide=list.some(t=>t.d);
+    const rev=list.slice().reverse(), cut=CAL.all?rev:rev.slice(0,40);
+    h+='<p class="sub2">Trades closed'+(bfS?' by '+esc(botName(bfS)):'')+' <small style="font-weight:500">· '+int(list.length)+', newest first</small></p><div class="scroll"><table class="daytrades log"><thead><tr><th>UTC</th>'+(showBot?'<th style="text-align:left">Bot</th>':'')+(showSym||showSide?'<th style="text-align:left">Instrument</th>':'')+'<th class="hh">Held</th><th>How</th><th>Result</th></tr></thead><tbody>'+
+      cut.map(t=>{ const b=showBot?magicOwner(t.m):null;
         return '<tr><td>'+hm(t.x)+'</td>'+(showBot?'<td class="bt"><span>'+(t.m===0?'By hand':(b?(b.flag?flagSVG(b.flag):'')+esc(botName(b)):'Magic '+esc(t.m)))+'</span></td>':'')+
           (showSym||showSide?'<td class="sy">'+esc(t.s||'—')+(t.d?' <span class="sd '+t.d+'">'+(t.d==='l'?'L':'S')+'</span>':'')+'</td>':'')+
-          '<td class="hh">'+holdTxt(t.h)+'</td><td class="how">'+(t.c==='m'?'<i></i>':'')+(HOW[t.c]||'—')+'</td><td class="'+cls(t.r)+'">'+tTxt1(t)+'</td></tr>'; }).join('')+'</tbody></table></div>';
+          '<td class="hh">'+holdTxt(t.h)+'</td><td class="how">'+(t.c==='m'?'<i></i>':'')+(HOW[t.c]||'—')+'</td><td class="'+cls(t.r)+'">'+tTxt1(t)+'</td></tr>'; }).join('')+'</tbody></table></div>'+
+      (rev.length>40?'<button type="button" class="st-btn tr-more" data-trall>'+(CAL.all?'Show the newest 40':'Show all '+int(rev.length)+' trades')+'</button>':'');
   }
+  h+='<p style="margin:14px 0 0;font:600 13.5px Archivo"><a href="journal.html'+(ACCT==='demo'?'?acct=demo':'')+'#d='+d+(sc.kind!=='account'?'&bot='+encodeURIComponent(sc.id):'')+'">Open this day in the journal &#8250;</a></p>';
   h+=nav;
   box.innerHTML=h;
   if(o.tr.length) calDayChart(o);
   calDayBots(box);
   calDayNav(box);
+  calAllDay(box,sc);
+  box.querySelectorAll('[data-bf]').forEach(b=>b.addEventListener('click',()=>{ CAL.bf=null; CAL.all=false; calDay(CUR_SCOPE); }));
+  box.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.open; CAL.bf=null; selectScope(id,true); $('calendar').scrollIntoView(); }));
+  box.querySelectorAll('[data-trall]').forEach(b=>b.addEventListener('click',()=>{ CAL.all=!CAL.all; calDay(CUR_SCOPE); }));
+}
+/* from a single bot back to every bot, on the same day */
+function calAllDay(box,sc){
+  box.querySelectorAll('[data-allday]').forEach(b=>b.addEventListener('click',()=>{ const d=CAL.sel; CAL.bf=sc.kind!=='account'&&d&&daySummary(sc,d).tr.length?sc.id:null; CAL.all=false;
+    selectScope('all',true); if(d){ CAL.sel=d; CAL.ym=d.slice(0,7); drawCalendar(CUR_SCOPE); } }));
 }
 function calDayBots(box){
-  box.querySelectorAll('.dayrow[data-id]').forEach(r=>{ const go=()=>{ CAL.sid=r.dataset.id; selectScope(r.dataset.id,true); $('calendar').scrollIntoView(); };
+  box.querySelectorAll('.dayrow[data-id]').forEach(r=>{ const go=()=>{ CAL.bf=CAL.bf===r.dataset.id?null:r.dataset.id; CAL.all=false; calDay(CUR_SCOPE); };
     r.addEventListener('click',go); r.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); }); });
 }
 function calDayNav(box){
   box.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{ const d=b.dataset.go; if(!d) return;
-    CAL.sel=d; if(d.slice(0,7)!==CAL.ym){ CAL.ym=d.slice(0,7); drawCalendar(CUR_SCOPE); } else { calMark(); calDay(CUR_SCOPE); } }));
+    CAL.sel=d; CAL.all=false; if(d.slice(0,7)!==CAL.ym){ CAL.ym=d.slice(0,7); drawCalendar(CUR_SCOPE); } else { calMark(); calDay(CUR_SCOPE); } }));
 }
 function calDayChart(o){
   const box=$('cal-dchart'); if(!box) return;
@@ -3846,6 +3892,7 @@ const DATA_BASE=ACCT==='demo'?'demo/':'';
     const q=[a.dataset.acct==='demo'?'acct=demo':'',keep].filter(Boolean).join('&');
     a.href=(q?'?'+q:location.pathname);
   });
+  if(ACCT==='demo') ['nav-journal','foot-journal'].forEach(id=>{ const a=$(id); if(a) a.href='journal.html?acct=demo'; });
   if(ACCT!=='demo') return;
   document.title='Test bench — Wisfli bots on trial in a demo account';
   $('hero-h1').textContent='Test bench'; $('hero-h1').classList.add('long');
@@ -3965,6 +4012,7 @@ document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',
   document.querySelectorAll('[data-cmp]').forEach(b=>b.addEventListener('click',()=>{ cmpMagics=b.dataset.cmp==='magics'; document.querySelectorAll('[data-cmp]').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawCompare(); }));
   const m=location.hash.match(/bot=([\w-]+)/);
   selectScope(m?m[1]:'all',false);
+  const dd=location.hash.match(/day=(\d{4}-\d{2}-\d{2})/); if(dd) setTimeout(()=>{ try{ calOpen(dd[1]); }catch(e){} },0);
   window.addEventListener('hashchange',()=>{ const k=location.hash.match(/bot=([\w-]+)/); selectScope(k?k[1]:'all',false); });
   if(ACCT==='demo') fetch(DATA_BASE+'research.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{ if(d) rsLoad(d); }).catch(e=>console.error('research.json',e));
   hreq.then(h=>{ if(!h) return; try{ loadHistory(h); if(CUR_SCOPE){ drawCalendar(CUR_SCOPE); drawToday(CUR_SCOPE); drawPeriods(CUR_SCOPE); drawHourly(CUR_SCOPE); } }catch(e){ console.error('history.json',e); } });
