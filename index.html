@@ -227,6 +227,15 @@ footer p{max-width:52em;margin:0 0 10px}
 .scopebar .nav button{font:600 13px Archivo;background:transparent;border:1px solid rgba(255,255,255,.25);color:#E7EDEA;padding:6px 10px;cursor:pointer}
 .scopebar .nav button:hover{border-color:var(--brass)}
 
+/* v14: day picker in the bar, separate from the bot */
+.scopebar .daypick{display:flex;align-items:center;gap:6px}
+.scopebar .daypick[hidden]{display:none}
+.scopebar .daypick button{font:600 13px Archivo;background:transparent;border:1px solid rgba(255,255,255,.25);color:#E7EDEA;padding:6px 10px;cursor:pointer}
+.scopebar .daypick button:hover:not(:disabled){border-color:var(--brass)}
+.scopebar .daypick button:disabled{opacity:.35;cursor:default}
+.scopebar .daypick input{font:700 14px Archivo;color:#fff;background:#12344D;border:1px solid rgba(255,255,255,.25);padding:5px 8px;color-scheme:dark}
+@media (max-width:720px){ .scopebar .daypick{width:100%} .scopebar .daypick input{flex:1} }
+
 /* compare */
 table.cmp{width:100%;border-collapse:collapse;font-size:14px;min-width:1040px}
 table.cmp th{font-size:12px;font-weight:600;color:var(--muted);text-align:right;padding:0 10px 10px;border-bottom:1px solid var(--rule-strong);white-space:nowrap;cursor:pointer;user-select:none}
@@ -761,8 +770,15 @@ table.mt5.deals thead th{font:600 12px Archivo;color:var(--muted);text-align:rig
     <select id="scope"></select>
     <div class="meta" id="scope-meta"></div>
     <div class="nav">
-      <button type="button" id="prev" aria-label="Previous bot">Previous</button>
-      <button type="button" id="next" aria-label="Next bot">Next</button>
+      <button type="button" id="prev" aria-label="Previous bot">&#8249; Bot</button>
+      <button type="button" id="next" aria-label="Next bot">Bot &#8250;</button>
+    </div>
+    <div class="daypick" id="daypick" hidden>
+      <label for="dp-date">Day</label>
+      <button type="button" id="dp-prev" aria-label="Previous trading day">&#8249;</button>
+      <input type="date" id="dp-date">
+      <button type="button" id="dp-next" aria-label="Next trading day">&#8250;</button>
+      <button type="button" id="dp-last" aria-label="Latest trading day">Latest</button>
     </div>
   </div>
 </div>
@@ -1486,6 +1502,10 @@ function buildSelector(){
   $('scope').addEventListener('change',e=>selectScope(e.target.value,true));
   const step=d=>{ const i=ORDER.findIndex(x=>x.id===CUR_SCOPE.id); selectScope(ORDER[(i+d+ORDER.length)%ORDER.length].id,true); };
   $('prev').addEventListener('click',()=>step(-1));
+  $('dp-date').addEventListener('change',e=>dpGo(e.target.value));
+  $('dp-prev').addEventListener('click',()=>{ const C=calDays(CUR_SCOPE), d=CAL.sel||'9999', o=C.act.filter(x=>x.d<d).pop(); if(o) dpGo(o.d); });
+  $('dp-next').addEventListener('click',()=>{ const C=calDays(CUR_SCOPE), d=CAL.sel, o=d&&C.act.find(x=>x.d>d); if(o) dpGo(o.d); });
+  $('dp-last').addEventListener('click',()=>{ const C=calDays(CUR_SCOPE); if(C.act.length) dpGo(C.act[C.act.length-1].d); });
   $('next').addEventListener('click',()=>step(1));
 }
 
@@ -3007,6 +3027,8 @@ const calMax=(list,metric,M)=>Math.max(1e-9,...list.filter(o=>o.active).map(o=>m
 const calTip=(o,M)=>dLong(o.d)+': '+(M&&!nil(o.p)?money(o.p,true)+' ('+pct(o.r,2)+')':pct(o.r,2))+(nil(o.roi)?'':', ROI '+roiTxt(o.roi))+', '+o.n+(o.n===1?' trade':' trades')+(o.n?', hits '+Math.round(o.hit)+'%':'')+(o.arch?' · earlier stretch of the record':'');
 
 function calRange(C){
+  // v14: the whole account's range, so changing bot never moves the date on screen
+  const accS=SCOPES.find(x=>x.kind==='account'), A=accS?calDays(accS):null; if(A&&A.act.length) C=A;
   const first=C.act[0].d.slice(0,7), lastDay=sessionDay()>C.act[C.act.length-1].d?sessionDay():C.act[C.act.length-1].d;
   return {first, last:lastDay.slice(0,7), lastDay};
 }
@@ -3189,8 +3211,26 @@ function calKey(C){
 }
 
 function calDayTiles(tl){ return '<dl class="st-tiles two">'+tl.map(t=>'<div><dt>'+t[0]+'</dt><dd>'+t[1]+'<small>'+(t[2]||'&nbsp;')+'</small></dd></div>').join('')+'</dl>'; }
+function dpSync(sc){
+  const box=$('daypick'); if(!box||!sc) return;
+  const C=calDays(sc), accS=SCOPES.find(x=>x.kind==='account'), A=accS?calDays(accS):C, all=A.days.length?A.days:C.days;
+  box.hidden=!all.length; if(!all.length) return;
+  const inp=$('dp-date'); inp.min=all[0].d; inp.max=new Date().toISOString().slice(0,10); inp.value=CAL.sel||'';
+  const d=CAL.sel||'9999';
+  $('dp-prev').disabled=!C.act.some(o=>o.d<d); $('dp-next').disabled=!CAL.sel||!C.act.some(o=>o.d>d);
+  $('dp-prev').title=sc.kind==='account'?'Previous trading day':'Previous day '+botName(sc)+' traded';
+  $('dp-next').title=sc.kind==='account'?'Next trading day':'Next day '+botName(sc)+' traded';
+}
+function dpGo(d){
+  if(!d||!CUR_SCOPE) return;
+  CAL.view='month'; CAL.sel=d; CAL.ym=d.slice(0,7); CAL.all=false;
+  document.querySelectorAll('[data-calview]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.calview==='month'));
+  drawCalendar(CUR_SCOPE);
+  const sec=$('calendar'); if(!sec.hidden){ const r=sec.getBoundingClientRect(); if(r.top>innerHeight*.6||r.bottom<140) sec.scrollIntoView(); }
+}
 function calDay(sc){
   const box=$('cal-day'), C=calDays(sc), d=CAL.sel, M=ACC.publish_money;
+  dpSync(sc);
   if(!d){
     const m0=CAL.ym+'-01', m1=ymAdd(CAL.ym,1)+'-01';
     const prev=C.act.filter(x=>x.d<m0).pop(), next=C.act.find(x=>x.d>=m1);
